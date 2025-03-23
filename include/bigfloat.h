@@ -17,7 +17,7 @@ class bigfloat final {
  public:
   static constexpr double DEFAULT_EPS = 1e-10;
 
-  bigfloat() = default;
+  bigfloat();
   bigfloat(bigint const &numerator, bigint const &demonimator);
   bigfloat(bigint const &other);
   bigfloat(bigfloat const &other) = default;

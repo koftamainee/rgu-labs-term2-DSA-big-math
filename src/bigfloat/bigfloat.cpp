@@ -1,8 +1,17 @@
 #include "bigfloat.h"
 
 #include <optional>
+#include <stdexcept>
+
+bigfloat::bigfloat() {
+  numerator_ = 0;
+  demonimator_ = 1;
+}
 
 bigfloat::bigfloat(bigint const &numerator, bigint const &demonimator) {
+  if (demonimator_ == 0) {
+    throw std::invalid_argument("Demonimator can not be 0");
+  }
   if (numerator >= 0 && demonimator >= 0) {
     numerator_ = numerator;
     demonimator_ = demonimator;
