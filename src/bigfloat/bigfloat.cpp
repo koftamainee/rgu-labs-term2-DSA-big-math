@@ -23,3 +23,6 @@ std::optional<double> bigfloat::to_double() noexcept {
   }
   return *int_numerator / *int_demonimator;
 }
+
+bigfloat &bigfloat::operator=(bigfloat const &other) {}
+bigfloat &bigfloat::operator=(bigfloat &&other) noexcept {}
