@@ -6,23 +6,28 @@
 #include "bigint.h"
 
 class bigfloat final {
-private:
+ private:
   bigint numerator_;
   bigint demonimator_;
 
-public:
+ public:
   static constexpr double DEFAULT_EPS = 1e-10;
 
   bigfloat() = default;
-  bigfloat(bigint const &numerator, bigint const &demonimator);
-  bigfloat(bigint const &num);
-  bigfloat(double num);
+  bigfloat(bigint numerator, bigint demonimator);  // using std::move
+  bigfloat(bigint const &other);
   bigfloat(bigfloat const &other);
+  bigfloat(bigint &&other) noexcept;
+  bigfloat(double num);
   ~bigfloat() noexcept = default;
 
-  std::optional<double> to_double();
+  std::optional<double> to_double() noexcept;
 
   bigfloat &operator=(bigfloat const &other);
+  bigfloat &operator=(bigfloat &&other) noexcept;
+
+  bigfloat operator-() const;
+  bigfloat &negate();
 
   bigfloat &operator+=(bigfloat const &other) &;
   friend bigfloat operator+(bigfloat const &first, bigfloat const &second);
@@ -48,8 +53,10 @@ public:
   friend bool operator>(bigfloat const &first, bigfloat const &second);
   friend bool operator>=(bigfloat const &first, bigfloat const &second);
 
-  friend std::ostream &operator<<(std::ostream &out, bigfloat const &num);
-  friend std::istream &operator>>(std::istream &in, bigfloat const &num);
+  friend std::ostream &operator<<(std::ostream &out,
+                                  bigfloat const &num) noexcept;
+  friend std::istream &operator>>(std::istream &in,
+                                  bigfloat const &num) noexcept;
 
   friend bigfloat sin(bigfloat const &number, bigfloat const &EPS);
   friend bigfloat tg(bigfloat const &number, bigfloat const &EPS);
