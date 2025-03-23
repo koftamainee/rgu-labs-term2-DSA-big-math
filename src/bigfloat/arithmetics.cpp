@@ -1,14 +1,37 @@
 #include "bigfloat.h"
 
-bigint bigfloat::gcd(bigint first,
-                     bigint second) {  // very expensive.. mb rewrite later
-  while (second != 0) {
-    bigint temp = second;
-    second = first % second;
-    first = temp;
+bigint bigfloat::gcd(bigint a, bigint b) {
+  if (a == 0) {
+    return b;
+  }
+  if (b == 0) {
+    return a;
   }
 
-  return first;
+  int shift = 0;
+  while (((a | b) & 1) == 0) {
+    a >>= 1;
+    b >>= 1;
+    ++shift;
+  }
+
+  while ((a & 1) == 0) {
+    a >>= 1;
+  }
+
+  do {
+    while ((b & 1) == 0) {
+      b >>= 1;
+    }
+    if (a > b) {
+      auto temp = a;
+      a = b;
+      b = temp;
+    }
+    b -= a;
+  } while (b != 0);
+
+  return a << shift;
 }
 
 void bigfloat::simplify() {

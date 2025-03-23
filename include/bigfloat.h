@@ -11,8 +11,9 @@ class bigfloat final {
   bigint demonimator_;
 
   void simplify();
-  static bigint gcd(bigint first, bigint second);
+  static bigint gcd(bigint a, bigint b);
   static bigint factorial(bigint const &value);
+  [[nodiscard]] static char *read_string(std::istream &in);
 
  public:
   static constexpr double DEFAULT_EPS = 1e-10;
@@ -58,8 +59,7 @@ class bigfloat final {
 
   friend std::ostream &operator<<(std::ostream &out,
                                   bigfloat const &num) noexcept;
-  friend std::istream &operator>>(std::istream &in,
-                                  bigfloat const &num) noexcept;
+  friend std::istream &operator>>(std::istream &in, bigfloat &num);
 
   friend bigfloat sin(bigfloat const &number, bigfloat const &EPS);
   friend bigfloat cos(bigfloat const &number, bigfloat const &EPS);
