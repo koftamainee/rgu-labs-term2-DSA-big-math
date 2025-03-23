@@ -1,58 +1,25 @@
 #include "bigfloat.h"
 
-bigfloat::bigfloat(bigint const &numerator, bigint const &demonimator) {}
-bigfloat::bigfloat(bigint const &num) {}
-bigfloat::bigfloat(double num) {}
+#include <optional>
+#include <utility>
+
+bigfloat::bigfloat(bigint numerator, bigint demonimator)
+    : numerator_(std::move(numerator)), demonimator_(std::move(demonimator)) {}
+
+bigfloat::bigfloat(bigint const &other) : numerator_(other), demonimator_(1) {}
+
 bigfloat::bigfloat(bigfloat const &other) {}
 
-std::optional<double> bigfloat::to_double() {}
+bigfloat::bigfloat(bigint &&other) noexcept {}
 
-bigfloat &bigfloat::operator=(bigfloat const &other) {}
+bigfloat::bigfloat(double num)
+    : numerator_(static_cast<int>(num)), demonimator_(1) {}
 
-bigfloat &bigfloat::operator+=(bigfloat const &other) & {}
-bigfloat operator+(bigfloat const &first, bigfloat const &second) {}
-
-bigfloat &bigfloat::operator-=(bigfloat const &other) & {}
-bigfloat operator-(bigfloat const &first, bigfloat const &second) {}
-
-bigfloat &bigfloat::operator*=(bigfloat const &other) & {}
-bigfloat operator*(bigfloat const &first, bigfloat const &second) {}
-
-bigfloat &bigfloat::operator/=(bigfloat const &other) & {}
-bigfloat operator/(bigfloat const &first, bigfloat const &second) {}
-
-bigfloat &bigfloat::operator%=(bigfloat const &other) & {}
-bigfloat operator%(bigfloat const &first, bigfloat const &second) {}
-
-bool operator==(bigfloat const &first, bigfloat const &second) {}
-bool operator!=(bigfloat const &first, bigfloat const &second) {}
-
-bool operator<(bigfloat const &first, bigfloat const &second) {}
-bool operator<=(bigfloat const &first, bigfloat const &second) {}
-
-bool operator>(bigfloat const &first, bigfloat const &second) {}
-bool operator>=(bigfloat const &first, bigfloat const &second) {}
-
-std::ostream &operator<<(std::ostream &out, bigfloat const &num) {}
-std::istream &operator>>(std::istream &in, bigfloat const &num) {}
-
-bigfloat sin(bigfloat const &number, bigfloat const &EPS) {}
-bigfloat tg(bigfloat const &number, bigfloat const &EPS) {}
-bigfloat ctg(bigfloat const &number, bigfloat const &EPS) {}
-bigfloat sec(bigfloat const &number, bigfloat const &EPS) {}
-bigfloat cosec(bigfloat const &number, bigfloat const &EPS) {}
-bigfloat arcsin(bigfloat const &number, bigfloat const &EPS) {}
-bigfloat arccos(bigfloat const &number, bigfloat const &EPS) {}
-bigfloat arctg(bigfloat const &number, bigfloat const &EPS) {}
-bigfloat arcctg(bigfloat const &number, bigfloat const &EPS) {}
-bigfloat arcsec(bigfloat const &number, bigfloat const &EPS) {}
-bigfloat arccosec(bigfloat const &number, bigfloat const &EPS) {}
-
-bigfloat pow(bigfloat const &base, bigint const &exp) {}
-bigfloat radical(bigfloat const &radicand, bigint const &index,
-                 bigfloat const &EPS) {}
-bigfloat sqrt(bigfloat const &radicand, bigfloat const &EPS) {}
-
-bigfloat log2(bigfloat const &number, bigfloat const &EPS) {}
-bigfloat log(bigfloat const &number, bigfloat const &EPS) {}
-bigfloat log10(bigfloat const &number, bigfloat const &EPS) {}
+std::optional<double> bigfloat::to_double() noexcept {
+  auto int_numerator = numerator_.to_int();
+  auto int_demonimator = demonimator_.to_int();
+  if (!int_numerator || !int_demonimator) {
+    return std::nullopt;
+  }
+  return *int_numerator / *int_demonimator;
+}
