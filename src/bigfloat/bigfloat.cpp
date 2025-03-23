@@ -1,19 +1,26 @@
 #include "bigfloat.h"
 
 #include <optional>
-#include <utility>
 
-bigfloat::bigfloat(bigint numerator, bigint demonimator)
-    : numerator_(std::move(numerator)), demonimator_(std::move(demonimator)) {}
+bigfloat::bigfloat(bigint const &numerator, bigint const &demonimator) {
+  if (numerator >= 0 && demonimator >= 0) {
+    numerator_ = numerator;
+    demonimator_ = demonimator;
+  } else if (numerator < 0 || demonimator < 0) {
+    numerator_ = -numerator;
+    demonimator_ = -demonimator;
+  } else {
+    numerator_ = numerator.abs();
+    demonimator_ = demonimator < 0 ? demonimator : -demonimator;
+  }
+}
 
-bigfloat::bigfloat(bigint const &other) : numerator_(other), demonimator_(1) {}
-
-bigfloat::bigfloat(bigfloat const &other) {}
-
-bigfloat::bigfloat(bigint &&other) noexcept {}
+bigfloat::bigfloat(bigint const &other)
+    : numerator_(other.abs()), demonimator_(other < 0 ? -1 : 1) {}
 
 bigfloat::bigfloat(double num)
-    : numerator_(static_cast<int>(num)), demonimator_(1) {}
+    : numerator_(std::abs(static_cast<int>(num))),
+      demonimator_(num < 0 ? -1 : 1) {}
 
 std::optional<double> bigfloat::to_double() noexcept {
   auto int_numerator = numerator_.to_int();
@@ -23,6 +30,3 @@ std::optional<double> bigfloat::to_double() noexcept {
   }
   return *int_numerator / *int_demonimator;
 }
-
-bigfloat &bigfloat::operator=(bigfloat const &other) {}
-bigfloat &bigfloat::operator=(bigfloat &&other) noexcept {}

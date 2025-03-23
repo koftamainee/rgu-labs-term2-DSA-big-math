@@ -61,6 +61,8 @@ class bigint final {
   bigint &operator%=(bigint const &other) &;
   friend bigint operator%(bigint const &first, bigint const &second);
 
+  bigint abs() const;
+
   friend bool operator==(bigint const &first, bigint const &second);
   friend bool operator!=(bigint const &first, bigint const &second);
 

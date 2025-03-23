@@ -10,21 +10,25 @@ class bigfloat final {
   bigint numerator_;
   bigint demonimator_;
 
+  void simplify();
+  static bigint gcd(bigint first, bigint second);
+  static bigint factorial(bigint const &value);
+
  public:
   static constexpr double DEFAULT_EPS = 1e-10;
 
   bigfloat() = default;
-  bigfloat(bigint numerator, bigint demonimator);  // using std::move
+  bigfloat(bigint const &numerator, bigint const &demonimator);
   bigfloat(bigint const &other);
-  bigfloat(bigfloat const &other);
-  bigfloat(bigint &&other) noexcept;
+  bigfloat(bigfloat const &other) = default;
+  bigfloat(bigfloat &&other) noexcept = default;
   bigfloat(double num);
   ~bigfloat() noexcept = default;
 
   std::optional<double> to_double() noexcept;
 
-  bigfloat &operator=(bigfloat const &other);
-  bigfloat &operator=(bigfloat &&other) noexcept;
+  bigfloat &operator=(bigfloat const &other) = default;
+  bigfloat &operator=(bigfloat &&other) = default;
 
   bigfloat operator-() const;
   bigfloat &negate();
@@ -41,8 +45,7 @@ class bigfloat final {
   bigfloat &operator/=(bigfloat const &other) &;
   friend bigfloat operator/(bigfloat const &first, bigfloat const &second);
 
-  bigfloat &operator%=(bigfloat const &other) &;
-  friend bigfloat operator%(bigfloat const &first, bigfloat const &second);
+  bigfloat abs() const;
 
   friend bool operator==(bigfloat const &first, bigfloat const &second);
   friend bool operator!=(bigfloat const &first, bigfloat const &second);
@@ -59,6 +62,7 @@ class bigfloat final {
                                   bigfloat const &num) noexcept;
 
   friend bigfloat sin(bigfloat const &number, bigfloat const &EPS);
+  friend bigfloat cos(bigfloat const &number, bigfloat const &EPS);
   friend bigfloat tg(bigfloat const &number, bigfloat const &EPS);
   friend bigfloat ctg(bigfloat const &number, bigfloat const &EPS);
   friend bigfloat sec(bigfloat const &number, bigfloat const &EPS);
@@ -78,6 +82,8 @@ class bigfloat final {
   friend bigfloat log2(bigfloat const &number, bigfloat const &EPS);
   friend bigfloat log(bigfloat const &number, bigfloat const &EPS);
   friend bigfloat log10(bigfloat const &number, bigfloat const &EPS);
+
+  static bigfloat PI(bigfloat const &EPS);
 };
 
 bigfloat cos(bigfloat const &number,
@@ -113,3 +119,5 @@ bigfloat log(bigfloat const &number,
              bigfloat const &EPS = bigfloat::DEFAULT_EPS);
 bigfloat log10(bigfloat const &number,
                bigfloat const &EPS = bigfloat::DEFAULT_EPS);
+
+bigfloat PI(bigfloat const &EPS = bigfloat::DEFAULT_EPS);

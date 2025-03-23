@@ -72,4 +72,4 @@ bigfloat operator/(bigfloat const &first, bigfloat const &second) {
   return temp /= second;
 }
 
-bigfloat bigfloat::abs() { return demonimator_ < 0 ? -*this : *this; }
+bigfloat bigfloat::abs() const { return demonimator_ < 0 ? -*this : *this; }

@@ -5,6 +5,8 @@ bigint bigint::operator-() const {
   return negative.negate();
 }
 
+bigint bigint::abs() const { return sign() < 0 ? -*this : *this; }
+
 bigint &bigint::negate() & {}
 
 bigint &bigint::operator++() & {}
