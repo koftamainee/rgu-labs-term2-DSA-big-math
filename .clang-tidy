@@ -1,0 +1,31 @@
+---
+Checks: >
+    -*,
+    clang-analyzer-*,
+    modernize-*,
+    performance-*,
+    readability-*,
+    bugprone-*, -bugprone-easily-swappable-parameters,
+    -performance-avoid-endl,
+    -modernize-use-trailing-return-type, -modernize-avoid-c-arrays,
+    -readability-magic-numbers, -readability-identifier-naming, -readability-identifier-length, -readability-convert-member-functions-to-static, -modernize-use-nodiscard,
+
+WarningsAsErrors: true
+HeaderFilterRegex: '.*'
+FormatStyle: file
+
+CheckOptions:
+  - key:             readability-identifier-naming.ClassCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.StructCase
+    value:           CamelCase
+  - key:             readability-const-return-type.IgnoreMacros
+    value:           true
+  - key:             modernize-use-using.IgnoreMacros
+    value:           true
+  - key:             performance-for-range-copy.TransformValues
+    value:           'true'
+  - key:             performance-unnecessary-value-param.IncludeStyle
+    value:           'llvm'
+  - key:             bugprone-reserved-identifier.AllowedIdentifiers
+    value:           'assert,__unused,__attribute__,__va_list__,^_[A-Z]'
