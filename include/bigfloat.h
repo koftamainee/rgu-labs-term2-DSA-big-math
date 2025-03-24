@@ -13,7 +13,6 @@ class bigfloat final {
   void simplify();
   static bigint gcd(bigint a, bigint b);
   static bigint factorial(bigint const &value);
-  [[nodiscard]] static char *read_string(std::istream &in);
 
  public:
   static constexpr double DEFAULT_EPS = 1e-10;

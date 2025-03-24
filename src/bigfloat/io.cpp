@@ -2,30 +2,7 @@
 #include <exception>
 
 #include "bigfloat.h"
-
-[[nodiscard]] char *bigfloat::read_string(std::istream &in) {
-  std::size_t size = 0;
-  std::size_t capacity = 16;
-  char *buffer = new char[capacity];
-
-  while (true) {
-    auto c = in.get();
-    if (size == capacity) {
-      auto *temp = new char[capacity * 2];
-      std::memcpy(temp, buffer, size * sizeof(char));
-      delete[] buffer;
-      buffer = temp;
-      capacity *= 2;
-    }
-    if (c == '\n' || c == EOF) {
-      buffer[size++] = '\0';
-      break;
-    }
-    buffer[size++] = static_cast<char>(c);
-  }
-
-  return buffer;
-}
+#include "cstring.h"
 
 std::ostream &operator<<(std::ostream &out, bigfloat const &num) noexcept {
   if (num.demonimator_ < 0) {
@@ -35,16 +12,16 @@ std::ostream &operator<<(std::ostream &out, bigfloat const &num) noexcept {
   return out;
 }
 std::istream &operator>>(std::istream &in, bigfloat &num) {
-  char *input = bigfloat::read_string(in);
+  cstd::string input;
+  in >> input;
 
-  char *slash_pos = std::strchr(input, '/');
+  char *slash_pos = std::strchr(input.data(), '/');
   if (slash_pos == nullptr) {
     in.setstate(std::ios::failbit);
-    delete[] input;
     return in;
   }
   *slash_pos = '\0';
-  char *numerator_str = input;
+  char *numerator_str = input.data();
   char *demonimator_str = slash_pos + 1;
 
   char sign = '+';
@@ -66,6 +43,5 @@ std::istream &operator>>(std::istream &in, bigfloat &num) {
     in.setstate(std::ios::failbit);
     return in;
   }
-  delete[] input;
   return in;
 }
