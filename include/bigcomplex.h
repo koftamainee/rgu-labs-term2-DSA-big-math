@@ -23,6 +23,9 @@ class bigcomplex final {
   bigcomplex(bigfloat real_, bigfloat imaginary_ = 0);
   bigcomplex(cstd::string const &complex_str);
 
+  bigcomplex operator-() const noexcept;
+  bigcomplex &negate() noexcept;
+
   bigcomplex &operator+=(bigcomplex const &other) &;
   friend bigcomplex operator+(bigcomplex const &first,
                               bigcomplex const &second);
@@ -41,6 +44,9 @@ class bigcomplex final {
 
   friend bool operator==(bigcomplex const &first, bigcomplex const &other);
   friend bool operator!=(bigcomplex const &first, bigcomplex const &other);
+
+  bigfloat arg(bigfloat const &EPS = bigfloat::DEFAULT_EPS) const;
+  bigfloat abs(bigfloat const &EPS = bigfloat::DEFAULT_EPS) const;
 
   friend std::ostream &operator<<(std::ostream &out, bigcomplex const &complex);
   friend std::istream &operator>>(std::istream &in, bigcomplex &complex);
