@@ -31,13 +31,13 @@ bigint &bigint::operator+=(bigint const &other) & {
     auto other_digit = other[i];
 
 #pragma unroll
-    for (int j = 0; j < 2; ++j) {  // 2 iterations
+    for (int j = 0; j < 2; ++j) {
       auto this_half_digit = loword_hiword_function_pointers[j](this_digit);
       auto other_half_digit = loword_hiword_function_pointers[j](other_digit);
 
       auto digits_sum = this_half_digit + other_half_digit + extra_digit;
       extra_digit = digits_sum >> SHIFT;
-      result[i] += (digits_sum & MASK) << (j * SHIFT);
+      result[i] += static_cast<int>((digits_sum & MASK) << (j * SHIFT));
     }
   }
 
@@ -46,11 +46,16 @@ bigint &bigint::operator+=(bigint const &other) & {
   return *this;
 }
 
-bigint operator+(bigint const &first, bigint const &second) {}
+bigint operator+(bigint const &first, bigint const &second) {
+  bigint temp = first;
+  return temp += second;
+}
 
-bigint &bigint::operator-=(bigint const &other) & {}
+bigint &bigint::operator-=(bigint const &other) & { return *this += (-other); }
 
-bigint operator-(bigint const &first, bigint const &second) {}
+bigint operator-(bigint const &first, bigint const &second) {
+  return first + (-second);
+}
 
 bigint &bigint::operator*=(bigint const &other) & {}
 

@@ -35,9 +35,9 @@ bigint bigfloat::gcd(bigint a, bigint b) {
 }
 
 void bigfloat::simplify() {
-  bigint divider = gcd(numerator_, demonimator_);
+  bigint divider = gcd(numerator_, denominator_);
   numerator_ /= divider;
-  demonimator_ /= divider;
+  denominator_ /= divider;
 }
 
 bigfloat bigfloat::operator-() const {
@@ -46,13 +46,13 @@ bigfloat bigfloat::operator-() const {
 }
 
 bigfloat &bigfloat::negate() {
-  demonimator_.negate();
+  denominator_.negate();
   return *this;
 }
 
 bigfloat &bigfloat::operator+=(bigfloat const &other) & {
-  *this *= other.demonimator_;
-  bigint new_other_numerator = other.numerator_ * demonimator_;
+  *this *= other.denominator_;
+  bigint new_other_numerator = other.numerator_ * denominator_;
   numerator_ += new_other_numerator;
   simplify();
   return *this;
@@ -73,7 +73,7 @@ bigfloat operator-(bigfloat const &first, bigfloat const &second) {
 
 bigfloat &bigfloat::operator*=(bigfloat const &other) & {
   numerator_ *= other.numerator_;
-  demonimator_ *= other.demonimator_;
+  denominator_ *= other.denominator_;
   simplify();
   return *this;
 }
@@ -84,8 +84,8 @@ bigfloat operator*(bigfloat const &first, bigfloat const &second) {
 }
 
 bigfloat &bigfloat::operator/=(bigfloat const &other) & {
-  numerator_ *= other.demonimator_;
-  demonimator_ *= other.numerator_;
+  numerator_ *= other.denominator_;
+  denominator_ *= other.numerator_;
   simplify();
   return *this;
 }
@@ -95,4 +95,4 @@ bigfloat operator/(bigfloat const &first, bigfloat const &second) {
   return temp /= second;
 }
 
-bigfloat bigfloat::abs() const { return demonimator_ < 0 ? -*this : *this; }
+bigfloat bigfloat::abs() const { return denominator_ < 0 ? -*this : *this; }

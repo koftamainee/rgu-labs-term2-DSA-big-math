@@ -25,7 +25,7 @@ class bigint final {
 
  public:
   bigint() noexcept;
-  bigint(char const *value, std::size_t base);
+  bigint(char const *value, std::size_t base = 10);
   bigint(int const *value, std::size_t size);
   bigint(int value) noexcept;
   bigint(bigint const &other);
@@ -83,11 +83,11 @@ class bigint final {
   bigint &operator^=(bigint const &other) &;
   friend bigint operator^(bigint const &first, bigint const &second);
 
-  bigint &operator<<=(bigint const &other) &;
-  friend bigint operator<<(bigint const &first, bigint const &second);
+  bigint &operator<<=(size_t index) &;
+  bigint operator<<(size_t index);
 
-  bigint &operator>>=(bigint const &other) &;
-  friend bigint operator>>(bigint const &first, bigint const &second);
+  bigint &operator>>=(size_t index) &;
+  bigint operator>>(size_t index);
 
   friend std::ostream &operator<<(std::ostream &out,
                                   bigint const &num) noexcept;

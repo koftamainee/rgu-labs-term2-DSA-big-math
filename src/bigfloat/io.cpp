@@ -5,10 +5,10 @@
 #include "cstring.h"
 
 std::ostream &operator<<(std::ostream &out, bigfloat const &num) noexcept {
-  if (num.demonimator_ < 0) {
+  if (num.denominator_ < 0) {
     out << "-";
   }
-  out << num.numerator_ << "/" << num.demonimator_;
+  out << num.numerator_ << "/" << num.denominator_;
   return out;
 }
 std::istream &operator>>(std::istream &in, bigfloat &num) {
@@ -22,7 +22,7 @@ std::istream &operator>>(std::istream &in, bigfloat &num) {
   }
   *slash_pos = '\0';
   char *numerator_str = input.data();
-  char *demonimator_str = slash_pos + 1;
+  char *denominator_str = slash_pos + 1;
 
   char sign = '+';
   if (numerator_str[0] == '+' || numerator_str[0] == '-') {
@@ -31,12 +31,12 @@ std::istream &operator>>(std::istream &in, bigfloat &num) {
   }
   try {
     bigint numerator(numerator_str, 10);
-    bigint demonimator(demonimator_str, 10);
+    bigint demonimator(denominator_str, 10);
     if (sign == '-') {
       demonimator.negate();
     }
 
-    num.demonimator_ = std::move(demonimator);
+    num.denominator_ = std::move(demonimator);
     num.numerator_ = std::move(numerator);
 
   } catch (std::exception const &e) {

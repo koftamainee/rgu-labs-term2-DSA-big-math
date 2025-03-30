@@ -8,7 +8,7 @@
 class bigfloat final {
  private:
   bigint numerator_;
-  bigint demonimator_;
+  bigint denominator_;
 
   void simplify();
   static bigint gcd(bigint a, bigint b);
