@@ -16,8 +16,11 @@ class bigint final {
   void move(bigint &&other);
 
   unsigned int operator[](std::size_t index) const noexcept;
+  int &operator[](std::size_t index);
   int sign() const noexcept;
   int size() const noexcept;
+
+  static int compare(bigint const &first, bigint const &second);
 
   static unsigned int max(unsigned int first, unsigned int second) noexcept;
   static unsigned int loword(unsigned int value);
@@ -72,7 +75,8 @@ class bigint final {
   friend bool operator>(bigint const &first, bigint const &second);
   friend bool operator>=(bigint const &first, bigint const &second);
 
-  bigint operator~();
+  bigint operator~() const;
+  bigint &bit_inverse() &;
 
   bigint &operator&=(bigint const &other) &;
   friend bigint operator&(bigint const &first, bigint const &second);

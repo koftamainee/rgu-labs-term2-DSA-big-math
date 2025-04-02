@@ -1,8 +1,8 @@
+#include "bigint.h"
+
 #include <cstring>
 #include <optional>
 #include <stdexcept>
-
-#include "bigint.h"
 
 bigint::bigint() noexcept : oldest_digit_(0), other_digits_(nullptr) {}
 

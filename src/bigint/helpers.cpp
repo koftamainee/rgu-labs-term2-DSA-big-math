@@ -1,6 +1,7 @@
 #include <strings.h>
 
 #include <cstring>
+#include <stdexcept>
 
 #include "bigint.h"
 
@@ -48,4 +49,13 @@ int bigint::sign() const noexcept {
 
 int bigint::size() const noexcept {
   return other_digits_ == nullptr ? 1 : other_digits_[0];
+}
+
+int &bigint::operator[](std::size_t index) {
+  auto const digits_count = size();
+  if (index >= digits_count) {
+    throw std::out_of_range("out of range of digits array");
+  }
+  return index == digits_count - 1 ? oldest_digit_
+                                   : *(other_digits_ + 1 + index);
 }
