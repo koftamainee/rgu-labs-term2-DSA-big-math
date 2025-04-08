@@ -27,9 +27,8 @@ void bigint::clone(bigint const &other) {
   if (other.other_digits_ == nullptr) {
     return;
   }
-  other_digits_ = new int[other.other_digits_[0]];
-  std::memcpy(other_digits_, other.other_digits_,
-              other.other_digits_[0] * sizeof(int));
+  other_digits_ = new int[other.size()];
+  std::memcpy(other_digits_, other.other_digits_, other.size() * sizeof(int));
 }
 
 void bigint::move(bigint &&other) {
@@ -44,7 +43,7 @@ int bigint::sign() const noexcept {
   if (oldest_digit_ == 0 && other_digits_ == nullptr) {
     return 0;
   }
-  return (oldest_digit_ >> ((sizeof(int) << 3) - 1)) == 0 ? 1 : -1;
+  return (oldest_digit_ >= 0) ? 1 : -1;
 }
 
 int bigint::size() const noexcept {

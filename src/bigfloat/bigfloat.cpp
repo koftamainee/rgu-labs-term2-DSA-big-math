@@ -9,7 +9,7 @@ bigfloat::bigfloat() {
 }
 
 bigfloat::bigfloat(bigint const &numerator, bigint const &demonimator) {
-  if (denominator_ == 0) {
+  if (demonimator == 0) {
     throw std::invalid_argument("Demonimator can not be 0");
   }
   if (numerator >= 0 && demonimator >= 0) {
@@ -22,6 +22,7 @@ bigfloat::bigfloat(bigint const &numerator, bigint const &demonimator) {
     numerator_ = numerator.abs();
     denominator_ = demonimator < 0 ? demonimator : -demonimator;
   }
+  simplify();
 }
 
 bigfloat::bigfloat(bigint const &other)

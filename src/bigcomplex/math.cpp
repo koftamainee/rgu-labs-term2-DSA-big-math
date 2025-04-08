@@ -46,11 +46,11 @@ bigcomplex operator*(bigcomplex const &first, bigcomplex const &second) {
 }
 
 bigcomplex &bigcomplex::operator/=(bigcomplex const &other) & {
-  bigfloat denominator =
-      (other.real_ * other.real_) + (other.imaginary_ * other.imaginary_);
-  if (denominator == 0) {
+  if (other.real_ == 0 && other.imaginary_ == 0) {
     throw std::invalid_argument("Division by zero");
   }
+  bigfloat denominator =
+      (other.real_ * other.real_) + (other.imaginary_ * other.imaginary_);
 
   real_ = (real_ * other.real_ + imaginary_ * other.imaginary_) / denominator;
   imaginary_ =

@@ -1,5 +1,6 @@
 #include <climits>
 #include <cstring>
+#include <iostream>
 
 #include "bigint.h"
 
@@ -33,6 +34,7 @@ bigint &bigint::operator++() & {
       return *this;
     }
   }
+
   if (++oldest_digit_ != INT_MIN) {
     return *this;
   }
@@ -92,7 +94,7 @@ bigint &bigint::operator--() & {
   }
 
   int *new_array = new int[digits_count + 1];
-  memcpy(new_array, other_digits_, sizeof(int) * size());
+  memcpy(new_array, other_digits_, sizeof(int) * digits_count);
   delete[] other_digits_;
   other_digits_ = new_array;
 
@@ -118,7 +120,7 @@ bigint &bigint::operator+=(bigint const &other) & {
   for (int i = 0; i < max_size; ++i) {
     result[i] = 0;
 
-    auto this_digit = this->operator[](i);
+    auto this_digit = static_cast<bigint const *>(this)->operator[](i);
     auto other_digit = other[i];
 
 #pragma unroll

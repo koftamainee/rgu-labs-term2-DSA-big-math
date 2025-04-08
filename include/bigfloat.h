@@ -25,6 +25,8 @@ class bigfloat final {
   bigfloat(double num);
   ~bigfloat() noexcept = default;
 
+  // bigint operator bigint(double num); // TODO
+
   std::optional<double> to_double() noexcept;
 
   bigfloat &operator=(bigfloat const &other) = default;
