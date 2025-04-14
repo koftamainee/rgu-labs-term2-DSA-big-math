@@ -1,6 +1,5 @@
 #include <climits>
 #include <cstring>
-#include <iostream>
 
 #include "bigint.h"
 
@@ -15,7 +14,7 @@ bigint &bigint::negate() & {
   if (sign() == 0) {
     return *this;
   }
-  return (sign() == 1) ? ++(bit_inverse()) : (--(*this)).bit_inverse();
+  return (sign() == 1) ? (bit_inverse() += 1) : ((*this) -= 1).bit_inverse();
 }
 
 bigint operator-(bigint const &first, bigint const &second) {
@@ -134,7 +133,9 @@ bigint &bigint::operator+=(bigint const &other) & {
     }
   }
 
-  // TODO something
+  from_array(result, max_size);
+
+  delete[] result;
 
   return *this;
 }

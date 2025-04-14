@@ -58,3 +58,37 @@ int &bigint::operator[](std::size_t index) {
   return index == digits_count - 1 ? oldest_digit_
                                    : *(other_digits_ + 1 + index);
 }
+
+bigint &bigint::from_string(cstd::string const &str, std::size_t base) {}
+
+cstd::string bigint::to_string() {}
+
+bigint &bigint::from_array(int const *digits, std::size_t size) {
+  if (digits == nullptr) {
+    throw std::invalid_argument(
+        "Pointer to digits array can't be EQ to nullptr");
+  }
+
+  if (size == 0) {
+    throw std::invalid_argument("Digits count can't be EQ to 0");
+  }
+
+  cleanup();
+
+  if (size == 1) {
+    oldest_digit_ = digits[0];
+
+    return *this;
+  }
+
+  while (size != 1 && ((digits[size - 1] == 0 && digits[size - 2] >= 0) ||
+                       (digits[size - 1] == -1 && digits[size - 2] < 0))) {
+    --size;
+  }
+
+  *(other_digits_ = new int[size]) = static_cast<int>(size);
+  memcpy(other_digits_ + 1, digits, (size - 1) * sizeof(int));
+  oldest_digit_ = digits[size - 1];
+
+  return *this;
+}

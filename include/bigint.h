@@ -4,6 +4,8 @@
 #include <iostream>
 #include <optional>
 
+#include "cstring.h"
+
 class bigint final {
  private:
   static constexpr unsigned int SHIFT = (sizeof(int) << 2);
@@ -12,6 +14,7 @@ class bigint final {
   int oldest_digit_;
   int *other_digits_;
 
+  void cleanup();
   void clone(bigint const &other);
   void move(bigint &&other);
 
@@ -25,6 +28,11 @@ class bigint final {
   static unsigned int max(unsigned int first, unsigned int second) noexcept;
   static unsigned int loword(unsigned int value);
   static unsigned int hiword(unsigned int value);
+
+  bigint &from_array(int const *digits, std::size_t size);
+
+  bigint &from_string(cstd::string const &str, std::size_t base);
+  cstd::string to_string();
 
  public:
   bigint() noexcept;

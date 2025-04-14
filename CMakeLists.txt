@@ -11,8 +11,10 @@ file(GLOB BIGFLOAT_SOURCES src/bigfloat/*.cpp)
 file(GLOB BIGPOLY_SOURCES src/bigpoly/*.cpp)
 file(GLOB BIGCOMPLEX_SOURCES src/bigcomplex/*.cpp)
 
+file(GLOB CSTD_SOURCES src/cstd/*.cpp)
 
-add_library(big_math ${BIGFLOAT_SOURCES} ${BIGINT_SOURCES} ${BIGPOLY_SOURCES} ${BIGCOMPLEX_SOURCES})
+
+add_library(big_math ${BIGFLOAT_SOURCES} ${BIGINT_SOURCES} ${BIGPOLY_SOURCES} ${BIGCOMPLEX_SOURCES} ${CSTD_SOURCES})
 
 file(GLOB EXAMPLES_SOURCES examples/*.cpp)
 
