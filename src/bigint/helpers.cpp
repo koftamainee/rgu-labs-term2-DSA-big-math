@@ -1,5 +1,6 @@
 #include <strings.h>
 
+#include <cctype>
 #include <cstring>
 #include <stdexcept>
 
@@ -19,7 +20,8 @@ unsigned int bigint::operator[](std::size_t index) const noexcept {
     return 0;
   }
   return *reinterpret_cast<unsigned int const *>(
-      index == digits_count - 1 ? &oldest_digit_ : other_digits_ + index + 1);
+      (index == (digits_count - 1)) ? &oldest_digit_
+                                    : other_digits_ + index + 1);
 }
 
 void bigint::clone(bigint const &other) {
@@ -59,14 +61,46 @@ int &bigint::operator[](std::size_t index) {
                                    : *(other_digits_ + 1 + index);
 }
 
-bigint &bigint::from_string(cstd::string const &str, std::size_t base) {}
+bigint &bigint::from_string(cstd::string const &str, std::size_t base) {
+  if (base > 36) {
+    throw std::invalid_argument("invalid base for conversion : ");
+  }
+  if (str.size() == 1 && str[0] == '-') {
+    throw std::invalid_argument("Invalid string number representation");
+  }
+
+  *this = 0;
+  bool negative = false;
+  for (int i = 0; i < str.size(); ++i) {
+    if (str[i] == '-') {
+      negative = true;
+      continue;
+    }
+    auto const c = str[i];
+    *this *= 10;
+    if (std::isdigit(c) != 0) {
+      *this += c - '0';
+    } else if (std::isalpha(c) != 0) {
+      *this += std::toupper(c) - 'A' + 10;
+    } else {
+      *this = 0;
+      throw std::invalid_argument(
+          "invalid character in string number representation found");
+    }
+  }
+  if (negative) {
+    negate();
+  }
+
+  return *this;
+}
 
 cstd::string bigint::to_string() {}
 
 bigint &bigint::from_array(int const *digits, std::size_t size) {
   if (digits == nullptr) {
     throw std::invalid_argument(
-        "Pointer to digits array can't be EQ to nullptr");
+        "pointer to digits array can't be EQ to nullptr");
   }
 
   if (size == 0) {

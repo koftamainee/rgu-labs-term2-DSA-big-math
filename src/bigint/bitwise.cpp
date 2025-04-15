@@ -17,22 +17,64 @@ bigint &bigint::bit_inverse() & {
   return *this;
 }
 
-bigint &bigint::operator&=(bigint const &other) & {}
+bigint &bigint::operator&=(bigint const &other) & {
+  auto const first_size = size();
 
-bigint operator&(bigint const &first, bigint const &second) {}
+  for (int i = 0; i < first_size; ++i) {
+    unsigned int const other_digit = other[i];
+    auto const other_digit_int = *reinterpret_cast<int const *>(&other_digit);
+    this->operator[](i) &= other_digit_int;
+  }
+  return *this;
+}
 
-bigint &bigint::operator|=(bigint const &other) & {}
+bigint operator&(bigint const &first, bigint const &second) {
+  bigint copy = first;
+  return copy &= second;
+}
 
-bigint operator|(bigint const &first, bigint const &second) {}
+bigint &bigint::operator|=(bigint const &other) & {
+  auto const first_size = size();
 
-bigint &bigint::operator^=(bigint const &other) & {}
+  for (int i = 0; i < first_size; ++i) {
+    unsigned int const other_digit = other[i];
+    auto const other_digit_int = *reinterpret_cast<int const *>(&other_digit);
+    this->operator[](i) |= other_digit_int;
+  }
+  return *this;
+}
 
-bigint operator^(bigint const &first, bigint const &second) {}
+bigint operator|(bigint const &first, bigint const &second) {
+  bigint copy = first;
+  return copy |= second;
+}
+
+bigint &bigint::operator^=(bigint const &other) & {
+  auto const first_size = size();
+
+  for (int i = 0; i < first_size; ++i) {
+    unsigned int const other_digit = other[i];
+    auto const other_digit_int = *reinterpret_cast<int const *>(&other_digit);
+    this->operator[](i) ^= other_digit_int;
+  }
+  return *this;
+}
+
+bigint operator^(bigint const &first, bigint const &second) {
+  bigint copy = first;
+  return copy ^= second;
+}
 
 bigint &bigint::operator<<=(size_t index) & {}
 
-bigint bigint::operator<<(size_t index) {}
+bigint bigint::operator<<(size_t index) {
+  bigint copy = *this;
+  return copy <<= index;
+}
 
 bigint &bigint::operator>>=(size_t index) & {}
 
-bigint bigint::operator>>(size_t index) {}
+bigint bigint::operator>>(size_t index) {
+  bigint copy = *this;
+  return copy >>= index;
+}

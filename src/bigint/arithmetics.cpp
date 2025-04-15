@@ -14,7 +14,7 @@ bigint &bigint::negate() & {
   if (sign() == 0) {
     return *this;
   }
-  return (sign() == 1) ? (bit_inverse() += 1) : ((*this) -= 1).bit_inverse();
+  return (sign() == 1) ? (bit_inverse() += 1) : ((*this) += -1).bit_inverse();
 }
 
 bigint operator-(bigint const &first, bigint const &second) {
@@ -121,6 +121,8 @@ bigint &bigint::operator+=(bigint const &other) & {
 
     auto this_digit = static_cast<bigint const *>(this)->operator[](i);
     auto other_digit = other[i];
+    // std::cout << "i: " << i << ", " << this_digit << " " << other_digit
+    //           << std::endl;
 
 #pragma unroll
     for (int j = 0; j < 2; ++j) {
@@ -128,9 +130,20 @@ bigint &bigint::operator+=(bigint const &other) & {
       auto other_half_digit = loword_hiword_function_pointers[j](other_digit);
 
       auto digits_sum = this_half_digit + other_half_digit + extra_digit;
-      extra_digit = digits_sum >> SHIFT;
+      extra_digit = ((this_digit == -1 || other_digit == -1) && j == 1)
+                        ? 0
+                        : digits_sum >> SHIFT;
+      std::cout << "extra: " << extra_digit << std::endl;
       result[i] += static_cast<int>((digits_sum & MASK) << (j * SHIFT));
     }
+    std::cout << "i: " << i << ", " << this_digit << " + " << other_digit
+              << " = " << result[i] << std::endl;
+    std::cout << std::endl;
+  }
+
+  if (result[max_size - 1] < oldest_digit_ &&
+      oldest_digit_ > 0) {  // TODO expect oldest_digit_ overflowing downto
+                            // INT_MIN, add leading zero pls
   }
 
   from_array(result, max_size);

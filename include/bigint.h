@@ -23,7 +23,7 @@ class bigint final {
   int sign() const noexcept;
   int size() const noexcept;
 
-  static int compare(bigint const &first, bigint const &second);
+  static int compare(bigint const &first, bigint const &second, size_t depth);
 
   static unsigned int max(unsigned int first, unsigned int second) noexcept;
   static unsigned int loword(unsigned int value);
