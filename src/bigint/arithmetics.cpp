@@ -165,6 +165,15 @@ bigint &bigint::operator+=(bigint const &other) & {
               << " = " << result[i] << std::endl;
   }
 
+  if (extra_multiplier == -1 && result[max_size - 1] == 0) {
+    --max_size;
+  }
+
+  if ((this_sign == -1 || other_sign == -1) && extra_multiplier == 1 &&
+      result[max_size - 1] == 1) {
+    --max_size;
+  }
+
   from_array(result, max_size);
 
   delete[] result;
