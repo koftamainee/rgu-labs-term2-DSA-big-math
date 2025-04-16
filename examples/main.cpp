@@ -76,4 +76,22 @@ int main() {
                "negative and abs(a) < abs(b)."
             << std::endl
             << std::endl;
+
+  a = -1000;
+  b = -1007;
+  std::cout << "In: " << a << " + " << b << std::endl;
+  result = a + b;
+  std::cout << "Out: " << result << std::endl;
+  std::cout << "Err. Shouldn't contain extra 0. Solve: remove extra 0. Same as "
+               "prev err, happens if b is "
+               "negative and abs(a) < abs(b)."
+            << std::endl
+            << std::endl;
+
+  std::cout << "======================" << std::endl;
+
+  int arr2[] = {-1, -1};
+  a.from_array(arr2, 2);
+  b = -1;
+  std::cout << a + b << std::endl;
 }
