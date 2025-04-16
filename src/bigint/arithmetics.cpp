@@ -112,7 +112,7 @@ bigint const bigint::operator--(int) & {
 bigint &bigint::operator+=(bigint const &other) & {
   unsigned int (*loword_hiword_function_pointers[])(unsigned int) = {loword,
                                                                      hiword};
-  unsigned int max_size = max(size(), other.size());
+  unsigned int max_size = max(size(), other.size()) + 1;
   int *result = new int[max_size];
   unsigned int extra_digit = 0;
 
@@ -121,8 +121,6 @@ bigint &bigint::operator+=(bigint const &other) & {
 
     auto this_digit = static_cast<bigint const *>(this)->operator[](i);
     auto other_digit = other[i];
-    // std::cout << "i: " << i << ", " << this_digit << " " << other_digit
-    //           << std::endl;
 
 #pragma unroll
     for (int j = 0; j < 2; ++j) {
@@ -130,21 +128,22 @@ bigint &bigint::operator+=(bigint const &other) & {
       auto other_half_digit = loword_hiword_function_pointers[j](other_digit);
 
       auto digits_sum = this_half_digit + other_half_digit + extra_digit;
-      extra_digit = ((this_digit == -1 || other_digit == -1) && j == 1)
-                        ? 0
-                        : digits_sum >> SHIFT;
-      std::cout << "extra: " << extra_digit << std::endl;
+      extra_digit = digits_sum >> SHIFT;
+      // if (extra_digit == 1 &&
+      //     (other_digit == INT_MIN || this_digit == INT_MIN)) {
+      //   extra_digit = -1;
+      // }
+      // std::cout << "extra: " << extra_digit << std::endl;
       result[i] += static_cast<int>((digits_sum & MASK) << (j * SHIFT));
     }
     std::cout << "i: " << i << ", " << this_digit << " + " << other_digit
               << " = " << result[i] << std::endl;
-    std::cout << std::endl;
   }
 
-  if (result[max_size - 1] < oldest_digit_ &&
-      oldest_digit_ > 0) {  // TODO expect oldest_digit_ overflowing downto
-                            // INT_MIN, add leading zero pls
-  }
+  // if (result[max_size - 1] < oldest_digit_ &&
+  //     oldest_digit_ > 0) {  // TODO expect oldest_digit_ overflowing downto
+  //                           // INT_MIN, add leading zero pls
+  // }
 
   from_array(result, max_size);
 

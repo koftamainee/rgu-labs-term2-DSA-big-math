@@ -4,6 +4,8 @@
 #include <iostream>
 #include <optional>
 
+#define unsafe
+
 #include "cstring.h"
 
 class bigint final {
@@ -14,12 +16,13 @@ class bigint final {
   int oldest_digit_;
   int *other_digits_;
 
-  void cleanup();
+  unsafe void cleanup();
   void clone(bigint const &other);
   void move(bigint &&other);
 
   unsigned int operator[](std::size_t index) const noexcept;
   int &operator[](std::size_t index);
+
   int sign() const noexcept;
   int size() const noexcept;
 
@@ -29,11 +32,6 @@ class bigint final {
   static unsigned int loword(unsigned int value);
   static unsigned int hiword(unsigned int value);
 
-  bigint &from_array(int const *digits, std::size_t size);
-
-  bigint &from_string(cstd::string const &str, std::size_t base);
-  cstd::string to_string();
-
  public:
   bigint() noexcept;
   bigint(char const *value, std::size_t base = 10);
@@ -42,6 +40,11 @@ class bigint final {
   bigint(bigint const &other);
   bigint(bigint &&other) noexcept;
   ~bigint() noexcept;
+
+  bigint &from_array(int const *digits, std::size_t size);
+
+  bigint &from_string(cstd::string const &str, std::size_t base);
+  cstd::string to_string();
 
   std::optional<int> to_int() noexcept;
 
