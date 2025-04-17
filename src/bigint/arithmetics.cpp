@@ -23,7 +23,7 @@ bigint operator-(bigint const &first, bigint const &second) {
 
 bigint &bigint::operator++() & {
   if (sign() == -1) {
-    return (--negate()).negate();
+    return *this += 1;
   }
 
   auto const digits_count = size();
@@ -67,7 +67,7 @@ bigint const bigint::operator++(int) & {
 
 bigint &bigint::operator--() & {
   if (sign() == -1) {
-    return (++negate()).negate();
+    return *this += -1;
   }
   if (sign() == 0) {
     oldest_digit_ = -1;
@@ -112,17 +112,17 @@ bigint const bigint::operator--(int) & {
 bigint &bigint::operator+=(bigint const &other) & {
   unsigned int (*loword_hiword_function_pointers[])(unsigned int) = {loword,
                                                                      hiword};
-  int extra_multiplier = 0;
+  int result_sign = 0;
   int this_sign = sign();
   int other_sign = other.sign();
 
   if (this_sign == other_sign) {
-    extra_multiplier = this_sign;
+    result_sign = this_sign;
   } else {
     if (this_sign == -1) {
-      extra_multiplier = ((*this).abs() > other) ? -1 : 1;
+      result_sign = ((*this).abs() > other) ? -1 : 1;
     } else {
-      extra_multiplier = ((*this) < other.abs()) ? -1 : 1;
+      result_sign = ((*this) < other.abs()) ? -1 : 1;
     }
   }
 
@@ -143,33 +143,23 @@ bigint &bigint::operator+=(bigint const &other) & {
 
       if (i == max_size - 1) {
         if (this_digit == 0 && other_digit == 0 && extra_digit != 0) {
-          result[i] = extra_multiplier;
-          std::cout << "Force push " << extra_multiplier << "to result[i]"
-                    << std::endl;
+          result[i] = result_sign;
           break;
         }
       }
 
-      auto digits_sum = this_half_digit + other_half_digit + extra_digit;
-      std::cout << "extra: " << (digits_sum >> SHIFT) << " * "
-                << extra_multiplier << std::endl;
+      unsigned int digits_sum =
+          this_half_digit + other_half_digit + extra_digit;
       extra_digit = (digits_sum >> SHIFT);
-
-      // if (extra_digit == 1 &&
-      //     (other_digit == INT_MIN || this_digit == INT_MIN)) {
-      //   extra_digit = -1;
-      // }
       result[i] += static_cast<int>((digits_sum & MASK) << (j * SHIFT));
     }
-    std::cout << "i: " << i << ", " << this_digit << " + " << other_digit
-              << " = " << result[i] << std::endl;
   }
 
-  if (extra_multiplier == -1 && result[max_size - 1] == 0) {
+  if (result_sign == -1 && result[max_size - 1] == 0) {
     --max_size;
   }
 
-  if ((this_sign == -1 || other_sign == -1) && extra_multiplier == 1 &&
+  if ((this_sign == -1 || other_sign == -1) && result_sign == 1 &&
       result[max_size - 1] == 1) {
     --max_size;
   }
