@@ -1,6 +1,7 @@
 #include <strings.h>
 
 #include <cctype>
+#include <cstdio>
 #include <cstring>
 #include <stdexcept>
 
@@ -97,7 +98,7 @@ bigint &bigint::from_string(cstd::string const &str, std::size_t base) {
 
 cstd::string bigint::to_string() {}
 
-bigint &bigint::from_array(int const *digits, std::size_t size) {
+void bigint::remove_insignificant_numbers(int const *digits, std::size_t size) {
   if (digits == nullptr) {
     throw std::invalid_argument(
         "pointer to digits array can't be EQ to nullptr");
@@ -107,17 +108,20 @@ bigint &bigint::from_array(int const *digits, std::size_t size) {
     throw std::invalid_argument("Digits count can't be EQ to 0");
   }
 
+  while (size != 1 && ((digits[size - 1] == 0 && digits[size - 2] >= 0) ||
+                       (digits[size - 1] == -1 && digits[size - 2] < 0))) {
+    --size;
+  }
+}
+
+bigint &bigint::from_array(int const *digits, std::size_t size) {
+  remove_insignificant_numbers(digits, size);
   cleanup();
 
   if (size == 1) {
     oldest_digit_ = digits[0];
 
     return *this;
-  }
-
-  while (size != 1 && ((digits[size - 1] == 0 && digits[size - 2] >= 0) ||
-                       (digits[size - 1] == -1 && digits[size - 2] < 0))) {
-    --size;
   }
 
   *(other_digits_ = new int[size]) = static_cast<int>(size);

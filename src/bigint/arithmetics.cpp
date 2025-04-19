@@ -17,10 +17,6 @@ bigint &bigint::negate() & {
   return (sign() == 1) ? (bit_inverse() += 1) : ((*this) += -1).bit_inverse();
 }
 
-bigint operator-(bigint const &first, bigint const &second) {
-  return first + (-second);
-}
-
 bigint &bigint::operator++() & {
   if (sign() == -1) {
     return *this += 1;
@@ -165,7 +161,6 @@ bigint &bigint::operator+=(bigint const &other) & {
   }
 
   from_array(result, max_size);
-
   delete[] result;
 
   return *this;
@@ -178,9 +173,15 @@ bigint operator+(bigint const &first, bigint const &second) {
 
 bigint &bigint::operator-=(bigint const &other) & { return *this += (-other); }
 
+bigint operator-(bigint const &first, bigint const &second) {
+  return first + (-second);
+}
+
 bigint &bigint::operator*=(bigint const &other) & {}
 
 bigint operator*(bigint const &first, bigint const &second) {}
+
+division_result division(bigint const &first, bigint const &second) {}
 
 bigint &bigint::operator/=(bigint const &other) & {}
 

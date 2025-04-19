@@ -1,3 +1,5 @@
+#include <cstring>
+
 #include "bigint.h"
 
 bigint bigint::operator~() const {
@@ -65,16 +67,109 @@ bigint operator^(bigint const &first, bigint const &second) {
   return copy ^= second;
 }
 
-bigint &bigint::operator<<=(size_t index) & {}
+bigint &bigint::operator<<=(size_t shift) & {
+  if (shift == 0 || sign() == 0) {
+    return *this;
+  }
 
-bigint bigint::operator<<(size_t index) {
-  bigint copy = *this;
-  return copy <<= index;
+  int const bits_per_digit = sizeof(int) << 3;
+  int const zeros_to_add_count = static_cast<int>(shift / bits_per_digit);
+  shift &= bits_per_digit - 1;
+
+  int bits_from_previous_digit = 0;
+  int bits_for_next_digit = 0;
+  auto const digits_count = size();
+
+  if (shift != 0) {
+    const int mask = (1 << shift) - 1;
+    for (int i = 0; i < digits_count; ++i) {
+      bits_for_next_digit =
+          (this->operator[](i) >> (bits_per_digit - shift)) & mask;
+      (this->operator[](i) <<= static_cast<int>(shift)) |=
+          bits_from_previous_digit;
+      bits_from_previous_digit = bits_for_next_digit;
+    }
+  }
+
+  int numbers_to_add_after_shift_overflows =
+      (bits_from_previous_digit != 0) ? 1 : 0;
+
+  size_t new_array_size =
+      digits_count + zeros_to_add_count + numbers_to_add_after_shift_overflows;
+  if (new_array_size > digits_count) {
+    auto *new_array = new int[new_array_size];
+
+    std::memcpy(new_array + zeros_to_add_count, other_digits_ + 1,
+                (digits_count - 1) * sizeof(int));
+    new_array[new_array_size - 1 - numbers_to_add_after_shift_overflows] =
+        oldest_digit_;
+    if (numbers_to_add_after_shift_overflows == 1) {
+      new_array[new_array_size - 1] = bits_from_previous_digit;
+    }
+    std::memset(new_array, 0, zeros_to_add_count * sizeof(int));
+
+    from_array(new_array, new_array_size);
+
+    delete[] new_array;
+  }
+
+  return *this;
 }
 
-bigint &bigint::operator>>=(size_t index) & {}
-
-bigint bigint::operator>>(size_t index) {
+bigint bigint::operator<<(size_t shift) {
   bigint copy = *this;
-  return copy >>= index;
+  return copy <<= shift;
+}
+
+bigint &bigint::operator>>=(size_t shift) & {
+  if (shift == 0 || sign() == 0) {
+    return *this;
+  }
+
+  int const bits_per_digit = sizeof(int) << 3;
+  int const digits_to_remove = static_cast<int>(shift / bits_per_digit);
+  shift &= bits_per_digit - 1;
+
+  if (digits_to_remove >= size()) {
+    *this = 0;
+    return *this;
+  }
+
+  int bits_from_previous_digit = 0;
+  int bits_for_next_digit = 0;
+  auto const digits_count = size();
+
+  if (shift != 0) {
+    const int mask = (1 << shift) - 1;
+    for (int i = digits_count - 1; i >= 0; --i) {
+      bits_for_next_digit = (this->operator[](i) & mask)
+                            << (bits_per_digit - shift);
+      (this->operator[](i) >>= static_cast<int>(shift)) |=
+          bits_from_previous_digit;
+      bits_from_previous_digit = bits_for_next_digit;
+    }
+  }
+
+  size_t new_array_size = digits_count - digits_to_remove;
+  if (new_array_size <= 0) {
+    *this = 0;
+    return *this;
+  }
+
+  if (digits_to_remove > 0) {
+    auto *new_array = new int[new_array_size];
+    std::memcpy(new_array, other_digits_ + 1 + digits_to_remove,
+                (new_array_size - 1) * sizeof(int));
+    new_array[new_array_size - 1] = oldest_digit_;
+
+    from_array(new_array, new_array_size);
+    delete[] new_array;
+  }
+
+  return *this;
+}
+
+bigint bigint::operator>>(size_t shift) {
+  bigint copy = *this;
+  return copy >>= shift;
 }

@@ -1,12 +1,15 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 #include <iostream>
 #include <optional>
 
-#define unsafe
-
 #include "cstring.h"
+
+class division_result {
+  // TODO
+};
 
 class bigint final {
  private:
@@ -16,7 +19,7 @@ class bigint final {
   int oldest_digit_;
   int *other_digits_;
 
-  unsafe void cleanup();
+  void cleanup();
   void clone(bigint const &other);
   void move(bigint &&other);
 
@@ -40,6 +43,8 @@ class bigint final {
   bigint(bigint const &other);
   bigint(bigint &&other) noexcept;
   ~bigint() noexcept;
+
+  static void remove_insignificant_numbers(int const *digits, std::size_t size);
 
   bigint &from_array(int const *digits, std::size_t size);
 
@@ -68,6 +73,8 @@ class bigint final {
 
   bigint &operator*=(bigint const &other) &;
   friend bigint operator*(bigint const &first, bigint const &second);
+
+  friend division_result division(bigint const &first, bigint const &second);
 
   bigint &operator/=(bigint const &other) &;
   friend bigint operator/(bigint const &first, bigint const &second);
@@ -98,11 +105,11 @@ class bigint final {
   bigint &operator^=(bigint const &other) &;
   friend bigint operator^(bigint const &first, bigint const &second);
 
-  bigint &operator<<=(size_t index) &;
-  bigint operator<<(size_t index);
+  bigint &operator<<=(size_t shift) &;
+  bigint operator<<(size_t shift);
 
-  bigint &operator>>=(size_t index) &;
-  bigint operator>>(size_t index);
+  bigint &operator>>=(size_t shift) &;
+  bigint operator>>(size_t shift);
 
   friend std::ostream &operator<<(std::ostream &out,
                                   bigint const &num) noexcept;

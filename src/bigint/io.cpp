@@ -4,8 +4,18 @@
 #include "cstring.h"
 
 std::ostream &operator<<(std::ostream &out, bigint const &num) noexcept {
+  auto const digits_count = num.size();
+  if (digits_count > 1) {
+    out << "[";
+  }
   for (int i = 0; i < num.size(); ++i) {
-    out << const_cast<bigint &>(num)[i] << " ";
+    out << const_cast<bigint &>(num)[i];
+    if (i != num.size() - 1) {
+      out << ", ";
+    }
+  }
+  if (digits_count > 1) {
+    out << "]";
   }
 
   return out;
