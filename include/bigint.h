@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstddef>
-#include <cstdint>
 #include <iostream>
 #include <optional>
 
@@ -28,12 +27,20 @@ class bigint final {
 
   int sign() const noexcept;
   int size() const noexcept;
+  void remove_leading_zeros();
 
   static int compare(bigint const &first, bigint const &second, size_t depth);
 
   static unsigned int max(unsigned int first, unsigned int second) noexcept;
   static unsigned int loword(unsigned int value);
   static unsigned int hiword(unsigned int value);
+
+  static void accumulate_multiplication(
+      bigint &result, unsigned int words_multiplication_result_digits[3],
+      unsigned int a, unsigned int b, size_t position_shift);
+
+  static void remove_insignificant_numbers(int const *digits,
+                                           std::size_t &size);
 
  public:
   bigint() noexcept;
@@ -43,8 +50,6 @@ class bigint final {
   bigint(bigint const &other);
   bigint(bigint &&other) noexcept;
   ~bigint() noexcept;
-
-  static void remove_insignificant_numbers(int const *digits, std::size_t size);
 
   bigint &from_array(int const *digits, std::size_t size);
 

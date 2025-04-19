@@ -1,4 +1,6 @@
 #include <climits>
+#include <cstddef>
+#include <cstdint>
 #include <cstring>
 
 #include "bigint.h"
@@ -177,9 +179,92 @@ bigint operator-(bigint const &first, bigint const &second) {
   return first + (-second);
 }
 
-bigint &bigint::operator*=(bigint const &other) & {}
+void bigint::accumulate_multiplication(
+    bigint &result, unsigned int words_multiplication_result_digits[3],
+    unsigned int a, unsigned int b, size_t position_shift) {
+  auto product = static_cast<uint64_t>(a) * static_cast<unsigned long long>(b);
+  words_multiplication_result_digits[0] =
+      static_cast<uint32_t>(product & 0xFFFFFFFF);
+  words_multiplication_result_digits[1] = static_cast<uint32_t>(product >> 32);
 
-bigint operator*(bigint const &first, bigint const &second) {}
+  bigint temp(reinterpret_cast<int *>(words_multiplication_result_digits), 3);
+  temp <<= position_shift;
+
+  result += temp;
+}
+
+bigint &bigint::operator*=(bigint const &other) & {
+  if (this->sign() == 0 || other.sign() == 0) {
+    *this = 0;
+    return *this;
+  }
+  if (other == 1) {
+    return *this;
+  }
+  if (*this == 1) {
+    return *this = other;
+  }
+  if (other == -1) {
+    return this->negate();
+  }
+  if (*this == -1) {
+    return *this = -other;
+  }
+
+  if (this->sign() == -1 && other.sign() == -1) {
+    return this->negate() *= -other;
+  }
+
+  if (other.sign() == -1) {
+    return (*this *= -other).negate();
+  }
+  if (this->sign() == -1) {
+    return (this->negate() *= other).negate();
+  }
+
+  unsigned int words_multiplication_result_digits[3] = {0};
+  int digit = 0;
+  unsigned int words_multiplication_result_digit = 0;
+  auto this_size = size();
+  auto other_size = other.size();
+  bigint const *first = this;
+
+  bigint result = 0;
+
+  for (int i = 0; i < this_size; ++i) {
+    unsigned int this_digit = first->operator[](i);
+    unsigned int this_digit_loword = loword(this_digit);
+    unsigned int this_digit_hiword = hiword(this_digit);
+
+    for (int j = 0; j < other_size; ++j) {
+      unsigned int other_digit = other[j];
+      unsigned int other_digit_loword = loword(other_digit);
+      unsigned int other_digit_hiword = hiword(other_digit);
+
+      accumulate_multiplication(result, words_multiplication_result_digits,
+                                this_digit_loword, other_digit_loword,
+                                (static_cast<long>(i + j)) * 32);
+
+      accumulate_multiplication(result, words_multiplication_result_digits,
+                                this_digit_loword, other_digit_hiword,
+                                ((i + j) * 32) + 16);
+
+      accumulate_multiplication(result, words_multiplication_result_digits,
+                                this_digit_hiword, other_digit_loword,
+                                ((i + j) * 32) + 16);
+
+      accumulate_multiplication(result, words_multiplication_result_digits,
+                                this_digit_hiword, other_digit_hiword,
+                                static_cast<size_t>(i + j + 1) * 32);
+    }
+  }
+  return *this = std::move(result);
+}
+
+bigint operator*(bigint const &first, bigint const &second) {
+  bigint copy = first;
+  return copy *= second;
+}
 
 division_result division(bigint const &first, bigint const &second) {}
 
