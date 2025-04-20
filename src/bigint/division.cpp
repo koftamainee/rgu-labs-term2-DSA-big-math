@@ -120,7 +120,15 @@ bigint::division_result bigint::division(bigint const &divident,
     std::cout << "shifted divisor after " << shifted_divisor << std::endl;
     std::cout << "shift: " << shift << std::endl;
 
+    if (shift == 0) {
+      break;
+    }
+
+    std::cout << "remainder - shifted_divisor: " << remainder << " - "
+              << shifted_divisor << " = ";
     remainder -= shifted_divisor;
+    std::cout << remainder << std::endl;
+
     quotient += (bigint(1) << shift);
     std::cout << "END. quotient: " << quotient << ", remainder: " << remainder
               << std::endl;

@@ -110,6 +110,7 @@ bigint const bigint::operator--(int) & {
 bigint &bigint::operator+=(bigint const &other) & {
   unsigned int (*loword_hiword_function_pointers[])(unsigned int) = {loword,
                                                                      hiword};
+
   int result_sign = 0;
   int this_sign = sign();
   int other_sign = other.sign();
