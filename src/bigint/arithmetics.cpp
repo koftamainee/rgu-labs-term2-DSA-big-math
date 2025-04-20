@@ -266,12 +266,18 @@ bigint operator*(bigint const &first, bigint const &second) {
   return copy *= second;
 }
 
-division_result division(bigint const &first, bigint const &second) {}
+bigint &bigint::operator/=(bigint const &other) & {
+  return *this = std::move(division(*this, other).quotient());
+}
 
-bigint &bigint::operator/=(bigint const &other) & {}
+bigint operator/(bigint const &first, bigint const &second) {
+  return bigint::division(first, second).quotient();
+}
 
-bigint operator/(bigint const &first, bigint const &second) {}
+bigint &bigint::operator%=(bigint const &other) & {
+  return *this = std::move(division(*this, other).remainder());
+}
 
-bigint &bigint::operator%=(bigint const &other) & {}
-
-bigint operator%(bigint const &first, bigint const &second) {}
+bigint operator%(bigint const &first, bigint const &second) {
+  return bigint::division(first, second).remainder();
+}

@@ -23,7 +23,7 @@ bigint::bigint(bigint &&other) noexcept { move(std::move(other)); }
 
 bigint::~bigint() noexcept { cleanup(); }
 
-std::optional<int> bigint::to_int() noexcept {
+std::optional<int> bigint::to_int() const noexcept {
   if (other_digits_ == nullptr) {
     return oldest_digit_;
   }

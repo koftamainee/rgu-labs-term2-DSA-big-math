@@ -92,12 +92,17 @@ string &string::operator+=(const string &other) {
 }
 
 void string::push_back(char c) {
-  if (size_ == capacity_) {
+  if (size_ + 1 == capacity_) {
     resize(capacity_ * STRING_GROWTH_FACTOR);
   }
   data_[size_++] = c;
+  data_[size_] = '\0';
 }
+
 void string::insert(char c, size_t index) {
+  if (index == size_) {
+    push_back(c);
+  }
   if (size_ == capacity_) {
     resize(capacity_ * STRING_GROWTH_FACTOR);
   }

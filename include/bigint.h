@@ -1,14 +1,13 @@
 #pragma once
 
 #include <cstddef>
+#include <exception>
 #include <iostream>
 #include <optional>
 
 #include "cstring.h"
 
-class division_result {
-  // TODO
-};
+class bigint;
 
 class bigint final {
  private:
@@ -21,6 +20,8 @@ class bigint final {
   void cleanup();
   void clone(bigint const &other);
   void move(bigint &&other);
+
+  int get_oldest_positive_bit_index() const noexcept;
 
   unsigned int operator[](std::size_t index) const noexcept;
   int &operator[](std::size_t index);
@@ -43,6 +44,33 @@ class bigint final {
                                            std::size_t &size);
 
  public:
+  class mathematical_uncertainty_exception : public std::exception {};
+  class zero_division_exception : public std::exception {};
+
+  class division_result final {
+   private:
+    bigint *quotient_;
+    bigint *remainder_;
+
+    void cleanup();
+    void clone(division_result const &other);
+    void move(division_result &&other) noexcept;
+
+   public:
+    division_result(bigint const &quotient, bigint const &remainder);
+    ~division_result() noexcept;
+    division_result(division_result const &other);
+    division_result &operator=(division_result const &other);
+    division_result(division_result &&other) noexcept;
+    division_result &operator=(division_result &&other) noexcept;
+
+    bigint quotient() const;
+    bigint remainder() const;
+  };
+
+  static division_result division(bigint const &divident,
+                                  bigint const &divisor);
+
   bigint() noexcept;
   bigint(char const *value, std::size_t base = 10);
   bigint(int const *value, std::size_t size);
@@ -54,9 +82,9 @@ class bigint final {
   bigint &from_array(int const *digits, std::size_t size);
 
   bigint &from_string(cstd::string const &str, std::size_t base);
-  cstd::string to_string();
+  cstd::string to_string() const;
 
-  std::optional<int> to_int() noexcept;
+  std::optional<int> to_int() const noexcept;
 
   bigint &operator=(bigint const &other);
   bigint &operator=(bigint &&other) noexcept;
@@ -78,8 +106,6 @@ class bigint final {
 
   bigint &operator*=(bigint const &other) &;
   friend bigint operator*(bigint const &first, bigint const &second);
-
-  friend division_result division(bigint const &first, bigint const &second);
 
   bigint &operator/=(bigint const &other) &;
   friend bigint operator/(bigint const &first, bigint const &second);
@@ -111,10 +137,10 @@ class bigint final {
   friend bigint operator^(bigint const &first, bigint const &second);
 
   bigint &operator<<=(size_t shift) &;
-  bigint operator<<(size_t shift);
+  bigint operator<<(size_t shift) const;
 
   bigint &operator>>=(size_t shift) &;
-  bigint operator>>(size_t shift);
+  bigint operator>>(size_t shift) const;
 
   friend std::ostream &operator<<(std::ostream &out,
                                   bigint const &num) noexcept;

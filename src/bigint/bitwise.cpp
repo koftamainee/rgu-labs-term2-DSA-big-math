@@ -138,7 +138,7 @@ bigint &bigint::operator<<=(size_t shift) & {
   return *this;
 }
 
-bigint bigint::operator<<(size_t shift) {
+bigint bigint::operator<<(size_t shift) const {
   bigint copy = *this;
   return copy <<= shift;
 }
@@ -191,7 +191,7 @@ bigint &bigint::operator>>=(size_t shift) & {
   return *this;
 }
 
-bigint bigint::operator>>(size_t shift) {
+bigint bigint::operator>>(size_t shift) const {
   bigint copy = *this;
   return copy >>= shift;
 }

@@ -159,15 +159,14 @@ bigint &bigint::from_array(int const *digits, std::size_t size) {
 }
 
 int bigint::get_oldest_positive_bit_index() const noexcept {
-  if (sign() == 0) {
-    return -1;
-  }
-
   int digits_count = size();
+
   int oldest_digit = oldest_digit_;
-
-  int index = ((digits_count - 1) * 8 * sizeof(int)) +
-              (31 - __builtin_clz(oldest_digit));  // assumes 32-bit int
-
-  return index;
+  int oldest_digit_oldest_bit_index = 0;
+  while (oldest_digit != 0) {
+    oldest_digit >>= 1;
+    ++oldest_digit_oldest_bit_index;
+  }
+  return oldest_digit_oldest_bit_index +
+         ((digits_count - 1) * static_cast<int>(sizeof(int) << 3)) - 1;
 }

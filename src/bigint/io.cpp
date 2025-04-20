@@ -19,6 +19,9 @@ std::ostream &operator<<(std::ostream &out, bigint const &num) noexcept {
   }
 
   return out;
+
+  // out << num.to_string();
+  // return out;
 }
 std::istream &operator>>(std::istream &in, bigint &num) noexcept {
   cstd::string input;
