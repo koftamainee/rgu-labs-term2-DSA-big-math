@@ -8,12 +8,16 @@ bigint bigint::operator~() const {
 }
 
 bigint &bigint::bit_inverse() & {
-  oldest_digit_ = ~oldest_digit_;
-  if (other_digits_ == nullptr) {
-    return *this;
-  }
-  for (int i = 1; i < size() - 1; ++i) {
-    other_digits_[i] = ~other_digits_[i];
+  // oldest_digit_ = ~oldest_digit_;
+  // if (other_digits_ == nullptr) {
+  //   return *this;
+  // }
+  // for (int i = 1; i < size() - 1; ++i) {
+  //   other_digits_[i] = ~other_digits_[i];
+  // }
+
+  for (int i = 0; i < size(); ++i) {
+    this->operator[](i) = ~this->operator[](i);
   }
 
   return *this;

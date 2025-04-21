@@ -1,3 +1,4 @@
+#include <cmath>
 #include <stdexcept>
 
 #include "bigint.h"
@@ -124,8 +125,6 @@ bigint::division_result bigint::division(bigint const &divident,
       break;
     }
 
-    std::cout << "remainder - shifted_divisor: " << remainder << " - "
-              << shifted_divisor << " = ";
     remainder -= shifted_divisor;
     std::cout << remainder << std::endl;
 

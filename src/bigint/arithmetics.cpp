@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <ostream>
 
 #include "bigint.h"
 
@@ -16,7 +17,31 @@ bigint &bigint::negate() & {
   if (sign() == 0) {
     return *this;
   }
-  return (sign() == 1) ? (bit_inverse() += 1) : ((*this) += -1).bit_inverse();
+  if (*this == INT_MIN) {
+    int arr[] = {INT_MIN, 0};
+    return this->from_array(arr, 2);
+  }
+  // return (sign() == 1) ? (bit_inverse() += 1) : ((*this) +=
+  // -1).bit_inverse();
+  if (sign() == 1) {
+    std::cout << "Negate: sign == 1, number: " << *this << std::endl;
+    bit_inverse();
+
+    std::cout << "Negate: inversed, number: " << *this << std::endl;
+    *this += 1;
+
+    std::cout << "Negate: +1, number: " << *this << std::endl;
+    return *this;
+  }
+
+  std::cout << "Negate: sign == -1, number: " << *this << std::endl;
+  *this += -1;
+
+  std::cout << "Negate: -1, number: " << *this << std::endl;
+  bit_inverse();
+
+  std::cout << "Negate: inversed, number: " << *this << std::endl;
+  return *this;
 }
 
 bigint &bigint::operator++() & {
@@ -111,6 +136,8 @@ bigint &bigint::operator+=(bigint const &other) & {
   unsigned int (*loword_hiword_function_pointers[])(unsigned int) = {loword,
                                                                      hiword};
 
+  // std::cout << "+=:" << *this << " " << other << std::endl;
+
   int result_sign = 0;
   int this_sign = sign();
   int other_sign = other.sign();
@@ -123,6 +150,10 @@ bigint &bigint::operator+=(bigint const &other) & {
     } else {
       result_sign = ((*this) < other.abs()) ? -1 : 1;
     }
+  }
+
+  if (this_sign != other_sign && this->abs() == other.abs()) {
+    return *this = 0;
   }
 
   unsigned int max_size = max(size(), other.size()) + 1;
