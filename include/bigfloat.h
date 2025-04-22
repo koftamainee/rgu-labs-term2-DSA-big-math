@@ -25,8 +25,6 @@ class bigfloat final {
   bigfloat(double num);
   ~bigfloat() noexcept = default;
 
-  // bigint operator bigint(double num); // TODO
-
   std::optional<double> to_double() noexcept;
 
   bigfloat &operator=(bigfloat const &other) = default;
@@ -111,8 +109,9 @@ bigfloat arccosec(bigfloat const &number,
                   bigfloat const &EPS = bigfloat::DEFAULT_EPS);
 
 bigfloat radical(bigfloat const &radicand, bigint const &index,
-                 bigfloat const &EPS);
-bigfloat sqrt(bigfloat const &radicand, bigfloat const &EPS);
+                 bigfloat const &EPS = bigfloat::DEFAULT_EPS);
+bigfloat sqrt(bigfloat const &radicand,
+              bigfloat const &EPS = bigfloat::DEFAULT_EPS);
 
 bigfloat log2(bigfloat const &number,
               bigfloat const &EPS = bigfloat::DEFAULT_EPS);

@@ -1,5 +1,4 @@
 #include <cmath>
-#include <stdexcept>
 
 #include "bigint.h"
 
@@ -58,32 +57,32 @@ void bigint::division_result::move(division_result &&other) noexcept {
   other.remainder_ = nullptr;
 }
 
-bigint::division_result bigint::division(bigint const &divident,
+bigint::division_result bigint::division(bigint const &dividend,
                                          bigint const &divisor) {
-  int divident_sign = divident.sign();
+  int dividend_sign = dividend.sign();
   int divisor_sign = divisor.sign();
 
   if (divisor_sign == 0) {
-    if (divident_sign == 0) {
+    if (dividend_sign == 0) {
       throw mathematical_uncertainty_exception();
     }
     throw zero_division_exception();
   }
 
-  if (divident_sign == 0) {
+  if (dividend_sign == 0) {
     return {0, 0};
   }
 
-  if (divident_sign == -1 || divisor_sign == -1) {
-    bigint abs_divident = divident.abs();
+  if (dividend_sign == -1 || divisor_sign == -1) {
+    bigint abs_dividend = dividend.abs();
     bigint abs_divisor = divisor.abs();
 
-    division_result positive_result = division(abs_divident, abs_divisor);
+    division_result positive_result = division(abs_dividend, abs_divisor);
 
-    if (divident_sign == -1 && divisor_sign == -1) {
+    if (dividend_sign == -1 && divisor_sign == -1) {
       return {positive_result.quotient(), -positive_result.remainder()};
     }
-    if (divident_sign == -1) {
+    if (dividend_sign == -1) {
       if (positive_result.remainder() == 0) {
         return {-positive_result.quotient(), 0};
       }
@@ -93,45 +92,49 @@ bigint::division_result bigint::division(bigint const &divident,
     return {-positive_result.quotient(), positive_result.remainder()};
   }
 
-  if (divident < divisor) {
-    return {0, divident};
+  if (dividend < divisor) {
+    return {0, dividend};
   }
 
   bigint quotient = 0;
-  bigint remainder = divident;
+  bigint remainder = dividend;
   int divisor_oldest_bit_index = divisor.get_oldest_positive_bit_index();
 
   while (remainder >= divisor) {
     int remainder_oldest_bit_index = remainder.get_oldest_positive_bit_index();
     size_t shift = remainder_oldest_bit_index - divisor_oldest_bit_index;
-    std::cout << "remainder - divisor: " << remainder_oldest_bit_index << " - "
-              << divisor_oldest_bit_index << " = " << shift << std::endl;
+    // std::cout << "remainder - divisor: " << remainder_oldest_bit_index << "
+    // -
+    // "
+    // << divisor_oldest_bit_index << " = " << shift << std::endl;
     bigint shifted_divisor = divisor << shift;
-    bigint old_shifted_divisor = shifted_divisor;
+    bigint shifted_divisor_copy = shifted_divisor;
 
-    std::cout << "remainder:" << remainder << std::endl;
+    // std::cout << "remainder:" << remainder << std::endl;
 
-    std::cout << "shifted divisor before " << shifted_divisor << std::endl;
+    // std::cout << "shifted divisor before " << shifted_divisor << std::endl;
 
     if (shifted_divisor > remainder) {
       shifted_divisor >>= 1;
       shift--;
+      // shifted_divisor_copy <<= shift;
+      // shifted_divisor = shifted_divisor_copy;
     }
 
-    std::cout << "shifted divisor after " << shifted_divisor << std::endl;
-    std::cout << "shift: " << shift << std::endl;
+    // std::cout << "shifted divisor after " << shifted_divisor << std::endl;
+    // std::cout << "shift: " << shift << std::endl;
 
-    if (shift == 0) {
-      break;
-    }
+    // std::cout << "remainder - shifted_divisor = " << remainder << " + "
+    // << shifted_divisor << " = ";
 
     remainder -= shifted_divisor;
-    std::cout << remainder << std::endl;
+    // std::cout << remainder << std::endl;
 
     quotient += (bigint(1) << shift);
-    std::cout << "END. quotient: " << quotient << ", remainder: " << remainder
-              << std::endl;
-    getchar();
+    // std::cout << "END. quotient: " << quotient << ", remainder: " <<
+    // remainder
+    // << std::endl;
+    // getchar();
   }
 
   return {quotient, remainder};

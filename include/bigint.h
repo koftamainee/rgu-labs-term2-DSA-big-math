@@ -17,6 +17,9 @@ class bigint final {
   int oldest_digit_;
   int *other_digits_;
 
+  bigint &_raw_increment();
+  bigint &_raw_decrement();
+
   void cleanup();
   void clone(bigint const &other);
   void move(bigint &&other);
@@ -68,7 +71,7 @@ class bigint final {
     bigint remainder() const;
   };
 
-  static division_result division(bigint const &divident,
+  static division_result division(bigint const &dividend,
                                   bigint const &divisor);
 
   bigint() noexcept;
@@ -82,7 +85,7 @@ class bigint final {
   bigint &from_array(int const *digits, std::size_t size);
 
   bigint &from_string(cstd::string const &str, std::size_t base);
-  cstd::string to_string() const;
+  std::string to_string() const;
 
   std::optional<int> to_int() const noexcept;
 

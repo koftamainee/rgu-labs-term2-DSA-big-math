@@ -11,36 +11,39 @@ bigint bigint::operator-() const {
   return negative.negate();
 }
 
-bigint bigint::abs() const { return sign() < 0 ? -*this : *this; }
+bigint bigint::abs() const {
+  // std::cout << "abs called on number " << *this << std::endl;
+  return sign() < 0 ? -*this : *this;
+  // return *this;
+}
 
 bigint &bigint::negate() & {
+  // std::cout << std::endl << "negate called on number " << *this << std::endl;
   if (sign() == 0) {
     return *this;
   }
-  if (*this == INT_MIN) {
-    int arr[] = {INT_MIN, 0};
-    return this->from_array(arr, 2);
-  }
-  // return (sign() == 1) ? (bit_inverse() += 1) : ((*this) +=
-  // -1).bit_inverse();
+  // if (*this == INT_MIN) {
+  //   int arr[] = {INT_MIN, 0};
+  //   return this->from_array(arr, 2);
+  // }
   if (sign() == 1) {
-    std::cout << "Negate: sign == 1, number: " << *this << std::endl;
+    // std::cout << "Negate+ sign == 1, number: " << *this << std::endl;
     bit_inverse();
 
-    std::cout << "Negate: inversed, number: " << *this << std::endl;
-    *this += 1;
+    // std::cout << "Negate: inversed, number: " << *this << std::endl;
+    _raw_increment();
 
-    std::cout << "Negate: +1, number: " << *this << std::endl;
+    // std::cout << "Negate finished, number: " << *this << std::endl;
     return *this;
   }
 
-  std::cout << "Negate: sign == -1, number: " << *this << std::endl;
-  *this += -1;
+  // std::cout << "Negate: sign == -1, number: " << *this << std::endl;
+  _raw_decrement();
 
-  std::cout << "Negate: -1, number: " << *this << std::endl;
+  // std::cout << "Negate: -1, number: " << *this << std::endl;
   bit_inverse();
 
-  std::cout << "Negate: inversed, number: " << *this << std::endl;
+  // std::cout << "Negate finished, number: " << *this << std::endl;
   return *this;
 }
 
@@ -49,37 +52,7 @@ bigint &bigint::operator++() & {
     return *this += 1;
   }
 
-  auto const digits_count = size();
-
-  for (int i = 0; i < digits_count - 1; ++i) {
-    if (++((*this)[i]) != 0) {  // if not overflow
-      return *this;
-    }
-  }
-
-  if (++oldest_digit_ != INT_MIN) {
-    return *this;
-  }
-
-  if (other_digits_ == nullptr) {
-    other_digits_ = new int[2];
-    other_digits_[0] = 2;
-    other_digits_[1] = oldest_digit_;
-    oldest_digit_ = 0;
-
-    return *this;
-  }
-
-  int *new_array = new int[digits_count + 1];
-  memcpy(new_array, other_digits_, sizeof(int) * size());
-  delete[] other_digits_;
-  other_digits_ = new_array;
-  new_array = nullptr;
-
-  (*this)[digits_count] = oldest_digit_;
-  ++(*this).other_digits_[0];
-  oldest_digit_ = 0;
-  return *this;
+  return _raw_increment();
 }
 
 bigint const bigint::operator++(int) & {
@@ -92,38 +65,8 @@ bigint &bigint::operator--() & {
   if (sign() == -1) {
     return *this += -1;
   }
-  if (sign() == 0) {
-    oldest_digit_ = -1;
-    return *this;
-  }
-  auto const digits_count = size();
-  for (int i = 0; i < digits_count - 1; ++i) {
-    if (--((*this)[i]) != -1) {
-      return *this;
-    }
-  }
 
-  if (--oldest_digit_ != INT_MAX) {
-    return *this;
-  }
-
-  if (other_digits_ == nullptr) {
-    other_digits_ = new int[2];
-    other_digits_[0] = 2;
-    other_digits_[1] = oldest_digit_;
-    oldest_digit_ = -1;
-    return *this;
-  }
-
-  int *new_array = new int[digits_count + 1];
-  memcpy(new_array, other_digits_, sizeof(int) * digits_count);
-  delete[] other_digits_;
-  other_digits_ = new_array;
-
-  (*this)[digits_count] = oldest_digit_;
-  --(*this).other_digits_[0];
-  oldest_digit_ = 0;
-  return *this;
+  return _raw_decrement();
 }
 
 bigint const bigint::operator--(int) & {
@@ -136,7 +79,10 @@ bigint &bigint::operator+=(bigint const &other) & {
   unsigned int (*loword_hiword_function_pointers[])(unsigned int) = {loword,
                                                                      hiword};
 
-  // std::cout << "+=:" << *this << " " << other << std::endl;
+  // std::cout << "+= called on numbers: " << *this << " += " << other
+  // << std::endl;
+
+  auto copy = *this;
 
   int result_sign = 0;
   int this_sign = sign();
@@ -196,6 +142,11 @@ bigint &bigint::operator+=(bigint const &other) & {
 
   from_array(result, max_size);
   delete[] result;
+
+  // std::cout << "result sign: " << result_sign << std::endl;
+
+  // std::cout << "+= finished, operation" << copy << " += " << other
+  // << ", result: " << *this << std::endl;
 
   return *this;
 }

@@ -96,17 +96,17 @@ bigint &bigint::from_string(cstd::string const &str, std::size_t base) {
   return *this;
 }
 
-cstd::string bigint::to_string() const {
+std::string bigint::to_string() const {
   if (*this == bigint(0)) {
     return {"0"};
   }
 
   bigint num = this->abs();
-  cstd::string result;
+  std::string result;
 
   while (num != bigint(0)) {
     division_result dr = division(num, 10);
-    int digit = '0' + dr.remainder().oldest_digit_;
+    int digit = '0' + dr.remainder().to_int().value_or(0);
     result.push_back(static_cast<char>(digit));
     num = dr.quotient();
   }

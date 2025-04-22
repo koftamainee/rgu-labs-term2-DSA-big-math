@@ -8,14 +8,6 @@ bigint bigint::operator~() const {
 }
 
 bigint &bigint::bit_inverse() & {
-  // oldest_digit_ = ~oldest_digit_;
-  // if (other_digits_ == nullptr) {
-  //   return *this;
-  // }
-  // for (int i = 1; i < size() - 1; ++i) {
-  //   other_digits_[i] = ~other_digits_[i];
-  // }
-
   for (int i = 0; i < size(); ++i) {
     this->operator[](i) = ~this->operator[](i);
   }
@@ -177,7 +169,7 @@ bigint &bigint::operator>>=(size_t shift) & {
   }
 
   size_t new_array_size = digits_count - digits_to_remove;
-  if (new_array_size <= 0) {
+  if (new_array_size == 0) {
     *this = 0;
     return *this;
   }
