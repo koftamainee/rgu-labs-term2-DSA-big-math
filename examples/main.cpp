@@ -7,13 +7,14 @@
 int main() {
   /* Negative remainder ???? should not happens
    * proper output does not works bc it ?? */
-  bigint a = INT_MAX;
+  bigint a = INT_MAX - 1;
   int coeff = INT_MAX;
-  a *= coeff;
+  // a *= coeff;
   std::cout << a << std::endl;
-  auto dr = bigint::division(a, 52);
+  auto dr = bigint::division(a, 2);
   std::cout << dr.quotient() << " " << dr.remainder() << std::endl;
-  std::cout << (dr.quotient() * 52) << std::endl;
+  std::cout << "result: " << (dr.quotient() * 2 + dr.remainder())
+            << ", source: " << a << std::endl;
 
   // /* Quotient became larger instead of smaller, mb bc prev problem, or bug in
   //  * right/left shift idk */

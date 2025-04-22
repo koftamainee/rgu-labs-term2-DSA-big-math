@@ -31,12 +31,12 @@ int bigint::compare(bigint const &first, bigint const &second, size_t depth) {
   //   return res > 0 ? -res : res;
   // }
 
-  if (first_size > second_size) {
-    return 1;
-  }
-  if (second_size > first_size) {
-    return -1;
-  }
+  // if (first_size > second_size) {
+  //   return 1;
+  // }
+  // if (second_size > first_size) {
+  //   return -1;
+  // }
   for (int i = first_size - 1; i >= 0; --i) {
     if (first[i] > second[i]) {
       return 1;
