@@ -1,3 +1,4 @@
+#include <bitset>
 #include <stdexcept>
 
 #include "bigint.h"

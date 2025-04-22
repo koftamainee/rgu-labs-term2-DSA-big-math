@@ -8,11 +8,13 @@ bigint &bigint::_raw_increment() {
 
   for (int i = 0; i < digits_count - 1; ++i) {
     if (++((*this)[i]) != 0) {  // if not overflow
+      remove_leading_zeros();
       return *this;
     }
   }
 
   if (++oldest_digit_ != INT_MIN) {
+    remove_leading_zeros();
     return *this;
   }
 
@@ -22,6 +24,7 @@ bigint &bigint::_raw_increment() {
     other_digits_[1] = oldest_digit_;
     oldest_digit_ = 0;
 
+    remove_leading_zeros();
     return *this;
   }
 
@@ -34,6 +37,8 @@ bigint &bigint::_raw_increment() {
   (*this)[digits_count] = oldest_digit_;
   ++(*this).other_digits_[0];
   oldest_digit_ = 0;
+
+  remove_leading_zeros();
   return *this;
 }
 
@@ -45,11 +50,13 @@ bigint &bigint::_raw_decrement() {
   auto const digits_count = size();
   for (int i = 0; i < digits_count - 1; ++i) {
     if (--((*this)[i]) != -1) {
+      remove_leading_zeros();
       return *this;
     }
   }
 
   if (--oldest_digit_ != INT_MAX) {
+    remove_leading_zeros();
     return *this;
   }
 
@@ -58,6 +65,8 @@ bigint &bigint::_raw_decrement() {
     other_digits_[0] = 2;
     other_digits_[1] = oldest_digit_;
     oldest_digit_ = -1;
+
+    remove_leading_zeros();
     return *this;
   }
 
@@ -69,5 +78,7 @@ bigint &bigint::_raw_decrement() {
   (*this)[digits_count] = oldest_digit_;
   --(*this).other_digits_[0];
   oldest_digit_ = 0;
+
+  remove_leading_zeros();
   return *this;
 }

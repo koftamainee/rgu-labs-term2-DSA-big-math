@@ -14,7 +14,6 @@ bigint bigint::operator-() const {
 bigint bigint::abs() const {
   // std::cout << "abs called on number " << *this << std::endl;
   return sign() < 0 ? -*this : *this;
-  // return *this;
 }
 
 bigint &bigint::negate() & {
@@ -31,14 +30,16 @@ bigint &bigint::negate() & {
     bit_inverse();
 
     // std::cout << "Negate: inversed, number: " << *this << std::endl;
-    _raw_increment();
+    _raw_decrement();
+    // *this += -1;
 
     // std::cout << "Negate finished, number: " << *this << std::endl;
     return *this;
   }
 
   // std::cout << "Negate: sign == -1, number: " << *this << std::endl;
-  _raw_decrement();
+  _raw_increment();
+  // *this += 1;
 
   // std::cout << "Negate: -1, number: " << *this << std::endl;
   bit_inverse();
@@ -53,6 +54,7 @@ bigint &bigint::operator++() & {
   }
 
   return _raw_increment();
+  // return *this += 1;
 }
 
 bigint const bigint::operator++(int) & {
@@ -67,6 +69,8 @@ bigint &bigint::operator--() & {
   }
 
   return _raw_decrement();
+
+  // return *this += 1;
 }
 
 bigint const bigint::operator--(int) & {
@@ -80,7 +84,7 @@ bigint &bigint::operator+=(bigint const &other) & {
                                                                      hiword};
 
   // std::cout << "+= called on numbers: " << *this << " += " << other
-  // << std::endl;
+  //           << std::endl;
 
   auto copy = *this;
 
@@ -144,9 +148,9 @@ bigint &bigint::operator+=(bigint const &other) & {
   delete[] result;
 
   // std::cout << "result sign: " << result_sign << std::endl;
-
+  //
   // std::cout << "+= finished, operation" << copy << " += " << other
-  // << ", result: " << *this << std::endl;
+  //           << ", result: " << *this << std::endl;
 
   return *this;
 }

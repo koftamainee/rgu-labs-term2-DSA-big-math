@@ -103,10 +103,9 @@ bigint::division_result bigint::division(bigint const &dividend,
   while (remainder >= divisor) {
     int remainder_oldest_bit_index = remainder.get_oldest_positive_bit_index();
     size_t shift = remainder_oldest_bit_index - divisor_oldest_bit_index;
-    // std::cout << "remainder - divisor: " << remainder_oldest_bit_index << "
-    // -
+    // std::cout << "remainder - divisor: " << remainder_oldest_bit_index << " -
     // "
-    // << divisor_oldest_bit_index << " = " << shift << std::endl;
+    //           << divisor_oldest_bit_index << " = " << shift << std::endl;
     bigint shifted_divisor = divisor << shift;
     bigint shifted_divisor_copy = shifted_divisor;
 
@@ -117,17 +116,16 @@ bigint::division_result bigint::division(bigint const &dividend,
     if (shifted_divisor > remainder) {
       shifted_divisor >>= 1;
       shift--;
-      // shifted_divisor_copy <<= shift;
-      // shifted_divisor = shifted_divisor_copy;
     }
 
     // std::cout << "shifted divisor after " << shifted_divisor << std::endl;
     // std::cout << "shift: " << shift << std::endl;
 
-    // std::cout << "remainder - shifted_divisor = " << remainder << " + "
+    // std::cout << "remainder - shifted_divisor = " << remainder << " - "
     // << shifted_divisor << " = ";
 
-    remainder -= shifted_divisor;
+    shifted_divisor.negate();
+    remainder += shifted_divisor;
     // std::cout << remainder << std::endl;
 
     quotient += (bigint(1) << shift);

@@ -1,4 +1,4 @@
-#pragma once
+#pragma oncebigint
 
 #include <cstddef>
 #include <exception>

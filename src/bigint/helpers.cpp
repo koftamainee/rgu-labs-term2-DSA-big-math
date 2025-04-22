@@ -106,7 +106,8 @@ std::string bigint::to_string() const {
 
   while (num != bigint(0)) {
     division_result dr = division(num, 10);
-    int digit = '0' + dr.remainder().to_int().value_or(0);
+    int digit = '0' + dr.remainder().to_int().value();
+    std::cout << "digit: " << digit << std::endl;
     result.push_back(static_cast<char>(digit));
     num = dr.quotient();
   }
@@ -164,11 +165,6 @@ int bigint::get_oldest_positive_bit_index() const noexcept {
     return 0;
   }
 
-  // int oldest_digit =
-  //     oldest_digit_ != 0
-  //         ? oldest_digit_
-  //         : const_cast<bigint *>(this)->operator[](digits_count - 1);
-
   int oldest_digit = oldest_digit_;
 
   int oldest_digit_oldest_bit_index = 0;
@@ -178,4 +174,18 @@ int bigint::get_oldest_positive_bit_index() const noexcept {
   }
   return oldest_digit_oldest_bit_index +
          ((digits_count - 1) * static_cast<int>(sizeof(int) << 3)) - 1;
+}
+
+void bigint::remove_leading_zeros() {
+  size_t size = this->size();
+  while (size > 1 && (((*this)[size - 1] == 0 && (*this)[size - 2] >= 0) ||
+                      ((*this)[size - 1] == -1 && (*this)[size - 2] < 0))) {
+    --size;
+  }
+
+  if (this->size() != size) {
+    // std::memcpy(other_digits_ +)
+  }
+
+  // std::cout << "new size: " << this->size() << std::endl;
 }
