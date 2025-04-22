@@ -21,16 +21,12 @@ bigint &bigint::negate() & {
   if (sign() == 0) {
     return *this;
   }
-  // if (*this == INT_MIN) {
-  //   int arr[] = {INT_MIN, 0};
-  //   return this->from_array(arr, 2);
-  // }
   if (sign() == 1) {
     // std::cout << "Negate+ sign == 1, number: " << *this << std::endl;
     bit_inverse();
 
     // std::cout << "Negate: inversed, number: " << *this << std::endl;
-    _raw_decrement();
+    _raw_negative_increment();
     // *this += -1;
 
     // std::cout << "Negate finished, number: " << *this << std::endl;
@@ -38,7 +34,7 @@ bigint &bigint::negate() & {
   }
 
   // std::cout << "Negate: sign == -1, number: " << *this << std::endl;
-  _raw_increment();
+  _raw_positive_decrement();
   // *this += 1;
 
   // std::cout << "Negate: -1, number: " << *this << std::endl;
@@ -50,10 +46,11 @@ bigint &bigint::negate() & {
 
 bigint &bigint::operator++() & {
   if (sign() == -1) {
-    return *this += 1;
+    // return *this += 1;
+    return _raw_negative_increment();
   }
 
-  return _raw_increment();
+  return _raw_positive_increment();
   // return *this += 1;
 }
 
@@ -65,10 +62,11 @@ bigint const bigint::operator++(int) & {
 
 bigint &bigint::operator--() & {
   if (sign() == -1) {
-    return *this += -1;
+    // return *this += -1;
+    return _raw_negative_decrement();
   }
 
-  return _raw_decrement();
+  return _raw_positive_decrement();
 
   // return *this += 1;
 }

@@ -107,7 +107,6 @@ std::string bigint::to_string() const {
   while (num != bigint(0)) {
     division_result dr = division(num, 10);
     int digit = '0' + dr.remainder().to_int().value();
-    std::cout << "digit: " << digit << std::endl;
     result.push_back(static_cast<char>(digit));
     num = dr.quotient();
   }

@@ -17,8 +17,11 @@ class bigint final {
   int oldest_digit_;
   int *other_digits_;
 
-  bigint &_raw_increment();
-  bigint &_raw_decrement();
+  bigint &_raw_positive_increment();
+  bigint &_raw_positive_decrement();
+
+  bigint &_raw_negative_increment();
+  bigint &_raw_negative_decrement();
 
   void cleanup();
   void clone(bigint const &other);
