@@ -124,8 +124,8 @@ cstd::string bigint::to_string() const {
   return result;
 }
 
-void bigint::remove_insignificant_numbers(int const *digits,
-                                          std::size_t &size) {
+void bigint::remove_insignificant_numbers_from_digits_array(int const *digits,
+                                                            std::size_t &size) {
   if (digits == nullptr) {
     throw std::invalid_argument(
         "pointer to digits array can't be EQ to nullptr");
@@ -142,7 +142,7 @@ void bigint::remove_insignificant_numbers(int const *digits,
 }
 
 bigint &bigint::from_array(int const *digits, std::size_t size) {
-  remove_insignificant_numbers(digits, size);
+  remove_insignificant_numbers_from_digits_array(digits, size);
   cleanup();
 
   if (size == 1) {
