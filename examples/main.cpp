@@ -5,11 +5,13 @@
 #include "bigint.h"
 
 /* TODO:
- * 1. implement increment/decrement on negatives
- * 2. check division
+ * 1. FIX ++
+ * 2. implement increment/decrement on negatives
+ * 3. check division
  */
 
 /* Current Issues:
+ * += does not works in one case, check last code block
  * _raw_negative_increment and _raw_negative_decrement should be implemented w/o
  * positive versions
  */
@@ -37,6 +39,7 @@
 /* NOTE addition and negate
  * may not work with negative numbers, bc i didn't sure, that current version of
  * _raw_negative_increment and _raw_negative_decrement works properly
+ * UPDATE: negate likely works, but += doesn't :(
  */
 
 /* NOTE output in human-readble mode
@@ -66,13 +69,13 @@ int main() {
 
   // [2147483645, 1] / 3 == (1610612736, -536870915)
 
-  int arr[] = {2147483645, 1};
-  bigint a(arr, 2);
-  std::cout << "begin div\n";
-  auto dr = bigint::division(a, 3);
-  std::cout << a << std::endl;
-  std::cout << dr.quotient() << ", " << dr.remainder() << std::endl;
-  std::cout << (dr.quotient() * 3) + dr.remainder() << std::endl;
+  // int arr[] = {2147483645, 1};
+  // bigint a(arr, 2);
+  // std::cout << "begin div\n";
+  // auto dr = bigint::division(a, 3);
+  // std::cout << a << std::endl;
+  // std::cout << dr.quotient() << ", " << dr.remainder() << std::endl;
+  // std::cout << (dr.quotient() * 3) + dr.remainder() << std::endl;
 
   // /* Quotient became larger instead of smaller, mb bc prev problem, or bug in
   //  * right/left shift idk */
@@ -91,4 +94,12 @@ int main() {
   // bigint b = INT_MAX;
   // std::cout << --a << " " << ++a << std::endl;
   // std::cout << ++b << " " << --b << std::endl;
+
+  // += isn't working.... again
+  // [-1073741827, 0] - 1610612736 = [1610612733, 1]
+  int arr[] = {-1073741827, 0};
+  bigint a(arr, 2);
+  bigint b = 1610612736;
+  b.negate();
+  std::cout << a << " + " << b << " = " << a + b << std::endl;
 }

@@ -70,35 +70,40 @@ bigint &bigint::operator<<=(size_t shift) & {
     return *this;
   }
 
-  int const bits_per_digit = sizeof(int) << 3;
-  int const zeros_to_add_count = static_cast<int>(shift / bits_per_digit);
+  unsigned int const bits_per_digit = sizeof(int) << 3;
+  unsigned int const zeros_to_add_count =
+      static_cast<int>(shift / bits_per_digit);
   shift &= bits_per_digit - 1;
 
-  int bits_from_previous_digit = 0;
-  int bits_for_next_digit = 0;
+  unsigned int bits_from_previous_digit = 0;
+  unsigned int bits_for_next_digit = 0;
   auto const digits_count = size();
   auto const old_sign = sign();
 
   if (shift != 0) {
     const int mask = (1 << shift) - 1;
     for (int i = 0; i < digits_count; ++i) {
-      bits_for_next_digit =
-          (this->operator[](i) >> (bits_per_digit - shift)) & mask;
-      (this->operator[](i) <<= static_cast<int>(shift)) |=
-          bits_from_previous_digit;
+      bits_for_next_digit = (static_cast<bigint const *>(this)->operator[](i) >>
+                             (bits_per_digit - shift)) &
+                            mask;
+
+      unsigned int result = (this->operator[](i) << static_cast<int>(shift)) |
+                            bits_from_previous_digit;
+      this->operator[](i) = *reinterpret_cast<int *>(&result);
       bits_from_previous_digit = bits_for_next_digit;
     }
   }
 
-  int numbers_to_add_after_shift_overflows =
+  size_t numbers_to_add_after_shift_overflows =
       (bits_from_previous_digit != 0) ? 1 : 0;
 
-  auto oldest_digit_in_new_array = numbers_to_add_after_shift_overflows > 0
-                                       ? bits_from_previous_digit
-                                       : oldest_digit_;
+  unsigned int oldest_digit_in_new_array =
+      numbers_to_add_after_shift_overflows > 0 ? bits_from_previous_digit
+                                               : oldest_digit_;
 
-  int additional_oldest_zero_to_prevent_number_to_turn_from_positive_to_negative =
-      0;
+  size_t
+      additional_oldest_zero_to_prevent_number_to_turn_from_positive_to_negative =
+          0;
   if (old_sign >= 0 && oldest_digit_ < 0) {
     additional_oldest_zero_to_prevent_number_to_turn_from_positive_to_negative =
         1;
@@ -120,7 +125,7 @@ bigint &bigint::operator<<=(size_t shift) & {
       new_array
           [new_array_size - 1 -
            additional_oldest_zero_to_prevent_number_to_turn_from_positive_to_negative] =
-              bits_from_previous_digit;
+              *reinterpret_cast<int *>(&bits_from_previous_digit);
     }
     if (additional_oldest_zero_to_prevent_number_to_turn_from_positive_to_negative ==
         1) {

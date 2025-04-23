@@ -82,7 +82,7 @@ bigint &bigint::operator+=(bigint const &other) & {
                                                                      hiword};
 
   // std::cout << "+= called on numbers: " << *this << " += " << other
-  //           << std::endl;
+  // << std::endl;
 
   auto copy = *this;
 
