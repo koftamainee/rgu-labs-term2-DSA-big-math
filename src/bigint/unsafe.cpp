@@ -85,12 +85,14 @@ bigint &bigint::_raw_positive_decrement() {
 }
 
 bigint &bigint::_raw_negative_increment() {
-  // _raw_positive_increment();
-  throw std::runtime_error("not implemented");
+  throw std::runtime_error(
+      "_raw_negative_increment is not implemented");  // TODO
+  _raw_positive_increment();
   return *this;
 }
 bigint &bigint::_raw_negative_decrement() {
-  throw std::runtime_error("not implemented");
-  // _raw_positive_decrement();
+  throw std::runtime_error(
+      "_raw_negative_decrement is not implemented");  // TODO
+  _raw_positive_decrement();
   return *this;
 }

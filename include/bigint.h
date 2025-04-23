@@ -88,7 +88,7 @@ class bigint final {
   bigint &from_array(int const *digits, std::size_t size);
 
   bigint &from_string(cstd::string const &str, std::size_t base);
-  std::string to_string() const;
+  cstd::string to_string() const;
 
   std::optional<int> to_int() const noexcept;
 

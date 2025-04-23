@@ -66,13 +66,13 @@ int main() {
 
   // [2147483645, 1] / 3 == (1610612736, -536870915)
 
-  // int arr[] = {2147483645, 1};
-  // bigint a(arr, 2);
-  // std::cout << "begin div\n";
-  // auto dr = bigint::division(a, 3);
-  // std::cout << a << std::endl;
-  // std::cout << dr.quotient() << ", " << dr.remainder() << std::endl;
-  // std::cout << (dr.quotient() * 3) + dr.remainder() << std::endl;
+  int arr[] = {2147483645, 1};
+  bigint a(arr, 2);
+  std::cout << "begin div\n";
+  auto dr = bigint::division(a, 3);
+  std::cout << a << std::endl;
+  std::cout << dr.quotient() << ", " << dr.remainder() << std::endl;
+  std::cout << (dr.quotient() * 3) + dr.remainder() << std::endl;
 
   // /* Quotient became larger instead of smaller, mb bc prev problem, or bug in
   //  * right/left shift idk */
