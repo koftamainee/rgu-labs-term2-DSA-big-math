@@ -1,3 +1,5 @@
+#include <bitset>
+#include <climits>
 #include <cstring>
 
 #include "bigint.h"
@@ -131,6 +133,8 @@ bigint &bigint::operator<<=(size_t shift) & {
     delete[] new_array;
   }
 
+  remove_leading_zeros();
+
   return *this;
 }
 
@@ -140,7 +144,8 @@ bigint bigint::operator<<(size_t shift) const {
 }
 
 bigint &bigint::operator>>=(size_t shift) & {
-  if (shift == 0 || sign() == 0) {
+  int const this_sign = sign();
+  if (shift == 0 || this_sign == 0) {
     return *this;
   }
 
@@ -153,24 +158,32 @@ bigint &bigint::operator>>=(size_t shift) & {
     return *this;
   }
 
-  int bits_from_previous_digit = 0;
-  int bits_for_next_digit = 0;
+  unsigned int bits_from_previous_digit = 0;
+  unsigned int bits_for_next_digit = 0;
   auto const digits_count = size();
 
   if (shift != 0) {
-    const int mask = (1 << shift) - 1;
+    const unsigned int mask = (1 << shift) - 1;
     for (int i = digits_count - 1; i >= 0; --i) {
-      bits_for_next_digit = (this->operator[](i) & mask)
-                            << (bits_per_digit - shift);
-      (this->operator[](i) >>= static_cast<int>(shift)) |=
-          bits_from_previous_digit;
+      bits_for_next_digit =
+          (static_cast<bigint const *>(this)->operator[](i) & mask)
+          << (bits_per_digit - shift);
+      unsigned int result = (static_cast<bigint const *>(this)->operator[](i) >>
+                             static_cast<int>(shift)) |
+                            bits_from_previous_digit;
       bits_from_previous_digit = bits_for_next_digit;
+      this->operator[](i) = *reinterpret_cast<int *>(&result);
+      if (this_sign == -1) {
+        int const mask = INT_MIN >> (shift - 1);
+        this->operator[](i) |= mask;
+      }
     }
   }
 
   size_t new_array_size = digits_count - digits_to_remove;
   if (new_array_size == 0) {
     *this = 0;
+    remove_leading_zeros();
     return *this;
   }
 
@@ -184,6 +197,7 @@ bigint &bigint::operator>>=(size_t shift) & {
     delete[] new_array;
   }
 
+  remove_leading_zeros();
   return *this;
 }
 

@@ -5,14 +5,11 @@
 #include "bigint.h"
 
 /* TODO:
- * 1. fix probably incorrect bit shifts, right, then left
- * 2. implement increment/decrement on negatives
- * 3. check division
+ * 1. implement increment/decrement on negatives
+ * 2. check division
  */
 
 /* Current Issues:
- * Negative remainder on dividing very big numbers
- * Increments and decrements should not use +=
  * _raw_negative_increment and _raw_negative_decrement should be implemented w/o
  * positive versions
  */
@@ -20,6 +17,9 @@
 /* NOTE bit shifts:
  * Increments does not work properly, behavior of (x <<= a; x >>= a - 1) isn't
  * equals to (x <<= a - 1), but should, both of them are (probably?) incorrect
+ * UPDATE: fixed right shift for positive numbers, but needed to add additional
+ * logic to handle negatives
+ * UPDATE 2: negative are probably working
  */
 
 /* NOTE division:
@@ -45,8 +45,8 @@
  */
 
 int main() {
-  /* Negative remainder ???? should not happens
-   * proper output does not works bc it ?? */
+  // /* Negative remainder ???? should not happens
+  //  * proper output does not works bc it ?? */
   // for (int i = 1; i < 9999; ++i) {
   //   bigint a = INT_MAX;
   //   int coeff = i;
@@ -70,24 +70,20 @@ int main() {
   // bigint a(arr, 2);
   // std::cout << "begin div\n";
   // auto dr = bigint::division(a, 3);
+  // std::cout << a << std::endl;
   // std::cout << dr.quotient() << ", " << dr.remainder() << std::endl;
+  // std::cout << (dr.quotient() * 3) + dr.remainder() << std::endl;
 
   // /* Quotient became larger instead of smaller, mb bc prev problem, or bug in
   //  * right/left shift idk */
   // bigint a = INT_MAX;
+  // a *= INT_MAX;
   // while (a > 0) {
-  //   auto dr = bigint::division(a * 15, 10);
+  //   auto dr = bigint::division(a, 10);
   //   std::cout << a << " / 10 == (" << dr.remainder() << ", " << dr.quotient()
   //             << ")" << std::endl;
   //   a = dr.quotient();
-  //   getchar();
-  // }
-
-  // /* Should it be [-1, 0] all the time with shift higher then 32 ??? */
-  // int arr[] = {INT_MIN, 0};
-  // bigint a(arr, 2);
-  // for (int i = 0; i < 128; ++i) {
-  //   std::cout << (a >>= 1) << std::endl;
+  //   // getchar();
   // }
 
   // /* increments SHOULD REMOVE EXTRA ZEROS */
