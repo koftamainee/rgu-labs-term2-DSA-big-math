@@ -126,18 +126,13 @@ bigint::division_result bigint::division(bigint const &dividend,
     std::cout << "remainder - shifted_divisor = " << remainder << " - "
               << shifted_divisor << " = ";
 
-    if (remainder < shifted_divisor) {
-      throw std::runtime_error(
-          "Invalid division occured");  // DEBUG purpose only
-    }
-
     remainder -= shifted_divisor;
     std::cout << remainder << std::endl;  // TODO: COMMENT THIS
 
     quotient += (bigint(1) << shift);
     std::cout << "END. quotient: " << quotient << ", remainder: " << remainder
               << std::endl;
-    getchar();
+    // getchar();
   }
 
   quotient.remove_leading_zeros();

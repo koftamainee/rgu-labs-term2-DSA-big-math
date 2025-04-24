@@ -4,6 +4,12 @@
 
 #include "bigint.h"
 
+/* FIXME
+ * 156 line in arithmetics.cpp
+ * this condition handles more cases than needed, add some logic to handle
+ * unneded extra_digit zeroing
+ */
+
 /* TODO:
  * 1. FIX +=
  * 2. implement increment/decrement on negatives
@@ -11,7 +17,7 @@
  */
 
 /* Current Issues:
- * += does not works in one case, check last code block
+ * += does not works in one case, check last code block //// depr
  * _raw_negative_increment and _raw_negative_decrement should be implemented w/o
  * positive versions
  */
@@ -48,13 +54,14 @@
  */
 
 int main() {
-  /* Negative remainder ???? should not happens
-   * proper output does not works bc it ?? */
+  // /* Negative remainder ???? should not happens
+  //  * proper output does not works bc it ?? */
   // for (int i = 1; i < 9999; ++i) {
   //   bigint a = INT_MAX;
   //   a *= i;
-  //   auto dr = bigint::division(a, i);
+  //   std::cout << "=========================" << std::endl;
   //   std::cout << "i = " << i << std::endl;
+  //   auto dr = bigint::division(a, i);
   //   std::cout << a << " / " << i << " == (" << dr.quotient() << ", "
   //             << dr.remainder() << ")" << std::endl;
   //   bigint result = ((dr.quotient() * i) + dr.remainder());
@@ -66,15 +73,15 @@ int main() {
   //   }
   // }
 
-  // [2147483645, 1] / 3 == (1610612736, -536870915)
+  // [ -6, 2 ] / 6 == (1431655764, 2)
 
-  // int arr[] = {2147483645, 1};
+  // int arr[] = {-6, 2};
   // bigint a(arr, 2);
   // std::cout << "begin div\n";
-  // auto dr = bigint::division(a, 3);
+  // auto dr = bigint::division(a, 6);
   // std::cout << a << std::endl;
   // std::cout << dr.quotient() << ", " << dr.remainder() << std::endl;
-  // std::cout << (dr.quotient() * 3) + dr.remainder() << std::endl;
+  // std::cout << (dr.quotient() * 6) + dr.remainder() << std::endl;
 
   // /* Quotient became larger instead of smaller, mb bc prev problem, or bug in
   //  * right/left shift idk */
@@ -100,15 +107,15 @@ int main() {
   // int arr[] = {-1073741827, 0};
   // bigint a(arr, 2);
   // bigint b = 1610612736;
-  // // b.negate();
+  // b.negate();
   // std::cout << "begin adding" << std::endl;
-  // std::cout << a << " - " << b << " = " << a - b << std::endl;
+  // std::cout << a << " + " << b << " = " << a + b << std::endl;
 
   // [ -4, 1 ] / 4 == (1073741824, -4)
-  int arr[] = {-4, 1};
-  bigint a(arr, 2);
-  auto const dr = bigint::division(a, 4);
-  std::cout << a << " / 4 = (" << dr.quotient() << ", " << dr.remainder()
-            << ")\n";
-  std::cout << dr.quotient() * 4 + dr.remainder() << std::endl;
+  // int arr[] = {-4, 1};
+  // bigint a(arr, 2);
+  // auto const dr = bigint::division(a, 4);
+  // std::cout << a << " / 4 = (" << dr.quotient() << ", " << dr.remainder()
+  //           << ")\n";
+  // std::cout << dr.quotient() * 4 + dr.remainder() << std::endl;
 }

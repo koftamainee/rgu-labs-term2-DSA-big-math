@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <exception>
 
 #include "bigint.h"
 
@@ -110,9 +111,19 @@ bigint &bigint::operator+=(bigint const &other) & {
   for (int i = 0; i < max_size; ++i) {
     result[i] = 0;
 
-    unsigned int this_digit = static_cast<bigint const *>(this)->operator[](i);
-    unsigned int other_digit = other[i];
+    int this_digit = 0;
+    int other_digit = 0;
 
+    try {
+      this_digit = this->operator[](i);
+    } catch (std::exception const &e) {
+      this_digit = 0;
+    }
+    try {
+      other_digit = const_cast<bigint &>(other)[i];
+    } catch (std::exception const &e) {
+      other_digit = 0;
+    }
 #pragma unroll
     for (int j = 0; j < 2; ++j) {
       unsigned int this_half_digit =
@@ -140,8 +151,12 @@ bigint &bigint::operator+=(bigint const &other) & {
     //   "
     //             << other_digit << std::endl;
     // }
-    if (this_sign != other_sign) {
-      // extra_digit = 0;
+    // std::cout << "this_digit: " << this_digit
+    //           << ", other_digit: " << other_digit << std::endl;
+    if (this_sign != other_sign && (this_digit < 0 && other_digit < 0) &&
+        (this_digit + other_digit) >= 0) {
+      // std::cout << "this code occured!!!!!!!!!!!!!!!!!!\n";
+      extra_digit = 0;
     }
   }
 
