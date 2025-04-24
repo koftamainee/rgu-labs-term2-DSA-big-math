@@ -5,7 +5,7 @@
 #include "bigint.h"
 
 /* TODO:
- * 1. FIX ++
+ * 1. FIX +=
  * 2. implement increment/decrement on negatives
  * 3. check division
  */
