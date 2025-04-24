@@ -24,7 +24,7 @@ void bigpoly::cleanup() noexcept {
 
 bigpoly::bigpoly() noexcept : poly_(nullptr) {}
 
-bigpoly::bigpoly(cstd::string const &poly_str) {
+bigpoly::bigpoly(std::string const &poly_str) {
   poly_ = poly_from_str(poly_str);
 }
 

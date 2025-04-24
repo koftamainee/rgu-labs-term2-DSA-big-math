@@ -89,6 +89,7 @@ bigint &bigint::_raw_negative_increment() {
   //     "_raw_negative_increment is not implemented");  // TODO
   // _raw_positive_increment();
   // return *this;
+  // std::cout << "WARNING: this code uses UNIMPLEMENTED FUNCTION" << std::endl;
   return *this += 1;
 }
 bigint &bigint::_raw_negative_decrement() {
@@ -96,5 +97,6 @@ bigint &bigint::_raw_negative_decrement() {
   //     "_raw_negative_decrement is not implemented");  // TODO
   // _raw_positive_decrement();
   // return *this;
+  std::cout << "WARNING: this code uses UNIMPLEMENTED FUNCTION" << std::endl;
   return *this += -1;
 }

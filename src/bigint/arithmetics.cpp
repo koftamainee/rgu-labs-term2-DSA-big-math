@@ -2,7 +2,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
-#include <ostream>
 
 #include "bigint.h"
 
@@ -111,13 +110,15 @@ bigint &bigint::operator+=(bigint const &other) & {
   for (int i = 0; i < max_size; ++i) {
     result[i] = 0;
 
-    auto this_digit = static_cast<bigint const *>(this)->operator[](i);
-    auto other_digit = other[i];
+    unsigned int this_digit = static_cast<bigint const *>(this)->operator[](i);
+    unsigned int other_digit = other[i];
 
 #pragma unroll
     for (int j = 0; j < 2; ++j) {
-      auto this_half_digit = loword_hiword_function_pointers[j](this_digit);
-      auto other_half_digit = loword_hiword_function_pointers[j](other_digit);
+      unsigned int this_half_digit =
+          loword_hiword_function_pointers[j](this_digit);
+      unsigned int other_half_digit =
+          loword_hiword_function_pointers[j](other_digit);
 
       if (i == max_size - 1) {
         if (this_digit == 0 && other_digit == 0 && extra_digit != 0) {
@@ -129,7 +130,18 @@ bigint &bigint::operator+=(bigint const &other) & {
       unsigned int digits_sum =
           this_half_digit + other_half_digit + extra_digit;
       extra_digit = (digits_sum >> SHIFT);
-      result[i] += static_cast<int>((digits_sum & MASK) << (j * SHIFT));
+      unsigned int unsigned_result = (digits_sum & MASK) << (j * SHIFT);
+      result[i] += *reinterpret_cast<int *>(&unsigned_result);
+      // std::cout << "result[i] = " << result[i] << std::endl;
+    }
+    // std::cout << std::endl;
+    // if (extra_digit != 0) {
+    //   std::cout << "extra_digit occured in addition of " << this_digit << " +
+    //   "
+    //             << other_digit << std::endl;
+    // }
+    if (this_sign != other_sign) {
+      // extra_digit = 0;
     }
   }
 
@@ -144,11 +156,6 @@ bigint &bigint::operator+=(bigint const &other) & {
 
   from_array(result, max_size);
   delete[] result;
-
-  // std::cout << "result sign: " << result_sign << std::endl;
-  //
-  // std::cout << "+= finished, operation" << copy << " += " << other
-  //           << ", result: " << *this << std::endl;
 
   return *this;
 }
@@ -167,9 +174,10 @@ bigint operator-(bigint const &first, bigint const &second) {
 void bigint::accumulate_multiplication(
     bigint &result, unsigned int words_multiplication_result_digits[3],
     unsigned int a, unsigned int b, size_t position_shift) {
-  auto product = static_cast<uint64_t>(a) * static_cast<unsigned long long>(b);
+  auto product =
+      static_cast<unsigned long long>(a) * static_cast<unsigned long long>(b);
   words_multiplication_result_digits[0] =
-      static_cast<uint32_t>(product & 0xFFFFFFFF);
+      static_cast<unsigned int>(product & 0xFFFFFFFF);
   words_multiplication_result_digits[1] = static_cast<uint32_t>(product >> 32);
 
   bigint temp(reinterpret_cast<int *>(words_multiplication_result_digits), 3);

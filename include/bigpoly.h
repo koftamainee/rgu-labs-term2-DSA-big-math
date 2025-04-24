@@ -21,11 +21,11 @@ class bigpoly final {
   void clone(bigpoly const &other);
   static node *clone_node(node *root);
   void cleanup() noexcept;
-  static node *poly_from_str(cstd::string const &poly_str);
+  static node *poly_from_str(std::string const &poly_str);
 
  public:
   bigpoly() noexcept;
-  bigpoly(cstd::string const &poly_str);
+  bigpoly(std::string const &poly_str);
   ~bigpoly() noexcept;
   bigpoly(bigpoly const &other);
   bigpoly(bigpoly &&other) noexcept;

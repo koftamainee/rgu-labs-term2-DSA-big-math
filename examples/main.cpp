@@ -48,12 +48,11 @@
  */
 
 int main() {
-  // /* Negative remainder ???? should not happens
-  //  * proper output does not works bc it ?? */
+  /* Negative remainder ???? should not happens
+   * proper output does not works bc it ?? */
   // for (int i = 1; i < 9999; ++i) {
   //   bigint a = INT_MAX;
-  //   int coeff = i;
-  //   a *= coeff;
+  //   a *= i;
   //   auto dr = bigint::division(a, i);
   //   std::cout << "i = " << i << std::endl;
   //   std::cout << a << " / " << i << " == (" << dr.quotient() << ", "
@@ -97,9 +96,19 @@ int main() {
 
   // += isn't working.... again
   // [-1073741827, 0] - 1610612736 = [1610612733, 1]
-  int arr[] = {-1073741827, 0};
+
+  // int arr[] = {-1073741827, 0};
+  // bigint a(arr, 2);
+  // bigint b = 1610612736;
+  // // b.negate();
+  // std::cout << "begin adding" << std::endl;
+  // std::cout << a << " - " << b << " = " << a - b << std::endl;
+
+  // [ -4, 1 ] / 4 == (1073741824, -4)
+  int arr[] = {-4, 1};
   bigint a(arr, 2);
-  bigint b = 1610612736;
-  b.negate();
-  std::cout << a << " + " << b << " = " << a + b << std::endl;
+  auto const dr = bigint::division(a, 4);
+  std::cout << a << " / 4 = (" << dr.quotient() << ", " << dr.remainder()
+            << ")\n";
+  std::cout << dr.quotient() * 4 + dr.remainder() << std::endl;
 }

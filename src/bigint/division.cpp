@@ -60,8 +60,8 @@ void bigint::division_result::move(division_result &&other) noexcept {
 
 bigint::division_result bigint::division(bigint const &dividend,
                                          bigint const &divisor) {
-  // std::cout << "division called on numbers: " << dividend << ", " << divisor
-  //           << std::endl;
+  std::cout << "division called on numbers: " << dividend << ", " << divisor
+            << std::endl;
   int dividend_sign = dividend.sign();
   int divisor_sign = divisor.sign();
 
@@ -132,7 +132,7 @@ bigint::division_result bigint::division(bigint const &dividend,
     }
 
     remainder -= shifted_divisor;
-    std::cout << remainder << std::endl;
+    std::cout << remainder << std::endl;  // TODO: COMMENT THIS
 
     quotient += (bigint(1) << shift);
     std::cout << "END. quotient: " << quotient << ", remainder: " << remainder
