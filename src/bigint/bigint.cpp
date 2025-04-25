@@ -5,7 +5,9 @@
 
 bigint::bigint() noexcept : oldest_digit_(0), other_digits_(nullptr) {}
 
-bigint::bigint(char const *value, std::size_t base) {}
+bigint::bigint(char const *value, std::size_t base) {
+  from_string(value, base);
+}
 
 bigint::bigint(int const *value, std::size_t size)
     : oldest_digit_(0), other_digits_(nullptr) {
