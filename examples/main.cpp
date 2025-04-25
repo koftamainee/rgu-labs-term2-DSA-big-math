@@ -1,5 +1,6 @@
 #include <cassert>
 #include <climits>
+#include <cstdlib>
 #include <iostream>
 
 #include "bigint.h"
@@ -56,23 +57,34 @@
 int main() {
   // /* Negative remainder ???? should not happens
   //  * proper output does not works bc it ?? */
-  // for (int i = 1; i < 9999; ++i) {
+  // bigint limit = INT_MAX;
+  // limit *= 5;
+  // bigint start = INT_MAX;
+  // start *= 2;
+  // for (bigint i = start; i < limit; i += 2) {
   //   bigint a = INT_MAX;
-  //   a *= i;
-  //   std::cout << "=========================" << std::endl;
-  //   std::cout << "i = " << i << std::endl;
-  //   auto dr = bigint::division(a, i);
-  //   std::cout << a << " / " << i << " == (" << dr.quotient() << ", "
-  //             << dr.remainder() << ")" << std::endl;
-  //   bigint result = ((dr.quotient() * i) + dr.remainder());
+  //   // a *= 52;
+  //   bigint coef = i;
+  //   int random = rand();
+  //   coef *= random;
+  //   a *= coef * rand();
+  //   std::cout << a << " " << coef << std::endl;
   //
-  //   std::cout << "result: " << result << ", source: " << a << ", Equals? "
-  //             << (result == a ? "true" : "false") << std::endl;
+  //   auto dr = bigint::division(a, coef);
+  //
+  //   bigint result = ((dr.quotient() * coef) + dr.remainder());
+  //
   //   if (result != a) {
+  //     std::cout << "=========================" << std::endl;
+  //     std::cout << a << " / " << coef << " == (" << dr.quotient() << ", "
+  //               << dr.remainder() << ")" << std::endl;
+  //     std::cout << "i = " << coef << std::endl;
+  //     std::cout << "result: " << result << ", source: " << a << ", Equals? "
+  //               << (result == a ? "true" : "false") << std::endl;
   //     getchar();
   //   }
   // }
-
+  //
   // [ -6, 2 ] / 6 == (1431655764, 2)
 
   // int arr[] = {-6, 2};
@@ -118,4 +130,19 @@ int main() {
   // std::cout << a << " / 4 = (" << dr.quotient() << ", " << dr.remainder()
   //           << ")\n";
   // std::cout << dr.quotient() * 4 + dr.remainder() << std::endl;
+
+  // int arr1[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+  // int arr2[] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
+  // bigint a(arr1, 10);
+  // bigint b(arr2, 10);
+  //
+  // std::cout << a << " / " << b << " == " << a / b << std::endl;
+  // std::cout << (a > b) << std::endl;
+
+  // // [666232700, -333116424, 36] / [1804289381, 1] == ([-52, 0], 0)
+  // int arr1[] = {666232700, -333116424, 36};
+  // int arr2[] = {1804289381, 1};
+  // bigint a(arr1, 3);
+  // bigint b(arr2, 2);
+  // auto dr = bigint::division(a, b);
 }

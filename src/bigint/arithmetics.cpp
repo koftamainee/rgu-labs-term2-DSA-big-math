@@ -89,6 +89,12 @@ bigint &bigint::operator+=(bigint const &other) & {
   int result_sign = 0;
   int this_sign = sign();
   int other_sign = other.sign();
+  if (this_sign == 0) {
+    return *this = other;
+  }
+  if (other_sign == 0) {
+    return *this;
+  }
 
   if (this_sign == other_sign) {
     result_sign = this_sign;
@@ -153,9 +159,12 @@ bigint &bigint::operator+=(bigint const &other) & {
     // }
     // std::cout << "this_digit: " << this_digit
     //           << ", other_digit: " << other_digit << std::endl;
+    unsigned int next_this_digit =
+        static_cast<bigint const *>(this)->operator[](i + 1);
+    unsigned int next_other_digit = other[i + 1];
     if (this_sign != other_sign && (this_digit < 0 && other_digit < 0) &&
-        (this_digit + other_digit) >= 0) {
-      // std::cout << "this code occured!!!!!!!!!!!!!!!!!!\n";
+        (this_digit + other_digit) >= 0 &&
+        (next_other_digit == 0 && next_this_digit == 0)) {
       extra_digit = 0;
     }
   }
