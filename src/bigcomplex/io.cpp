@@ -3,7 +3,7 @@
 
 #include "bigcomplex.h"
 
-void bigcomplex::from_str(std::string const &complex_str) {
+void bigcomplex::from_str(cstd::string const &complex_str) {
   std::istringstream input(complex_str.c_str());
   bigfloat real;
   bigfloat imaginary;
@@ -31,7 +31,7 @@ std::ostream &operator<<(std::ostream &out, bigcomplex const &complex) {
 }
 
 std::istream &operator>>(std::istream &in, bigcomplex &complex) {
-  std::string input;
+  cstd::string input;
   in >> input;
   try {
     complex.from_str(input);

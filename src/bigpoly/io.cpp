@@ -2,12 +2,12 @@
 
 #include "bigpoly.h"
 
-bigpoly::node *bigpoly::poly_from_str(std::string const &poly_str) {}
+bigpoly::node *bigpoly::poly_from_str(cstd::string const &poly_str) {}
 
 std::ostream &operator<<(std::ostream &out, bigpoly const &poly) {}
 
 std::istream &operator>>(std::istream &in, bigpoly &poly) {
-  std::string input;
+  cstd::string input;
   in >> input;
   try {
     poly.poly_ = bigpoly::poly_from_str(input);

@@ -25,7 +25,7 @@ std::ostream &operator<<(std::ostream &out, bigint const &num) noexcept {
   return out;
 }
 std::istream &operator>>(std::istream &in, bigint &num) {
-  std::string input;
+  cstd::string input;
   in >> input;
 
   num.cleanup();

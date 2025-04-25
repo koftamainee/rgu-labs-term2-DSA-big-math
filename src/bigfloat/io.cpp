@@ -12,7 +12,7 @@ std::ostream &operator<<(std::ostream &out, bigfloat const &num) noexcept {
   return out;
 }
 std::istream &operator>>(std::istream &in, bigfloat &num) {
-  std::string input;
+  cstd::string input;
   in >> input;
 
   char *slash_pos = std::strchr(input.data(), '/');

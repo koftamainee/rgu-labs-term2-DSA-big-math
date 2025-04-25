@@ -62,7 +62,7 @@ int &bigint::operator[](std::size_t index) {
                                    : *(other_digits_ + 1 + index);
 }
 
-bigint &bigint::from_string(std::string const &str, std::size_t base) {
+bigint &bigint::from_string(cstd::string const &str, std::size_t base) {
   if (base > 36) {
     throw std::invalid_argument("invalid base for conversion : ");
   }
@@ -96,13 +96,13 @@ bigint &bigint::from_string(std::string const &str, std::size_t base) {
   return *this;
 }
 
-std::string bigint::to_string() const {
+cstd::string bigint::to_string() const {
   if (*this == bigint(0)) {
     return {"0"};
   }
 
   bigint num = this->abs();
-  std::string result;
+  cstd::string result;
 
   while (num != bigint(0)) {
     division_result dr = division(num, 10);

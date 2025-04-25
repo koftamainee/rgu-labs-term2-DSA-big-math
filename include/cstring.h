@@ -13,7 +13,7 @@ class string {
   size_t size_;
   size_t capacity_;
 
-  void resize(size_t new_size);
+  void resize(size_t new_capacity);
 
  public:
   string();
@@ -31,7 +31,7 @@ class string {
   void clear();
   [[nodiscard]] bool empty() const noexcept;
 
-  string operator+(string other) const;
+  string operator+(const string &other) const;
   string &operator+=(const string &other);
 
   void push_back(char c);
@@ -39,7 +39,7 @@ class string {
 
   void pop_back();
 
-  [[nodiscard]] string substr(const string &needle) const;
+  [[nodiscard]] string substr(size_t pos, size_t len) const;
   [[nodiscard]] int compare(const string &other) const noexcept;
 
   [[nodiscard]] const char *c_str() const noexcept;
