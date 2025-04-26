@@ -151,7 +151,8 @@ bigint &bigint::from_array(int const *digits, std::size_t size) {
     return *this;
   }
 
-  *(other_digits_ = new int[size]) = static_cast<int>(size);
+  other_digits_ = new int[size];
+  other_digits_[0] = static_cast<int>(size);
   memcpy(other_digits_ + 1, digits, (size - 1) * sizeof(int));
   oldest_digit_ = digits[size - 1];
 

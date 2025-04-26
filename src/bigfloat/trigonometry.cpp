@@ -1,6 +1,6 @@
 #include "bigfloat.h"
 
-bigfloat bigfloat::PI(bigfloat const &EPS) { return 4 * arctg(1, EPS); }
+bigfloat bigfloat::PI(bigfloat const &EPS) { return arctg(1, EPS) * 4; }
 
 bigfloat sin(bigfloat const &number, bigfloat const &EPS) {
   bigfloat result = 0;
@@ -58,7 +58,7 @@ bigfloat arcsin(bigfloat const &number, bigfloat const &EPS) {
 }
 
 bigfloat arccos(bigfloat const &number, bigfloat const &EPS) {
-  return (bigfloat::PI(EPS) * 0.5) - arcsin(number, EPS);
+  return (bigfloat::PI(EPS) / 2) - arcsin(number, EPS);
 }
 
 bigfloat arctg(bigfloat const &number, bigfloat const &EPS) {

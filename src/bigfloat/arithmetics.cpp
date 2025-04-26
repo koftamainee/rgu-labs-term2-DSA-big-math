@@ -1,6 +1,10 @@
 #include "bigfloat.h"
 
 bigint bigfloat::gcd(bigint a, bigint b) {
+  // Take absolute values
+  a = a < 0 ? -a : a;
+  b = b < 0 ? -b : b;
+
   if (a == 0) {
     return b;
   }
@@ -36,10 +40,17 @@ bigint bigfloat::gcd(bigint a, bigint b) {
 
 void bigfloat::simplify() {
   bigint divider = gcd(numerator_, denominator_);
+  if (divider == 0) {
+    return;
+  }
   numerator_ /= divider;
   denominator_ /= divider;
-}
 
+  if (denominator_ < 0) {
+    numerator_ = -numerator_;
+    denominator_ = -denominator_;
+  }
+}
 bigfloat bigfloat::operator-() const {
   bigfloat negative = *this;
   return negative.negate();
@@ -54,6 +65,7 @@ bigfloat &bigfloat::operator+=(bigfloat const &other) & {
   *this *= other.denominator_;
   bigint new_other_numerator = other.numerator_ * denominator_;
   numerator_ += new_other_numerator;
+
   simplify();
   return *this;
 }

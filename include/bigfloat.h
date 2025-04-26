@@ -1,6 +1,5 @@
 #pragma once
 
-#include <optional>
 #include <ostream>
 
 #include "bigint.h"
@@ -15,17 +14,15 @@ class bigfloat final {
   static bigint factorial(bigint const& value);
 
  public:
-  static constexpr double DEFAULT_EPS = 1e-10;
+  static const bigfloat DEFAULT_EPS;
 
   bigfloat();
   bigfloat(bigint const& numerator, bigint const& denominator);
   bigfloat(bigint const& other);
+  bigfloat(int other);
   bigfloat(bigfloat const& other) = default;
   bigfloat(bigfloat&& other) noexcept = default;
-  bigfloat(double num);
   ~bigfloat() noexcept = default;
-
-  std::optional<double> to_double() noexcept;
 
   bigfloat& operator=(bigfloat const& other) = default;
   bigfloat& operator=(bigfloat&& other) = default;
@@ -121,3 +118,5 @@ bigfloat log(bigfloat const& number,
              bigfloat const& EPS = bigfloat::DEFAULT_EPS);
 bigfloat log10(bigfloat const& number,
                bigfloat const& EPS = bigfloat::DEFAULT_EPS);
+
+bigfloat PI(bigfloat const& EPS = bigfloat::DEFAULT_EPS);
