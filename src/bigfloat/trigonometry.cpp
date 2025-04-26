@@ -58,7 +58,7 @@ bigfloat arcsin(bigfloat const &number, bigfloat const &EPS) {
 }
 
 bigfloat arccos(bigfloat const &number, bigfloat const &EPS) {
-  return (PI(EPS) * 0.5) - arcsin(number, EPS);
+  return (bigfloat::PI(EPS) * 0.5) - arcsin(number, EPS);
 }
 
 bigfloat arctg(bigfloat const &number, bigfloat const &EPS) {
@@ -75,7 +75,7 @@ bigfloat arctg(bigfloat const &number, bigfloat const &EPS) {
 }
 
 bigfloat arcctg(bigfloat const &number, bigfloat const &EPS) {
-  return (PI(EPS) / 2) - arctg(number, EPS);
+  return (bigfloat::PI(EPS) / 2) - arctg(number, EPS);
 }
 
 bigfloat arcsec(bigfloat const &number, bigfloat const &EPS) {
