@@ -32,6 +32,12 @@ bigint fibonacci_iterative(bigint const &n) {
   return b;
 }
 
+bigint catalan_number(int n) {
+  bigint numerator = factorial(2 * n);
+  bigint denominator = factorial(n + 1) * factorial(n);
+  return numerator / denominator;
+}
+
 int test_bigint() {
   std::cout << "===== Bigint Functionality Demonstration =====\n\n";
   try {
@@ -108,11 +114,35 @@ int test_bigint() {
               << "\n";
     std::cout << "x_val + y_val = " << (x_val + y_val) << "\n";
 
-    std::cout << "Testing very large computations: \n\n";
-    std::cout << "Computing 100!: " << factorial(100) << std::endl;
-    std::cout << "Computing 1000 Fibonacci number: ";
-    bigint result = fibonacci_iterative(1000);
-    std::cout << result << std::endl;
+    std::cout << "\nTesting very large computations:\n";
+
+    bigint correct_fact100 =
+        "9332621544394415268169923885626670049071596826438162146859296389521759"
+        "9993229915608941463976156518286253697920827223758251185210916864000000"
+        "000000000000000000";
+    bigint correct_fib1000 =
+        "4346655768693745643568852767504062580256466051737178040248172908953655"
+        "5417949051890403879840079255169295922593080322634775209689623239873322"
+        "471161642996440906533187938298969649928516003704476137795166849228875";
+    bigint correct_catalan100 =
+        "896519947090131496687170070074100632420837521538745909320";
+
+    bigint fact100 = factorial(100);
+    std::cout << "Computing 100!:\n" << fact100 << "\n";
+    std::cout << "Correct? " << (fact100 == correct_fact100 ? "Yes" : "No")
+              << "\n\n";
+
+    bigint fib1000 = fibonacci_iterative(1000);
+    std::cout << "Computing 1000th Fibonacci number:\n" << fib1000 << "\n";
+    std::cout << "Correct? " << (fib1000 == correct_fib1000 ? "Yes" : "No")
+              << "\n\n";
+
+    bigint catalan100 = catalan_number(100);
+    std::cout << "Computing Catalan(100):\n" << catalan100 << "\n";
+    std::cout << "Correct? "
+              << (catalan100 == correct_catalan100 ? "Yes" : "No") << "\n";
+
+    std::cout << "\n===== Demonstration Complete =====\n";
 
   } catch (const std::exception &e) {
     std::cout << "Unexpected exception: " << e.what() << "\n";

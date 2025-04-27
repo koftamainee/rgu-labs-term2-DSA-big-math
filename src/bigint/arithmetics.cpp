@@ -11,47 +11,30 @@ bigint bigint::operator-() const {
   return negative.negate();
 }
 
-bigint bigint::abs() const {
-  // std::cout << "abs called on number " << *this << std::endl;
-  return sign() < 0 ? -*this : *this;
-}
+bigint bigint::abs() const { return sign() < 0 ? -*this : *this; }
 
 bigint &bigint::negate() & {
-  // std::cout << std::endl << "negate called on number " << *this << std::endl;
   if (sign() == 0) {
     return *this;
   }
   if (sign() == 1) {
-    // std::cout << "Negate+ sign == 1, number: " << *this << std::endl;
     bit_inverse();
-
-    // std::cout << "Negate: inversed, number: " << *this << std::endl;
     _raw_negative_increment();
-    // *this += -1;
-
-    // std::cout << "Negate finished, number: " << *this << std::endl;
     return *this;
   }
 
-  // std::cout << "Negate: sign == -1, number: " << *this << std::endl;
-  _raw_positive_decrement();
-  // *this += 1;
-
-  // std::cout << "Negate: -1, number: " << *this << std::endl;
+  _raw_positive_decrement();  // TODO: rewrite _raw_negative_decrement without
+                              // +=
   bit_inverse();
-
-  // std::cout << "Negate finished, number: " << *this << std::endl;
   return *this;
 }
 
 bigint &bigint::operator++() & {
   if (sign() == -1) {
-    // return *this += 1;
     return _raw_negative_increment();
   }
 
   return _raw_positive_increment();
-  // return *this += 1;
 }
 
 bigint const bigint::operator++(int) & {
@@ -62,13 +45,10 @@ bigint const bigint::operator++(int) & {
 
 bigint &bigint::operator--() & {
   if (sign() == -1) {
-    // return *this += -1;
     return _raw_negative_decrement();
   }
 
   return _raw_positive_decrement();
-
-  // return *this += 1;
 }
 
 bigint const bigint::operator--(int) & {
@@ -80,11 +60,6 @@ bigint const bigint::operator--(int) & {
 bigint &bigint::operator+=(bigint const &other) & {
   unsigned int (*loword_hiword_function_pointers[])(unsigned int) = {loword,
                                                                      hiword};
-
-  // std::cout << "+= called on numbers: " << *this << " += " << other
-  // << std::endl;
-
-  auto copy = *this;
 
   int result_sign = 0;
   int this_sign = sign();
@@ -149,16 +124,8 @@ bigint &bigint::operator+=(bigint const &other) & {
       extra_digit = (digits_sum >> SHIFT);
       unsigned int unsigned_result = (digits_sum & MASK) << (j * SHIFT);
       result[i] += *reinterpret_cast<int *>(&unsigned_result);
-      // std::cout << "result[i] = " << result[i] << std::endl;
     }
-    // std::cout << std::endl;
-    // if (extra_digit != 0) {
-    //   std::cout << "extra_digit occured in addition of " << this_digit << " +
-    //   "
-    //             << other_digit << std::endl;
-    // }
-    // std::cout << "this_digit: " << this_digit
-    //           << ", other_digit: " << other_digit << std::endl;
+
     unsigned int next_this_digit =
         static_cast<bigint const *>(this)->operator[](i + 1);
 
@@ -169,8 +136,8 @@ bigint &bigint::operator+=(bigint const &other) & {
     bool sum_non_negative = (this_digit + other_digit) >= 0;
     bool next_digits_zero = (next_other_digit == 0 && next_this_digit == 0);
 
-    if (signs_differ && both_digits_negative && sum_non_negative &&
-        next_digits_zero) {
+    if ((signs_differ && both_digits_negative && sum_non_negative &&
+         next_digits_zero)) {
       extra_digit = 0;
     }
   }

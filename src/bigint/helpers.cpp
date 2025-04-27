@@ -26,6 +26,7 @@ unsigned int bigint::operator[](std::size_t index) const noexcept {
 }
 
 void bigint::clone(bigint const &other) {
+  cleanup();
   oldest_digit_ = other.oldest_digit_;
   if (other.other_digits_ == nullptr) {
     return;

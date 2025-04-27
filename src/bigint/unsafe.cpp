@@ -9,13 +9,11 @@ bigint &bigint::_raw_positive_increment() {
 
   for (int i = 0; i < digits_count - 1; ++i) {
     if (++((*this)[i]) != 0) {  // if not overflow
-      remove_leading_zeros();
       return *this;
     }
   }
 
   if (++oldest_digit_ != INT_MIN) {
-    remove_leading_zeros();
     return *this;
   }
 
@@ -25,21 +23,20 @@ bigint &bigint::_raw_positive_increment() {
     other_digits_[1] = oldest_digit_;
     oldest_digit_ = 0;
 
-    remove_leading_zeros();
     return *this;
   }
 
   int *new_array = new int[digits_count + 1];
-  memcpy(new_array, other_digits_, sizeof(int) * size());
+  std::memcpy(new_array, other_digits_, sizeof(int) * size());
   delete[] other_digits_;
   other_digits_ = new_array;
   new_array = nullptr;
 
   (*this)[digits_count] = oldest_digit_;
-  ++(*this).other_digits_[0];
+  ++(*this).other_digits_[0];  // size++
   oldest_digit_ = 0;
 
-  remove_leading_zeros();
+  // remove_leading_zeros();
   return *this;
 }
 
@@ -89,7 +86,6 @@ bigint &bigint::_raw_negative_increment() {
   //     "_raw_negative_increment is not implemented");  // TODO
   // _raw_positive_increment();
   // return *this;
-  // std::cout << "WARNING: this code uses UNIMPLEMENTED FUNCTION" << std::endl;
   return *this += 1;
 }
 bigint &bigint::_raw_negative_decrement() {
@@ -97,6 +93,5 @@ bigint &bigint::_raw_negative_decrement() {
   //     "_raw_negative_decrement is not implemented");  // TODO
   // _raw_positive_decrement();
   // return *this;
-  std::cout << "WARNING: this code uses UNIMPLEMENTED FUNCTION" << std::endl;
   return *this += -1;
 }
