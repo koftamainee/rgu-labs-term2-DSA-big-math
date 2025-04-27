@@ -1,5 +1,4 @@
 #include <cmath>
-#include <stdexcept>
 
 #include "bigint.h"
 
@@ -60,6 +59,7 @@ void bigint::division_result::move(division_result &&other) noexcept {
 
 bigint::division_result bigint::division(bigint const &dividend,
                                          bigint const &divisor) {
+  // std::cout << "\n\n\n\n\n\n";
   // std::cout << "division called on numbers: " << dividend << ", " << divisor
   // << std::endl;
   int dividend_sign = dividend.sign();
@@ -130,13 +130,14 @@ bigint::division_result bigint::division(bigint const &dividend,
     // std::cout << "remainder - shifted_divisor = " << remainder << " - "
     // << shifted_divisor << " = ";
 
-    remainder -= shifted_divisor;
+    shifted_divisor.negate();
+    remainder += shifted_divisor;
     // std::cout << remainder << std::endl;  // TODO: COMMENT THIS
 
     quotient += (bigint(1) << shift);
     // std::cout << "END. quotient: " << quotient << ", remainder: " <<
     // remainder
-    //           << std::endl;
+    // << std::endl;
     // getchar();
   }
 

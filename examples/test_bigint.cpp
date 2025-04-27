@@ -3,6 +3,35 @@
 
 #include "bigint.h"
 
+bigint factorial(bigint const &n) {
+  if (n == 0) {
+    return 1;
+  }
+
+  return n * factorial(n - 1);
+}
+
+bigint fibonacci_iterative(bigint const &n) {
+  if (n <= 0) {
+    return 0;
+  }
+  if (n == 1) {
+    return 1;
+  }
+
+  bigint a = 0;
+  bigint b = 1;
+  bigint c;
+
+  for (int i = 2; i <= n; ++i) {
+    c = a + b;
+    a = b;
+    b = c;
+  }
+
+  return b;
+}
+
 int test_bigint() {
   std::cout << "===== Bigint Functionality Demonstration =====\n\n";
   try {
@@ -78,6 +107,12 @@ int test_bigint() {
     std::cout << "You entered: x_val = " << x_val << ", y_val = " << y_val
               << "\n";
     std::cout << "x_val + y_val = " << (x_val + y_val) << "\n";
+
+    std::cout << "Testing very large computations: \n\n";
+    std::cout << "Computing 100!: " << factorial(100) << std::endl;
+    std::cout << "Computing 1000 Fibonacci number: ";
+    bigint result = fibonacci_iterative(1000);
+    std::cout << result << std::endl;
 
   } catch (const std::exception &e) {
     std::cout << "Unexpected exception: " << e.what() << "\n";

@@ -161,10 +161,16 @@ bigint &bigint::operator+=(bigint const &other) & {
     //           << ", other_digit: " << other_digit << std::endl;
     unsigned int next_this_digit =
         static_cast<bigint const *>(this)->operator[](i + 1);
+
     unsigned int next_other_digit = other[i + 1];
-    if (this_sign != other_sign && (this_digit < 0 && other_digit < 0) &&
-        (this_digit + other_digit) >= 0 &&
-        (next_other_digit == 0 && next_this_digit == 0)) {
+
+    bool signs_differ = (this_sign != other_sign);
+    bool both_digits_negative = (this_digit < 0 && other_digit < 0);
+    bool sum_non_negative = (this_digit + other_digit) >= 0;
+    bool next_digits_zero = (next_other_digit == 0 && next_this_digit == 0);
+
+    if (signs_differ && both_digits_negative && sum_non_negative &&
+        next_digits_zero) {
       extra_digit = 0;
     }
   }
@@ -240,8 +246,6 @@ bigint &bigint::operator*=(bigint const &other) & {
   }
 
   unsigned int words_multiplication_result_digits[3] = {0};
-  int digit = 0;
-  unsigned int words_multiplication_result_digit = 0;
   auto this_size = size();
   auto other_size = other.size();
   bigint const *first = this;

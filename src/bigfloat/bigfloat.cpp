@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-const bigfloat bigfloat::DEFAULT_EPS = bigfloat(bigint(1), bigint(1000000));
+// const bigfloat bigfloat::DEFAULT_EPS = bigfloat(bigint(1), bigint(1000000));
 
 bigfloat::bigfloat() {
   numerator_ = 0;

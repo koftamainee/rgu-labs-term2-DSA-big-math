@@ -1,5 +1,3 @@
-
-#include <bitset>
 #include <climits>
 #include <utility>
 
@@ -18,13 +16,4 @@ void print_fib() {
 int test_bigint();
 int test_bigfloat();
 
-int main() {
-  // test_bigint();
-  // test_bigfloat();
-
-  // print_fib();
-  int arr[] = {-1, -10};
-  bigint a(arr, 2);
-  bigint b = -10;
-  std::cout << a << " " << b << ", " << (a > b) << std::endl;
-}
+int main() { test_bigint(); }

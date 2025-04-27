@@ -5,7 +5,8 @@
 
 bigint::bigint() noexcept : oldest_digit_(0), other_digits_(nullptr) {}
 
-bigint::bigint(char const *value, std::size_t base) {
+bigint::bigint(char const *value, std::size_t base)
+    : oldest_digit_(0), other_digits_(nullptr) {
   from_string(value, base);
 }
 
@@ -21,7 +22,10 @@ bigint::bigint(bigint const &other) : oldest_digit_(0), other_digits_(nullptr) {
   clone(other);
 }
 
-bigint::bigint(bigint &&other) noexcept { move(std::move(other)); }
+bigint::bigint(bigint &&other) noexcept
+    : oldest_digit_(0), other_digits_(nullptr) {
+  move(std::move(other));
+}
 
 bigint::~bigint() noexcept { cleanup(); }
 
