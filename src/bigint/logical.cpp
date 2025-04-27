@@ -1,10 +1,6 @@
 #include "bigint.h"
 
-int bigint::compare(bigint const &first, bigint const &second, size_t depth) {
-  if (depth > 2) {
-    std::cout << first << second << std::endl;
-    throw 52;
-  }
+int bigint::compare(bigint const &first, bigint const &second) {
   auto const first_znak = first.sign();
   auto const second_znak = second.sign();
   auto const first_size = first.size();
@@ -31,40 +27,40 @@ int bigint::compare(bigint const &first, bigint const &second, size_t depth) {
   //   return res > 0 ? -res : res;
   // }
 
-  // if (first_size > second_size) {
-  //   return 1;
-  // }
-  // if (second_size > first_size) {
-  //   return -1;
-  // }
+  if (first_size > second_size) {
+    return 1 * positives;
+  }
+  if (second_size > first_size) {
+    return -1 * positives;
+  }
   for (int i = first_size - 1; i >= 0; --i) {
     if (first[i] > second[i]) {
-      return 1;
+      return 1 * positives;
     }
     if (second[i] > first[i]) {
-      return -1;
+      return -1 * positives;
     }
   }
   return 0;
 }
 
 bool operator==(bigint const &first, bigint const &second) {
-  return bigint::compare(first, second, 1) == 0;
+  return bigint::compare(first, second) == 0;
 }
 bool operator!=(bigint const &first, bigint const &second) {
-  return bigint::compare(first, second, 1) != 0;
+  return bigint::compare(first, second) != 0;
 }
 
 bool operator<(bigint const &first, bigint const &second) {
-  return bigint::compare(first, second, 1) < 0;
+  return bigint::compare(first, second) < 0;
 }
 bool operator<=(bigint const &first, bigint const &second) {
-  return bigint::compare(first, second, 1) <= 0;
+  return bigint::compare(first, second) <= 0;
 }
 
 bool operator>(bigint const &first, bigint const &second) {
-  return bigint::compare(first, second, 1) > 0;
+  return bigint::compare(first, second) > 0;
 }
 bool operator>=(bigint const &first, bigint const &second) {
-  return bigint::compare(first, second, 1) >= 0;
+  return bigint::compare(first, second) >= 0;
 }

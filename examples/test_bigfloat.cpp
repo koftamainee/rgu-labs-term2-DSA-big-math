@@ -80,7 +80,7 @@ int test_bigfloat() {
 
     std::cout << "8. Input/output:\n";
     bigfloat input;
-    std::cout << "Enter a BigFloat (e.g. '3.14159' or '22/7'): ";
+    std::cout << "Enter a BigFloat (e.g. 22/7'): ";
     std::cin >> input;
     std::cout << "You entered: " << input << "\n";
 
