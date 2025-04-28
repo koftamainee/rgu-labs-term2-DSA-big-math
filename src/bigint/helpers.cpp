@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
+#include <string>
 
 #include "bigint.h"
 
@@ -64,6 +65,9 @@ int &bigint::operator[](std::size_t index) {
 }
 
 bigint &bigint::from_string(cstd::string const &str, std::size_t base) {
+  if (str.size() == 0) {
+    throw std::invalid_argument("string is empty");
+  }
   if (base > 36) {
     throw std::invalid_argument("invalid base for conversion : ");
   }
@@ -85,7 +89,6 @@ bigint &bigint::from_string(cstd::string const &str, std::size_t base) {
     } else if (std::isalpha(c) != 0) {
       *this += std::toupper(c) - 'A' + 10;
     } else {
-      *this = 0;
       throw std::invalid_argument(
           "invalid character in string number representation found");
     }

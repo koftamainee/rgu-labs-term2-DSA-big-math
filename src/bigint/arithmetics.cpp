@@ -173,12 +173,13 @@ void bigint::accumulate_multiplication(
       static_cast<unsigned long long>(a) * static_cast<unsigned long long>(b);
   words_multiplication_result_digits[0] =
       static_cast<unsigned int>(product & 0xFFFFFFFF);
-  words_multiplication_result_digits[1] = static_cast<uint32_t>(product >> 32);
+  words_multiplication_result_digits[1] =
+      static_cast<unsigned int>(product >> 32);
 
   bigint temp(reinterpret_cast<int *>(words_multiplication_result_digits), 3);
   temp <<= position_shift;
 
-  result += temp;
+  result += temp;  // TODO: add function to raw add w/o shift
 }
 
 bigint &bigint::operator*=(bigint const &other) & {
