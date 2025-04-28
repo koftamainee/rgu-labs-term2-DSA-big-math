@@ -10,8 +10,6 @@ class bigfloat final {
   bigint denominator_;
 
   void simplify();
-  static bigint gcd(bigint a, bigint b);
-  static bigint factorial(bigint const& value);
 
  public:
   static const bigfloat DEFAULT_EPS;

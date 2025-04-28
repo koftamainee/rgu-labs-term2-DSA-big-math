@@ -1,45 +1,7 @@
 #include "bigfloat.h"
 
-bigint bigfloat::gcd(bigint a, bigint b) {
-  // Take absolute values
-  a = a < 0 ? -a : a;
-  b = b < 0 ? -b : b;
-
-  if (a == 0) {
-    return b;
-  }
-  if (b == 0) {
-    return a;
-  }
-
-  int shift = 0;
-  while (((a | b) & 1) == 0) {
-    a >>= 1;
-    b >>= 1;
-    ++shift;
-  }
-
-  while ((a & 1) == 0) {
-    a >>= 1;
-  }
-
-  do {
-    while ((b & 1) == 0) {
-      b >>= 1;
-    }
-    if (a > b) {
-      auto temp = a;
-      a = b;
-      b = temp;
-    }
-    b -= a;
-  } while (b != 0);
-
-  return a << shift;
-}
-
 void bigfloat::simplify() {
-  bigint divider = gcd(numerator_, denominator_);
+  bigint divider = bigint::gcd(numerator_, denominator_);
   if (divider == 0) {
     return;
   }

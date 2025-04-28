@@ -3,14 +3,6 @@
 
 #include "bigint.h"
 
-bigint factorial(bigint const &n) {
-  if (n == 0) {
-    return 1;
-  }
-
-  return n * factorial(n - 1);
-}
-
 bigint fibonacci_iterative(bigint const &n) {
   if (n <= 0) {
     return 0;
@@ -33,8 +25,8 @@ bigint fibonacci_iterative(bigint const &n) {
 }
 
 bigint catalan_number(int n) {
-  bigint numerator = factorial(2 * n);
-  bigint denominator = factorial(n + 1) * factorial(n);
+  bigint numerator = bigint::factorial(2 * n);
+  bigint denominator = bigint::factorial(n + 1) * bigint::factorial(n);
   return numerator / denominator;
 }
 
@@ -209,7 +201,7 @@ int test_bigint() {
     bigint correct_catalan100 =
         "896519947090131496687170070074100632420837521538745909320";
 
-    bigint fact100 = factorial(100);
+    bigint fact100 = bigint::factorial(100);
     std::cout << "Computing 100!:\n" << fact100 << "\n";
     std::cout << "Correct? " << (fact100 == correct_fact100 ? "Yes" : "No")
               << "\n\n";

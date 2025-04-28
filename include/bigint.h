@@ -7,7 +7,11 @@
 
 #include "cstring.h"
 
-class bigint;
+// TODO:
+// add pow and mod_pow
+// add mathematical expressions handling in constructor from string
+// add move semantics to from_array
+// bool is_prime(int certainty = 5) const;
 
 class bigint final {
  public:
@@ -111,6 +115,12 @@ class bigint final {
   friend bool operator<=(bigint const &first, bigint const &second);
   friend bool operator>(bigint const &first, bigint const &second);
   friend bool operator>=(bigint const &first, bigint const &second);
+
+  // Advanced mathematical operations
+  static bigint factorial(bigint const &n);
+  static bigint gcd(bigint a, bigint b);
+  bigint pow(bigint const &exponent) const;
+  bigint mod_pow(bigint exponent, bigint const &modulus) const;
 
   // Utilities
   bigint abs() const;
