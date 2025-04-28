@@ -16,10 +16,4 @@ void print_fib() {
 int test_bigint();
 int test_bigfloat();
 
-int main() {
-  test_bigint();
-  // bigint num_a(12345);
-  // bigint num_b("98765432109876543210");
-  // std::cout << num_b << " - " << num_a << " = " << num_b - num_a <<
-  // std::endl;
-}
+int main() { test_bigint(); }

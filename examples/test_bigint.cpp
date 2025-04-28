@@ -171,7 +171,7 @@ int test_bigint() {
     int digits_array[] = {1, 2, 3, 4};
     bigint from_array_val;
     from_array_val.from_array(digits_array, 4);
-    bigint correct_array_val = 1234;
+    bigint correct_array_val = "316912650112397582603894390785";
     std::cout << "from_array_val = " << from_array_val << "\n";
     std::cout << "Correct? "
               << (from_array_val == correct_array_val ? "Yes" : "No") << "\n";
