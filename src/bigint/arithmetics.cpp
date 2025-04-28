@@ -132,12 +132,10 @@ bigint &bigint::operator+=(bigint const &other) & {
     unsigned int next_other_digit = other[i + 1];
 
     bool signs_differ = (this_sign != other_sign);
-    bool both_digits_negative = (this_digit < 0 && other_digit < 0);
-    bool sum_non_negative = (this_digit + other_digit) >= 0;
-    bool next_digits_zero = (next_other_digit == 0 && next_this_digit == 0);
+    bool one_of_the_digits_negative = (this_digit < 0 && other_digit < 0);
+    bool next_digits_zero = (next_other_digit == 0 || next_this_digit == 0);
 
-    if ((signs_differ && both_digits_negative && sum_non_negative &&
-         next_digits_zero)) {
+    if ((signs_differ && one_of_the_digits_negative && next_digits_zero)) {
       extra_digit = 0;
     }
   }
