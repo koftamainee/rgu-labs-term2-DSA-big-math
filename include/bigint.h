@@ -1,4 +1,4 @@
-#pragma once
+#pragma oncebigin
 
 #include <cstddef>
 #include <exception>
@@ -12,6 +12,8 @@
 // add mathematical expressions handling in constructor from string
 // add move semantics to from_array
 // bool is_prime(int certainty = 5) const;
+
+class allocator;
 
 class bigint final {
  public:
@@ -60,6 +62,7 @@ class bigint final {
 
   // Conversion / Representation
   bigint &from_array(int const *digits, std::size_t size);
+  bigint &move_from_array(int *digits, std::size_t size);
   bigint &from_string(cstd::string const &str, std::size_t base);
   cstd::string to_string() const;
   std::optional<int> to_int() const noexcept;
@@ -139,13 +142,14 @@ class bigint final {
   int oldest_digit_;
   int *other_digits_;
 
-  // Core increments to positive and negative numbers
+  // Core unsafe operations
   bigint &_raw_positive_increment();
   bigint &_raw_positive_decrement();
   bigint &_raw_negative_increment();
   bigint &_raw_negative_decrement();
+  static void _add_with_shift(bigint &adding_to, bigint &summand, size_t shift);
 
-  // Memory management functions
+  // Memory management function3
   void cleanup();
   void clone(bigint const &other);
   void move(bigint &&other);

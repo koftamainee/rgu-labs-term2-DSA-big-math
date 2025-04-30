@@ -1,6 +1,8 @@
 #include <climits>
 #include <cstring>
+#include <exception>
 #include <stdexcept>
+#include <vector>
 
 #include "bigint.h"
 
@@ -94,4 +96,77 @@ bigint &bigint::_raw_negative_decrement() {
   // _raw_positive_decrement();
   // return *this;
   return *this += -1;
+}
+
+void bigint::_add_with_shift(bigint &adding_to, bigint &summand, size_t shift) {
+  // adding_to += summand << shift;
+  // return;
+
+  size_t bit_shift = shift % (sizeof(int) * 8);
+  size_t word_shift = shift / (sizeof(int) * 8);
+
+  if (bit_shift != 0) {
+    summand <<= bit_shift;
+  }
+
+  size_t summand_imaginary_size = word_shift + summand.size();
+  size_t max_size = (summand_imaginary_size > adding_to.size())
+                        ? summand_imaginary_size
+                        : adding_to.size();
+  if (adding_to.size() == summand_imaginary_size) {
+    ++max_size;
+  }
+
+  auto *result = new int[max_size]();
+
+  unsigned int extra_digit = 0;
+
+  unsigned int (*loword_hiword_function_pointers[])(unsigned int) = {loword,
+                                                                     hiword};
+  int other_pos = 0;
+
+  for (int i = 0; i < max_size; ++i) {
+    if (i < word_shift) {
+      result[i] = (i < adding_to.size()) ? adding_to[i] : 0;
+      continue;
+    }
+    result[i] = 0;
+    int this_digit = 0;
+    int other_digit = 0;
+
+    // std::cout << pos << ", " << i << std::endl;
+
+    try {
+      this_digit = adding_to[i];
+    } catch (std::exception const &e) {
+      this_digit = 0;
+    }
+    try {
+      other_digit = summand[other_pos++];
+    } catch (std::exception const &e) {
+      other_digit = 0;
+    }
+
+#pragma unroll
+    for (int j = 0; j < 2; ++j) {
+      unsigned int this_half_digit =
+          loword_hiword_function_pointers[j](this_digit);
+      unsigned int other_half_digit =
+          loword_hiword_function_pointers[j](other_digit);
+
+      unsigned int digits_sum =
+          this_half_digit + other_half_digit + extra_digit;
+      extra_digit = (digits_sum >> SHIFT);
+      unsigned int unsigned_result = (digits_sum & MASK) << (j * SHIFT);
+      result[i] += *reinterpret_cast<int *>(&unsigned_result);
+    }
+  }
+
+  // std::cout << "result: ";
+  // for (int i = 0; i < max_size; ++i) {
+  //   std::cout << result[i] << ", ";
+  // }
+  // std::cout << "\n";
+  adding_to.move_from_array(result, max_size);
+  // std::cout << "result: " << adding_to << std::endl;
 }

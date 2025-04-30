@@ -1,6 +1,5 @@
 #include <climits>
 #include <cstddef>
-#include <cstdint>
 #include <cstring>
 #include <exception>
 
@@ -67,6 +66,7 @@ bigint &bigint::operator+=(bigint const &other) & {
   if (this_sign == 0) {
     return *this = other;
   }
+
   if (other_sign == 0) {
     return *this;
   }
@@ -92,19 +92,9 @@ bigint &bigint::operator+=(bigint const &other) & {
   for (int i = 0; i < max_size; ++i) {
     result[i] = 0;
 
-    int this_digit = 0;
-    int other_digit = 0;
+    int this_digit = (i < size()) ? this->operator[](i) : 0;
+    int other_digit = (i < other.size()) ? const_cast<bigint &>(other)[i] : 0;
 
-    try {
-      this_digit = this->operator[](i);
-    } catch (std::exception const &e) {
-      this_digit = 0;
-    }
-    try {
-      other_digit = const_cast<bigint &>(other)[i];
-    } catch (std::exception const &e) {
-      other_digit = 0;
-    }
 #pragma unroll
     for (int j = 0; j < 2; ++j) {
       unsigned int this_half_digit =
@@ -149,8 +139,7 @@ bigint &bigint::operator+=(bigint const &other) & {
     --max_size;
   }
 
-  from_array(result, max_size);
-  delete[] result;
+  move_from_array(result, max_size);
 
   return *this;
 }
@@ -177,9 +166,7 @@ void bigint::accumulate_multiplication(
       static_cast<unsigned int>(product >> 32);
 
   bigint temp(reinterpret_cast<int *>(words_multiplication_result_digits), 3);
-  temp <<= position_shift;
-
-  result += temp;  // TODO: add function to raw add w/o shift
+  _add_with_shift(result, temp, position_shift);
 }
 
 bigint &bigint::operator*=(bigint const &other) & {
@@ -230,7 +217,7 @@ bigint &bigint::operator*=(bigint const &other) & {
 
       accumulate_multiplication(result, words_multiplication_result_digits,
                                 this_digit_loword, other_digit_loword,
-                                (static_cast<long>(i + j)) * 32);
+                                (static_cast<long long>(i + j)) * 32);
 
       accumulate_multiplication(result, words_multiplication_result_digits,
                                 this_digit_loword, other_digit_hiword,

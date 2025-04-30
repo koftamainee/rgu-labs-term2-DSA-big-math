@@ -201,16 +201,15 @@ int test_bigint() {
     bigint correct_catalan100 =
         "896519947090131496687170070074100632420837521538745909320";
 
-    bigint fact100 = bigint::factorial(10000);
-    // std::cout << "Computing 100!:\n" << fact100 << "\n";
-    // std::cout << "Correct? " << (fact100 == correct_fact100 ? "Yes" : "No")
-    // << "\n\n";
-    std::cout << "factorial computed\n";
+    bigint fact100 = bigint::factorial(100);
+    std::cout << "Computing 100!:\n" << fact100 << "\n";
+    std::cout << "Correct? " << (fact100 == correct_fact100 ? "Yes" : "No")
+              << "\n\n";
 
-    bigint fib1000 = fibonacci_iterative(10000);
-    // std::cout << "Computing 1000th Fibonacci number:\n" << fib1000 << "\n";
-    // std::cout << "Correct? " << (fib1000 == correct_fib1000 ? "Yes" : "No")
-    // << "\n\n";
+    bigint fib1000 = fibonacci_iterative(1000);
+    std::cout << "Computing 1000th Fibonacci number:\n" << fib1000 << "\n";
+    std::cout << "Correct? " << (fib1000 == correct_fib1000 ? "Yes" : "No")
+              << "\n\n";
 
     bigint catalan100 = catalan_number(100);
     std::cout << "Computing Catalan(100):\n" << catalan100 << "\n";

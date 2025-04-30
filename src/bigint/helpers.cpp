@@ -37,6 +37,7 @@ void bigint::clone(bigint const &other) {
 }
 
 void bigint::move(bigint &&other) {
+  cleanup();
   oldest_digit_ = other.oldest_digit_;
   other.oldest_digit_ = 0;
 
@@ -160,6 +161,21 @@ bigint &bigint::from_array(int const *digits, std::size_t size) {
   memcpy(other_digits_ + 1, digits, (size - 1) * sizeof(int));
   oldest_digit_ = digits[size - 1];
 
+  return *this;
+}
+
+bigint &bigint::move_from_array(int *digits, std::size_t size) {
+  remove_insignificant_numbers_from_digits_array(digits, size);
+  cleanup();
+  oldest_digit_ = digits[size - 1];
+  if (size == 1) {
+    delete[] digits;
+    return *this;
+  }
+  std::memcpy(digits + 1, digits, (size - 1) * sizeof(int));
+  digits[0] = static_cast<int>(size);
+  other_digits_ = digits;
+  digits = nullptr;
   return *this;
 }
 

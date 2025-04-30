@@ -1,5 +1,7 @@
 #include "bigint.h"
 
+#include <unistd.h>
+
 #include <cstring>
 #include <optional>
 
