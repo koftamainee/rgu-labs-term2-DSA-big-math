@@ -137,8 +137,11 @@ class bigint final {
   // Constants
   static constexpr unsigned int SHIFT = (sizeof(int) << 2);
   static constexpr unsigned int MASK = (1 << SHIFT) - 1;
-  static constexpr unsigned int KARATSUBA_THRESHOLD = 16;
 
+ public:
+  static constexpr unsigned int KARATSUBA_THRESHOLD = 64;
+
+ private:
   // Data Members
   int oldest_digit_;
   int *other_digits_;
