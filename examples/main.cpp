@@ -5,6 +5,6 @@ int test_bigfloat();
 int bigint_performance();
 
 int main() {
-  // bigint_performance();
-  test_bigint();
+  bigint_performance();
+  // test_bigint();
 }

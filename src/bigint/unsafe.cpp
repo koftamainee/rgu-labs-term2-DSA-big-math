@@ -108,7 +108,7 @@ void bigint::_add_with_shift(bigint &adding_to, bigint &summand, size_t shift) {
     return;
   }
 
-  size_t bits_per_word = sizeof(int) * 8;
+  constexpr size_t bits_per_word = sizeof(int) << 3;
   size_t bit_shift = shift % bits_per_word;
   size_t word_shift = shift / bits_per_word;
 
@@ -132,7 +132,7 @@ void bigint::_add_with_shift(bigint &adding_to, bigint &summand, size_t shift) {
   int summand_pos = 0;
 
   for (int i = 0; i < word_shift; ++i) {
-    result[i] = (i < adding_to_size) ? adding_to[i] : 0;
+    result[i] = (i < adding_to.size()) ? adding_to[i] : 0;
   }
 
   for (int i = static_cast<int>(word_shift); i < max_size; ++i) {
