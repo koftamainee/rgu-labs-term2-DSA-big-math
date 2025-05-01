@@ -10,7 +10,7 @@ std::ostream &operator<<(std::ostream &out, bigint const &num) noexcept {
   //   out << "[";
   // }
   // for (int i = 0; i < num.size(); ++i) {
-  //   out << const_cast<bigint &>(num)[i];
+  //   out << std::bitset<32>(const_cast<bigint &>(num)[i]);
   //   if (i != num.size() - 1) {
   //     out << ", ";
   //   }

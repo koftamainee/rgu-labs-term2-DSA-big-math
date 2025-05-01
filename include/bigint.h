@@ -137,6 +137,7 @@ class bigint final {
   // Constants
   static constexpr unsigned int SHIFT = (sizeof(int) << 2);
   static constexpr unsigned int MASK = (1 << SHIFT) - 1;
+  static constexpr unsigned int KARATSUBA_THRESHOLD = 16;
 
   // Data Members
   int oldest_digit_;
@@ -149,10 +150,14 @@ class bigint final {
   bigint &_raw_negative_decrement();
   static void _add_with_shift(bigint &adding_to, bigint &summand, size_t shift);
 
-  // Memory management function3
+  // Memory management functions
   void cleanup();
   void clone(bigint const &other);
   void move(bigint &&other);
+
+  // Multiplication alghoritms
+  bigint &scholarbook_multiply(bigint const &other) &;
+  bigint &karatsuba_multiply(bigint const &other);
 
   // Utilities
   void remove_leading_zeros();
@@ -164,6 +169,9 @@ class bigint final {
 
   int sign() const noexcept;
   int size() const noexcept;
+  int bit_length() const noexcept;
+  bigint get_lower(size_t m) const;
+  bigint get_upper(size_t m) const;
 
   // Static Helpers
   static int compare(bigint const &first, bigint const &second);

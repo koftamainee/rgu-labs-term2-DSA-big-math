@@ -207,3 +207,36 @@ void bigint::remove_leading_zeros() {
     other_digits_[0] = static_cast<int>(size);
   }
 }
+
+int bigint::bit_length() const noexcept {
+  return get_oldest_positive_bit_index() + 1;
+}
+
+bigint bigint::get_lower(size_t m) const {
+  auto const digits_count = size();
+  if (m >= digits_count) {
+    return *this;
+  }
+
+  auto *new_digits = new int[m];
+  for (int i = 0; i < m; ++i) {
+    new_digits[i] = const_cast<bigint *>(this)->operator[](i);
+  }
+  bigint temp;
+  return temp.move_from_array(new_digits, m);
+}
+
+bigint bigint::get_upper(size_t m) const {
+  auto const digits_count = size();
+  if (m >= digits_count) {
+    return 0;
+  }
+
+  const size_t upper_size = digits_count - m;
+  auto *new_digits = new int[upper_size];
+  for (int i = 0; i < upper_size; ++i) {
+    new_digits[i] = const_cast<bigint *>(this)->operator[](i + m);
+  }
+  bigint temp;
+  return temp.move_from_array(new_digits, upper_size);
+}
