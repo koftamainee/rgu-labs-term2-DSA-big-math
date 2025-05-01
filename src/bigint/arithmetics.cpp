@@ -1,6 +1,7 @@
 #include <climits>
 #include <cstddef>
 #include <cstring>
+#include <exception>
 
 #include "bigint.h"
 
@@ -56,6 +57,7 @@ bigint const bigint::operator--(int) & {
 }
 
 bigint &bigint::operator+=(bigint const &other) & {
+  // std::cout << "+= called on: " << *this << ", " << other << "\n";
   int this_sign = sign();
   int other_sign = other.sign();
 

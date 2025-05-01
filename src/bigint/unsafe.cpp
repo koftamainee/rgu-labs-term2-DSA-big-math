@@ -42,16 +42,19 @@ bigint &bigint::_raw_positive_increment() {
 bigint &bigint::_raw_positive_decrement() {
   if (sign() == 0) {
     oldest_digit_ = -1;
+    remove_leading_zeros();
     return *this;
   }
   auto const digits_count = size();
   for (int i = 0; i < digits_count - 1; ++i) {
     if (--((*this)[i]) != -1) {
+      remove_leading_zeros();
       return *this;
     }
   }
 
   if (--oldest_digit_ != INT_MAX) {
+    remove_leading_zeros();
     return *this;
   }
 
@@ -70,8 +73,8 @@ bigint &bigint::_raw_positive_decrement() {
   delete[] other_digits_;
   other_digits_ = new_array;
 
-  (*this)[digits_count] = oldest_digit_;
-  --(*this).other_digits_[0];
+  this->other_digits_[digits_count] = oldest_digit_;
+  ++(*this).other_digits_[0];
   oldest_digit_ = 0;
 
   remove_leading_zeros();

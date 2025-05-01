@@ -25,9 +25,17 @@ bigint fibonacci_iterative(bigint const &n) {
 }
 
 bigint catalan_number(int n) {
-  bigint numerator = bigint::factorial(2 * n);
-  bigint denominator = bigint::factorial(n + 1) * bigint::factorial(n);
-  return numerator / denominator;
+  if (n < 0) {
+    return 0;
+  }
+  bigint result = 1;
+  bool flag = false;
+  for (int i = 1; i <= n; ++i) {
+    result *= (n + i);
+
+    result /= i;
+  }
+  return result / (n + 1);
 }
 
 int test_bigint() {
@@ -217,7 +225,6 @@ int test_bigint() {
               << (catalan100 == correct_catalan100 ? "Yes" : "No") << "\n";
 
     std::cout << "\n===== Demonstration Complete =====\n";
-
   } catch (const std::exception &e) {
     std::cout << "Unexpected exception: " << e.what() << "\n";
     return 1;

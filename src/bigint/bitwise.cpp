@@ -70,7 +70,7 @@ bigint &bigint::operator<<=(size_t shift) & {
     return *this;
   }
 
-  unsigned int const bits_per_digit = sizeof(int) << 3;
+  unsigned int constexpr bits_per_digit = sizeof(int) << 3;
   unsigned int const zeros_to_add_count =
       static_cast<int>(shift / bits_per_digit);
   shift &= bits_per_digit - 1;

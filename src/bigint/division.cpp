@@ -59,7 +59,6 @@ void bigint::division_result::move(division_result &&other) noexcept {
 
 bigint::division_result bigint::division(bigint const &dividend,
                                          bigint const &divisor) {
-  // std::cout << "\n\n\n\n\n\n";
   // std::cout << "division called on numbers: " << dividend << ", " << divisor
   // << std::endl;
   int dividend_sign = dividend.sign();

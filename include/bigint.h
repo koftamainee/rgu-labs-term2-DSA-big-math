@@ -163,6 +163,8 @@ class bigint final {
   int &operator[](std::size_t index);
 
   int sign() const noexcept;
+
+ public:
   int size() const noexcept;
 
   // Static Helpers

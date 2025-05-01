@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
+#include <string>
 
 #include "bigint.h"
 
@@ -166,11 +167,12 @@ bigint &bigint::from_array(int const *digits, std::size_t size) {
 bigint &bigint::move_from_array(int *digits, std::size_t size) {
   remove_insignificant_numbers_from_digits_array(digits, size);
   cleanup();
-  oldest_digit_ = digits[size - 1];
   if (size == 1) {
+    oldest_digit_ = digits[0];
     delete[] digits;
     return *this;
   }
+  oldest_digit_ = digits[size - 1];
   std::memcpy(digits + 1, digits, (size - 1) * sizeof(int));
   digits[0] = static_cast<int>(size);
   other_digits_ = digits;
@@ -197,8 +199,7 @@ int bigint::get_oldest_positive_bit_index() const noexcept {
 
 void bigint::remove_leading_zeros() {
   size_t size = this->size();
-  while (size != 1 && (((*this)[size - 1] == 0 && (*this)[size - 2] >= 0) ||
-                       ((*this)[size - 1] == -1 && (*this)[size - 2] < 0))) {
+  while (size > 1 && (((*this)[size - 1] == 0 && (*this)[size - 2] >= 0))) {
     --size;
   }
   if (size < this->size()) {
