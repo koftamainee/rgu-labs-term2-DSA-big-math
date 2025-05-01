@@ -168,8 +168,6 @@ void bigint::accumulate_multiplication(
   _add_with_shift(result, temp, position_shift);
 }
 
-#pragma omp declare reduction(merge:bigint : omp_out += omp_in) \
-    initializer(omp_priv = bigint(0))
 bigint &bigint::operator*=(bigint const &other) & {
   if (this->sign() == 0 || other.sign() == 0) {
     *this = 0;
@@ -199,13 +197,13 @@ bigint &bigint::operator*=(bigint const &other) & {
     return (this->negate() *= other).negate();
   }
 
+  unsigned int words_multiplication_result_digits[3] = {0};
   auto this_size = size();
   auto other_size = other.size();
   bigint const *first = this;
 
   bigint result = 0;
 
-#pragma omp parallel for reduction(merge : result)
   for (int i = 0; i < this_size; ++i) {
     unsigned int this_digit = first->operator[](i);
     unsigned int this_digit_loword = loword(this_digit);
@@ -215,8 +213,6 @@ bigint &bigint::operator*=(bigint const &other) & {
       unsigned int other_digit = other[j];
       unsigned int other_digit_loword = loword(other_digit);
       unsigned int other_digit_hiword = hiword(other_digit);
-
-      unsigned int words_multiplication_result_digits[3] = {0};
 
       accumulate_multiplication(result, words_multiplication_result_digits,
                                 this_digit_loword, other_digit_loword,
@@ -237,6 +233,7 @@ bigint &bigint::operator*=(bigint const &other) & {
   }
   return *this = std::move(result);
 }
+
 bigint operator*(bigint const &first, bigint const &second) {
   bigint copy = first;
   return copy *= second;
