@@ -4,6 +4,8 @@ int test_bigint();
 int test_bigfloat();
 int bigint_performance();
 
+bigint fibonacci_iterative(bigint const &n);
+
 int main() {
   bigint_performance();
   // test_bigint();
