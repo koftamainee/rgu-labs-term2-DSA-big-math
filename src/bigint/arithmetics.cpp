@@ -1,7 +1,6 @@
 #include <climits>
 #include <cstddef>
 #include <cstring>
-#include <exception>
 
 #include "bigint.h"
 
@@ -57,12 +56,9 @@ bigint const bigint::operator--(int) & {
 }
 
 bigint &bigint::operator+=(bigint const &other) & {
-  unsigned int (*loword_hiword_function_pointers[])(unsigned int) = {loword,
-                                                                     hiword};
-
-  int result_sign = 0;
   int this_sign = sign();
   int other_sign = other.sign();
+
   if (this_sign == 0) {
     return *this = other;
   }
@@ -71,61 +67,65 @@ bigint &bigint::operator+=(bigint const &other) & {
     return *this;
   }
 
+  int result_sign = 0;
+
   if (this_sign == other_sign) {
     result_sign = this_sign;
   } else {
-    if (this_sign == -1) {
-      result_sign = ((*this).abs() > other) ? -1 : 1;
-    } else {
-      result_sign = ((*this) < other.abs()) ? -1 : 1;
+    const bigint &abs_this = this->abs();
+    const bigint &abs_other = other.abs();
+
+    if (abs_this == abs_other) {
+      return *this = 0;
     }
+
+    bool this_bigger = abs_this > abs_other;
+    result_sign = this_bigger ? this_sign : other_sign;
   }
 
-  if (this_sign != other_sign && this->abs() == other.abs()) {
-    return *this = 0;
-  }
+  unsigned int this_size = size();
+  unsigned int other_size = other.size();
+  unsigned int max_size = (this_size > other_size ? this_size : other_size) + 1;
 
-  unsigned int max_size = max(size(), other.size()) + 1;
   int *result = new int[max_size];
   unsigned int extra_digit = 0;
 
   for (int i = 0; i < max_size; ++i) {
+    int this_digit = (i < this_size) ? (*this)[i] : 0;
+    int other_digit = (i < other_size) ? const_cast<bigint &>(other)[i] : 0;
+
     result[i] = 0;
 
-    int this_digit = (i < size()) ? this->operator[](i) : 0;
-    int other_digit = (i < other.size()) ? const_cast<bigint &>(other)[i] : 0;
-
-#pragma unroll
-    for (int j = 0; j < 2; ++j) {
-      unsigned int this_half_digit =
-          loword_hiword_function_pointers[j](this_digit);
-      unsigned int other_half_digit =
-          loword_hiword_function_pointers[j](other_digit);
-
-      if (i == max_size - 1) {
-        if (this_digit == 0 && other_digit == 0 && extra_digit != 0) {
-          result[i] = result_sign;
-          break;
-        }
-      }
-
-      unsigned int digits_sum =
-          this_half_digit + other_half_digit + extra_digit;
-      extra_digit = (digits_sum >> SHIFT);
-      unsigned int unsigned_result = (digits_sum & MASK) << (j * SHIFT);
-      result[i] += *reinterpret_cast<int *>(&unsigned_result);
+    if (this_digit == 0 && other_digit == 0 && extra_digit == 0) {
+      continue;
     }
 
-    unsigned int next_this_digit =
-        static_cast<bigint const *>(this)->operator[](i + 1);
+    unsigned int this_lo = loword(this_digit);
+    unsigned int this_hi = hiword(this_digit);
+    unsigned int other_lo = loword(other_digit);
+    unsigned int other_hi = hiword(other_digit);
 
-    unsigned int next_other_digit = other[i + 1];
+    unsigned int sum_lo = this_lo + other_lo + extra_digit;
+    extra_digit = sum_lo >> SHIFT;
+    unsigned int lo_res = sum_lo & MASK;
+
+    unsigned int sum_hi = this_hi + other_hi + extra_digit;
+    extra_digit = sum_hi >> SHIFT;
+    unsigned int hi_res = sum_hi & MASK;
+
+    unsigned int combined = (hi_res << SHIFT) | lo_res;
+    result[i] = *reinterpret_cast<int *>(&combined);
+
+    if (i + 1 >= max_size) {
+      break;
+    }
 
     bool signs_differ = (this_sign != other_sign);
-    bool one_of_the_digits_negative = (this_digit < 0 && other_digit < 0);
-    bool next_digits_zero = (next_other_digit == 0 || next_this_digit == 0);
+    bool both_negative = (this_digit < 0 && other_digit < 0);
+    bool next_zero = ((i + 1 >= this_size || (*this)[i + 1] == 0) ||
+                      (i + 1 >= other_size || other[i + 1] == 0));
 
-    if ((signs_differ && one_of_the_digits_negative && next_digits_zero)) {
+    if (signs_differ && both_negative && next_zero) {
       extra_digit = 0;
     }
   }
@@ -140,7 +140,6 @@ bigint &bigint::operator+=(bigint const &other) & {
   }
 
   move_from_array(result, max_size);
-
   return *this;
 }
 

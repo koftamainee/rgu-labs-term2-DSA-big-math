@@ -4,7 +4,6 @@
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
-#include <string>
 
 #include "bigint.h"
 
@@ -198,7 +197,8 @@ int bigint::get_oldest_positive_bit_index() const noexcept {
 
 void bigint::remove_leading_zeros() {
   size_t size = this->size();
-  while (size > 1 && (((*this)[size - 1] == 0 && (*this)[size - 2] >= 0))) {
+  while (size != 1 && (((*this)[size - 1] == 0 && (*this)[size - 2] >= 0) ||
+                       ((*this)[size - 1] == -1 && (*this)[size - 2] < 0))) {
     --size;
   }
   if (size < this->size()) {
