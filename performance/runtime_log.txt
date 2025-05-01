@@ -1,0 +1,24 @@
+Running large number performance tests...
+Fibonacci(10000) computed in 0.00411084s
+Fibonacci(20000) computed in 0.0160086s
+Fibonacci(30000) computed in 0.0345454s
+Fibonacci(40000) computed in 0.0611096s
+Fibonacci(50000) computed in 0.0948292s
+Fibonacci(60000) computed in 0.136551s
+Fibonacci(70000) computed in 0.184221s
+Fibonacci(80000) computed in 0.238805s
+Fibonacci(90000) computed in 0.303383s
+Fibonacci(100000) computed in 0.373551s
+Factorial(1000) computed in 0.0232346s
+Factorial(2000) computed in 0.19094s
+Factorial(3000) computed in 0.66682s
+Factorial(4000) computed in 1.62712s
+Factorial(5000) computed in 3.26657s
+Factorial(6000) computed in 5.78902s
+Factorial(7000) computed in 9.42836s
+Factorial(8000) computed in 14.4194s
+Factorial(9000) computed in 20.9703s
+Factorial(10000) computed in 29.3286s
+Results saved to peroformance/performance_results.csv
+
+

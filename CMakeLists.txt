@@ -9,6 +9,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
       "-O3 -march=native -flto -funroll-loops -fomit-frame-pointer -ffast-math -fno-rtti"
   )
   set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+
+  set_target_properties(big_math PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
 include_directories(include)
@@ -31,4 +33,3 @@ add_executable(rgu-labs ${EXAMPLES_SOURCES})
 target_link_libraries(rgu-labs big_math)
 
 # Enable interprocedural optimization for the big_math target
-set_target_properties(big_math PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
