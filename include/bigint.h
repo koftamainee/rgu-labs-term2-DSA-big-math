@@ -122,6 +122,7 @@ class bigint final {
 
   // Advanced mathematical operations
   static bigint factorial(bigint const &n);
+  static bigint product(const bigint &l, const bigint &r);
   static bigint gcd(bigint a, bigint b);
   bigint pow(bigint const &exponent) const;
   bigint mod_pow(bigint exponent, bigint const &modulus) const;
@@ -134,15 +135,12 @@ class bigint final {
                                   bigint const &num) noexcept;
   friend std::istream &operator>>(std::istream &in, bigint &num);
 
- private:
   // Constants
   static constexpr unsigned int SHIFT = (sizeof(int) << 2);
   static constexpr unsigned int MASK = (1 << SHIFT) - 1;
 
- public:
   static constexpr unsigned int KARATSUBA_THRESHOLD = 4;
 
- private:
   // Data Members
   int oldest_digit_;
   int *other_digits_;
@@ -153,6 +151,8 @@ class bigint final {
   bigint &_raw_negative_increment();
   bigint &_raw_negative_decrement();
   static void _add_with_shift(bigint &adding_to, bigint &summand, size_t shift);
+  static void _add_with_word_shift(bigint &adding_to, bigint &summand,
+                                   size_t shift);
 
   // Memory management functions
   void cleanup();
@@ -162,7 +162,7 @@ class bigint final {
   // Multiplication alghoritms
   bigint &multiply(bigint const &other);
   bigint &scholarbook_multiply(bigint const &other) &;
-  bigint &karatsuba_multiply(bigint const &other);
+  bigint &karatsuba_multiply(bigint const &other) &;
 
   // Utilities
   void remove_leading_zeros();

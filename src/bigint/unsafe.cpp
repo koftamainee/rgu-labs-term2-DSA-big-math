@@ -119,6 +119,11 @@ void bigint::_add_with_shift(bigint &adding_to, bigint &summand, size_t shift) {
     summand <<= bit_shift;
   }
 
+  _add_with_word_shift(adding_to, summand, word_shift);
+}
+
+void bigint::_add_with_word_shift(bigint &adding_to, bigint &summand,
+                                  size_t word_shift) {
   size_t adding_to_size = adding_to.size();
   size_t summand_size = summand.size();
   size_t total_summand_size = word_shift + summand_size;

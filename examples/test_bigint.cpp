@@ -213,6 +213,7 @@ int test_bigint() {
     std::cout << "Computing 100!:\n" << fact100 << "\n";
     std::cout << "Correct? " << (fact100 == correct_fact100 ? "Yes" : "No")
               << "\n\n";
+    std::cout << fact100 - correct_fact100 << std::endl;
 
     bigint fib1000 = fibonacci_iterative(1000);
     std::cout << "Computing 1000th Fibonacci number:\n" << fib1000 << "\n";

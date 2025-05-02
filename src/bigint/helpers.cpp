@@ -140,9 +140,14 @@ void bigint::remove_insignificant_numbers_from_digits_array(int const *digits,
     throw std::invalid_argument("Digits count can't be EQ to 0");
   }
 
-  while (size != 1 && ((digits[size - 1] == 0 && digits[size - 2] >= 0) ||
-                       (digits[size - 1] == -1 && digits[size - 2] < 0))) {
+  while (size > 1 && ((digits[size - 1] == 0 && digits[size - 2] >= 0) ||
+                      (digits[size - 1] == -1 && digits[size - 2] < 0))) {
     --size;
+  }
+
+  if (size == 0) {
+    throw std::invalid_argument(
+        "After removing insignificant numbers, array cannot be empty");
   }
 }
 
@@ -215,28 +220,33 @@ int bigint::bit_length() const noexcept {
 bigint bigint::get_lower(size_t m) const {
   auto const digits_count = size();
   if (m >= digits_count) {
+    return *this;
+  }
+  if (m == 0) {
     return 0;
   }
 
-  auto *new_digits = new int[m];
+  auto *new_digits = new int[m + 1];
   for (int i = 0; i < m; ++i) {
     new_digits[i] = const_cast<bigint *>(this)->operator[](i);
   }
+  new_digits[m] = 0;
   bigint temp;
-  return temp.move_from_array(new_digits, m);
+  return temp.move_from_array(new_digits, m + 1);
 }
 
 bigint bigint::get_upper(size_t m) const {
   auto const digits_count = size();
   if (m >= digits_count) {
-    return *this;
+    return 0;
   }
 
   const size_t upper_size = digits_count - m;
-  auto *new_digits = new int[upper_size];
+  auto *new_digits = new int[upper_size + 1];
   for (int i = 0; i < upper_size; ++i) {
     new_digits[i] = const_cast<bigint *>(this)->operator[](i + m);
   }
+  new_digits[upper_size] = 0;
   bigint temp;
-  return temp.move_from_array(new_digits, upper_size);
+  return temp.move_from_array(new_digits, upper_size + 1);
 }

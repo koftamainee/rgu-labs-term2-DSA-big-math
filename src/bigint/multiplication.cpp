@@ -52,25 +52,31 @@ bigint &bigint::scholarbook_multiply(bigint const &other) & {
   return *this = std::move(result);
 }
 
-bigint &bigint::karatsuba_multiply(bigint const &other) {
-  const size_t this_size = this->size();
-  const size_t other_size = other.size();
-  const size_t m = std::max(this_size, other_size) / 2;
+bigint &bigint::karatsuba_multiply(bigint const &other) & {
+  auto const this_size = this->size();
+  auto const other_size = other.size();
 
-  bigint high1 = this->get_upper(m);
-  bigint low1 = this->get_lower(m);
-  bigint high2 = other.get_upper(m);
-  bigint low2 = other.get_lower(m);
+  size_t const m = (max(this_size, other_size)) / 2;
+
+  bigint const high1 = this->get_upper(m);
+  bigint const low1 = this->get_lower(m);
+  bigint const high2 = other.get_upper(m);
+  bigint const low2 = other.get_lower(m);
 
   bigint z0 = low1 * low2;
   bigint z2 = high1 * high2;
+  bigint z1 = (low1 + high1) * (low2 + high2);
 
-  bigint sum1 = low1 + high1;
-  bigint sum2 = low2 + high2;
-  bigint z1 = sum1 * sum2;
+  std::cout << z1 << " + " << -z2 << " = ";
   z1 -= z2;
+  std::cout << z1 << std::endl;
+  std::cout << z1 << " + " << -z0 << " = ";
   z1 -= z0;
+  std::cout << z1 << std::endl;
 
-  *this = (z2 << (m * 2)) + (z1 << m) + z0;
-  return *this;
+  bigint result = std::move(z0);
+  _add_with_word_shift(result, z1, m);
+  _add_with_word_shift(result, z2, 2 * m);
+
+  return *this = std::move(result);
 }

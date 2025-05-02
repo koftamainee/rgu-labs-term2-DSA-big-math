@@ -1,17 +1,27 @@
 #include <stdexcept>
 
 #include "bigint.h"
-bigint bigint::factorial(bigint const &n) {
+
+bigint bigint::product(const bigint &l, const bigint &r) {
+  if (l > r) {
+    return 1;
+  }
+  if (l == r) {
+    return l;
+  }
+  if (r - l == 1) {
+    return l * r;
+  }
+
+  bigint m = (l + r) / 2;
+  return product(l, m) * product(m + 1, r);
+}
+
+bigint bigint::factorial(const bigint &n) {
   if (n < 2) {
     return 1;
   }
-
-  bigint result = 1;
-  for (bigint i = 2; i <= n; ++i) {
-    result *= i;
-  }
-
-  return result;
+  return product(2, n);
 }
 
 bigint bigint::gcd(bigint a, bigint b) {
