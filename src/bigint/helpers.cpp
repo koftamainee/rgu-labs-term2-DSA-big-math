@@ -215,7 +215,7 @@ int bigint::bit_length() const noexcept {
 bigint bigint::get_lower(size_t m) const {
   auto const digits_count = size();
   if (m >= digits_count) {
-    return *this;
+    return 0;
   }
 
   auto *new_digits = new int[m];
@@ -229,7 +229,7 @@ bigint bigint::get_lower(size_t m) const {
 bigint bigint::get_upper(size_t m) const {
   auto const digits_count = size();
   if (m >= digits_count) {
-    return 0;
+    return *this;
   }
 
   const size_t upper_size = digits_count - m;

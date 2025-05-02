@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 thresholds = list(range(4, 308, 4))
 times = [
@@ -87,21 +88,40 @@ plt.xlabel("Threshold Value", fontsize=12)
 plt.ylabel("Execution Time (ms)", fontsize=12)
 plt.grid(True, linestyle="--", alpha=0.7)
 
+# Находим минимум
 min_time = min(times)
 min_index = times.index(min_time)
+min_threshold = thresholds[min_index]
+
 plt.scatter(
-    thresholds[min_index],
+    min_threshold,
     min_time,
     color="red",
     s=100,
-    label=f"Minimum: {min_time} ms at threshold {thresholds[min_index]}",
+    label=f"Minimum: {min_time} ms at threshold {min_threshold}",
 )
+
+# Строим среднюю линию для точек после минимума
+post_min_thresholds = thresholds[min_index:]
+post_min_times = times[min_index:]
+
+# Линейная регрессия для точек после минимума
+coefficients = np.polyfit(post_min_thresholds, post_min_times, 1)
+trend_line = np.poly1d(coefficients)
+plt.plot(
+    post_min_thresholds,
+    trend_line(post_min_thresholds),
+    color="green",
+    linestyle="--",
+    label=f"Trend after min: y={coefficients[0]:.2f}x+{coefficients[1]:.2f}",
+)
+
 plt.legend()
 
 plt.text(
-    thresholds[min_index],
+    min_threshold,
     min_time + 1000,
-    f"Optimal threshold: {thresholds[min_index]}",
+    f"Optimal threshold: {min_threshold}",
     horizontalalignment="center",
     fontsize=10,
     bbox=dict(facecolor="white", alpha=0.8),
@@ -111,5 +131,5 @@ plt.xticks(range(0, 309, 32))
 plt.yticks(range(70000, 77000, 1000))
 
 plt.tight_layout()
-plt.savefig("karatsuba_thresholds.png", dpi=300, bbox_inches="tight")
+plt.savefig("karatsuba_thresholds_with_trend.png", dpi=300, bbox_inches="tight")
 plt.show()

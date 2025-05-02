@@ -140,7 +140,7 @@ class bigint final {
   static constexpr unsigned int MASK = (1 << SHIFT) - 1;
 
  public:
-  static constexpr unsigned int KARATSUBA_THRESHOLD = 4;
+  static constexpr unsigned int KARATSUBA_THRESHOLD = INT_MAX;
 
  private:
   // Data Members

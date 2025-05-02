@@ -183,9 +183,13 @@ bigint &bigint::operator*=(bigint const &other) & {
     return (this->negate() *= other).negate();
   }
 
-  if (size() >= KARATSUBA_THRESHOLD || other.size() >= KARATSUBA_THRESHOLD) {
-    return karatsuba_multiply(other);
-  }
+  return multiply(other);
+}
+
+bigint &bigint::multiply(bigint const &other) {
+  // if (size() >= KARATSUBA_THRESHOLD && other.size() >= KARATSUBA_THRESHOLD) {
+  //   return karatsuba_multiply(other);
+  // }
   return scholarbook_multiply(other);
 }
 

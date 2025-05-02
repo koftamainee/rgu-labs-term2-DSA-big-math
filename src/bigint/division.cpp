@@ -59,8 +59,6 @@ void bigint::division_result::move(division_result &&other) noexcept {
 
 bigint::division_result bigint::division(bigint const &dividend,
                                          bigint const &divisor) {
-  // std::cout << "division called on numbers: " << dividend << ", " << divisor
-  // << std::endl;
   int dividend_sign = dividend.sign();
   int divisor_sign = divisor.sign();
 
@@ -82,14 +80,19 @@ bigint::division_result bigint::division(bigint const &dividend,
     division_result positive_result = division(abs_dividend, abs_divisor);
 
     if (dividend_sign == -1 && divisor_sign == -1) {
-      return {positive_result.quotient(), -positive_result.remainder()};
+      return {positive_result.quotient(), positive_result.remainder()};
     }
     if (dividend_sign == -1) {
       if (positive_result.remainder() == 0) {
         return {-positive_result.quotient(), 0};
       }
-      return {-positive_result.quotient() - 1,
-              abs_divisor - positive_result.remainder()};
+      if (dividend_sign == -1) {
+        if (positive_result.remainder() == 0) {
+          return {-positive_result.quotient(), 0};
+        }
+        return {-positive_result.quotient() - 1,
+                abs_divisor - positive_result.remainder()};
+      }
     }
     return {-positive_result.quotient(), positive_result.remainder()};
   }
@@ -100,44 +103,21 @@ bigint::division_result bigint::division(bigint const &dividend,
 
   bigint quotient = 0;
   bigint remainder = dividend;
-  // std::cout << "divisor: " << divisor << std::endl;
   int divisor_oldest_bit_index = divisor.get_oldest_positive_bit_index();
 
   while (remainder >= divisor) {
-    // std::cout << "==============" << std::endl;
     int remainder_oldest_bit_index = remainder.get_oldest_positive_bit_index();
     int shift = remainder_oldest_bit_index - divisor_oldest_bit_index;
-    // std::cout << "remainder_oldest_bit_index - divisor_oldest_bit_index: "
-    // << remainder_oldest_bit_index << " - " << divisor_oldest_bit_index
-    // << " = " << shift << std::endl;
     bigint shifted_divisor = divisor << shift;
-
-    // std::cout << "remainder:" << remainder << std::endl;
-
-    // std::cout << "shifted divisor before " << shifted_divisor << std::endl;
-
     if (shifted_divisor > remainder) {
-      // std::cout << "shifted divisor is too bitm shifting right to 1"
-      // << std::endl;
       shifted_divisor >>= 1;
       --shift;
     }
-
-    // std::cout << "shifted divisor after " << shifted_divisor << std::endl;
-    // std::cout << "shift: " << shift << std::endl;
-
-    // std::cout << "remainder - shifted_divisor = " << remainder << " - "
-    // << shifted_divisor << " = ";
-
     shifted_divisor.negate();
     remainder += shifted_divisor;
-    // std::cout << remainder << std::endl;  // TODO: COMMENT THIS
 
-    quotient += (bigint(1) << shift);
-    // std::cout << "END. quotient: " << quotient << ", remainder: " <<
-    // remainder
-    // << std::endl;
-    // getchar();
+    bigint one = 1;
+    _add_with_shift(quotient, one, shift);
   }
 
   quotient.remove_leading_zeros();

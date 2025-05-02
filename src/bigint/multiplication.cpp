@@ -55,37 +55,22 @@ bigint &bigint::scholarbook_multiply(bigint const &other) & {
 bigint &bigint::karatsuba_multiply(bigint const &other) {
   const size_t this_size = this->size();
   const size_t other_size = other.size();
+  const size_t m = std::max(this_size, other_size) / 2;
 
-  if (this_size < KARATSUBA_THRESHOLD || other_size < KARATSUBA_THRESHOLD) {
-    return scholarbook_multiply(other);
-  }
+  bigint high1 = this->get_upper(m);
+  bigint low1 = this->get_lower(m);
+  bigint high2 = other.get_upper(m);
+  bigint low2 = other.get_lower(m);
 
-  const size_t m = (std::min(this_size, other_size) + 1) / 2;
+  bigint z0 = low1 * low2;
+  bigint z2 = high1 * high2;
 
-  bigint high1;
-  bigint low1;
-  bigint high2;
-  bigint low2;
+  bigint sum1 = low1 + high1;
+  bigint sum2 = low2 + high2;
+  bigint z1 = sum1 * sum2;
+  z1 -= z2;
+  z1 -= z0;
 
-  high1 = std::move(this->get_upper(m));
-  low1 = std::move(this->get_lower(m));
-
-  high2 = std::move(other.get_upper(m));
-  low2 = std::move(other.get_lower(m));
-
-  bigint z1 = std::move((low1 + high1).karatsuba_multiply(low2 + high2));
-
-  // z0 = low1
-  low1.karatsuba_multiply(low2);
-  // z2 = high1
-  high1.karatsuba_multiply(high2);
-
-  z1 -= low1;
-  z1 -= high1;
-
-  _add_with_shift(*this, high1, m << 1);
-  _add_with_shift(*this, z1, m);
-  *this += low1;
-
+  *this = (z2 << (m * 2)) + (z1 << m) + z0;
   return *this;
 }
