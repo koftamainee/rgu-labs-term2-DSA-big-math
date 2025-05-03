@@ -1,5 +1,5 @@
-#include <algorithm>
 #include <climits>
+#include <cstdint>
 #include <cstring>
 
 #include "bigint.h"
@@ -56,7 +56,6 @@ bigint const bigint::operator--(int) & {
 }
 
 bigint &bigint::operator+=(bigint const &other) & {
-  // std::cout << "+= called on: " << *this << ", " << other << "\n";
   int this_sign = sign();
   int other_sign = other.sign();
 
@@ -68,84 +67,27 @@ bigint &bigint::operator+=(bigint const &other) & {
     return *this;
   }
 
-  int result_sign = 0;
-
-  if (this_sign == other_sign) {
-    result_sign = this_sign;
-  } else {
-    const bigint &abs_this = this->abs();
-    const bigint &abs_other = other.abs();
-
-    if (abs_this == abs_other) {
-      return *this = 0;
-    }
-
-    bool this_bigger = abs_this > abs_other;
-    result_sign = this_bigger ? this_sign : other_sign;
-  }
-
   unsigned int this_size = size();
   unsigned int other_size = other.size();
   unsigned int max_size = (this_size > other_size ? this_size : other_size) + 1;
 
   int *result = new int[max_size];
-  unsigned int extra_digit = 0;
+  uint64_t carry = 0;
 
-  for (int i = 0; i < max_size; ++i) {
-    int this_digit = (i < this_size) ? (*this)[i] : 0;
-    int other_digit = (i < other_size) ? const_cast<bigint &>(other)[i] : 0;
+  for (unsigned int i = 0; i < max_size; ++i) {
+    uint32_t this_digit =
+        (i < this_size) ? static_cast<uint32_t>((*this)[i]) : 0;
+    uint32_t other_digit =
+        (i < other_size) ? static_cast<uint32_t>(other[i]) : 0;
 
-    result[i] = 0;
-
-    if (this_digit == 0 && other_digit == 0 && extra_digit == 0) {
-      continue;
-    }
-
-    unsigned int this_lo = loword(this_digit);
-    unsigned int this_hi = hiword(this_digit);
-    unsigned int other_lo = loword(other_digit);
-    unsigned int other_hi = hiword(other_digit);
-
-    unsigned int sum_lo = this_lo + other_lo + extra_digit;
-    extra_digit = sum_lo >> SHIFT;
-    unsigned int lo_res = sum_lo & MASK;
-
-    unsigned int sum_hi = this_hi + other_hi + extra_digit;
-    extra_digit = sum_hi >> SHIFT;
-    unsigned int hi_res = sum_hi & MASK;
-
-    unsigned int combined = (hi_res << SHIFT) | lo_res;
-    result[i] = *reinterpret_cast<int *>(&combined);
-
-    if (i + 1 >= max_size) {
-      break;
-    }
-
-    bool signs_differ = (this_sign != other_sign);
-    bool both_negative = (this_digit < 0 && other_digit < 0);
-    bool next_zero = ((i + 1 >= this_size || (*this)[i + 1] <= 0) ||
-                      (i + 1 >= other_size || other[i + 1] <= 0));
-
-    if (signs_differ && both_negative && next_zero && extra_digit > 0) {
-      extra_digit = 0;
-    }
-    //   if (this_digit < 0 && other_digit >= 0 ||
-    //       this_digit >= 0 && other_digit < 0) {
-    //     extra_digit = 0;
-    //   }
+    uint64_t sum = static_cast<uint64_t>(this_digit) + other_digit + carry;
+    carry = sum >> 32;
+    result[i] = static_cast<int>(sum & 0xFFFFFFFF);
   }
 
-  if (result_sign == -1 && result[max_size - 1] == 0) {
-    --max_size;
-  }
-  if ((this_sign == -1 || other_sign == -1) && result_sign == 1 &&
-      result[max_size - 1] == 1) {
-    --max_size;
-  }
   move_from_array(result, max_size);
   return *this;
 }
-
 bigint operator+(bigint const &first, bigint const &second) {
   bigint temp = first;
   return temp += second;
@@ -190,10 +132,9 @@ bigint &bigint::operator*=(bigint const &other) & {
 }
 
 bigint &bigint::multiply(bigint const &other) {
-  // if (size() >= KARATSUBA_THRESHOLD && other.size() >= KARATSUBA_THRESHOLD)
-  // {
-  //   return karatsuba_multiply(other);
-  // }
+  if (size() >= KARATSUBA_THRESHOLD && other.size() >= KARATSUBA_THRESHOLD) {
+    return karatsuba_multiply(other);
+  }
   return scholarbook_multiply(other);
 }
 

@@ -1,4 +1,5 @@
 #include <chrono>
+#include <climits>
 #include <fstream>
 #include <iomanip>
 
@@ -63,10 +64,22 @@ bigint fibonacci_iterative(bigint const &n);
 //   csv_file.close();
 // }
 
+int test_addition() {
+  int arr1[] = {1, 2, 3, -1, 0};
+  int arr2[] = {5, 4, 3, -1, 0};
+  bigint a(arr1, 5);
+  bigint b(arr2, 5);
+
+  std::cout << a << " + " << b << " = " << a + b << std::endl;
+
+  return 0;
+}
+
 int main() {
   // benchmark_karatsuba_threshold();
   // bigint_performance();
   // test_bigint();
+  test_addition();
 
   // bigint num_a = 12345;
   // bigint num_b = "98765432109876543210";
@@ -90,14 +103,12 @@ int main() {
   //
   // bigint res = a * b;
 
-  int arr1[] = {-2147483648, -1000000000};
-
-  int arr2[] = {-1, -1000000000};
-
-  bigint a(arr1, 2);
-  bigint b(arr2, 2);
-
-  std::cout << a << " + " << b << " = " << a + b << std::endl;
-
-  return 0;
+  // 176815061055011095745886298753849689089432706178510500
+  // + -176815022714212959676956976999327727818741091208162980 =
+  // 38340798136068929321754521961270691614970347520
+  //
+  //
+  //[-2133430620, 1093403247, -1983487616, 2127757544, -969878514, 120981] +
+  //[1026134364, 1113903038, 1579385472, -1967053645, 1082551992, -120982] =
+  //[-1107296256, -2087661011, -404102144, 160703899, 112673479]
 }

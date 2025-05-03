@@ -14,8 +14,6 @@
 // add move semantics to from_array
 // bool is_prime(int certainty = 5) const;
 
-class allocator;
-
 class bigint final {
  public:
   // Exceptions
