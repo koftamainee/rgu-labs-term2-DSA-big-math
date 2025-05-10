@@ -1,21 +1,22 @@
+
 #include "bigint.h"
 
 void bigint::accumulate_multiplication(
-    bigint &result, unsigned int words_multiplication_result_digits[3],
+    bigint &result, unsigned int *words_multiplication_result_digits,
     unsigned int a, unsigned int b, size_t position_shift) {
-  auto product =
-      static_cast<unsigned long long>(a) * static_cast<unsigned long long>(b);
-  words_multiplication_result_digits[0] =
-      static_cast<unsigned int>(product & 0xFFFFFFFF);
-  words_multiplication_result_digits[1] =
-      static_cast<unsigned int>(product >> 32);
+  if (a == 0 || b == 0) {
+    return;
+  }
+  unsigned int product = a * b;
+  words_multiplication_result_digits[0] = product;
 
-  bigint temp(reinterpret_cast<int *>(words_multiplication_result_digits), 3);
+  bigint temp(reinterpret_cast<int *>(words_multiplication_result_digits), 2);
+
   _add_with_shift(result, temp, position_shift);
 }
 
 bigint &bigint::scholarbook_multiply(bigint const &other) & {
-  unsigned int words_multiplication_result_digits[3] = {0};
+  unsigned int words_multiplication_result_digits[2] = {0};
   auto this_size = size();
   auto other_size = other.size();
   bigint const *first = this;
@@ -32,21 +33,22 @@ bigint &bigint::scholarbook_multiply(bigint const &other) & {
       unsigned int other_digit_loword = loword(other_digit);
       unsigned int other_digit_hiword = hiword(other_digit);
 
-      accumulate_multiplication(result, words_multiplication_result_digits,
-                                this_digit_loword, other_digit_loword,
-                                (static_cast<long long>(i + j)) * 32);
+      accumulate_multiplication(
+          result, words_multiplication_result_digits, this_digit_loword,
+          other_digit_loword,
+          (static_cast<long long>(i + j)) * sizeof(int) * 8);
 
       accumulate_multiplication(result, words_multiplication_result_digits,
                                 this_digit_loword, other_digit_hiword,
-                                ((i + j) * 32) + 16);
+                                ((i + j) * (sizeof(int) * 8)) + SHIFT);
 
       accumulate_multiplication(result, words_multiplication_result_digits,
                                 this_digit_hiword, other_digit_loword,
-                                ((i + j) * 32) + 16);
+                                ((i + j) * sizeof(int) * 8) + SHIFT);
 
-      accumulate_multiplication(result, words_multiplication_result_digits,
-                                this_digit_hiword, other_digit_hiword,
-                                static_cast<size_t>(i + j + 1) * 32);
+      accumulate_multiplication(
+          result, words_multiplication_result_digits, this_digit_hiword,
+          other_digit_hiword, static_cast<size_t>(i + j + 1) * sizeof(int) * 8);
     }
   }
   return *this = std::move(result);

@@ -4,7 +4,6 @@
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
-#include <string>
 
 #include "bigint.h"
 
@@ -141,7 +140,7 @@ void bigint::remove_insignificant_numbers_from_digits_array(int const *digits,
   }
 
   while (size > 1 && ((digits[size - 1] == 0 && digits[size - 2] >= 0) ||
-                      (digits[size - 1] == -1 && digits[size - 2] < 0))) {
+                      (digits[size - 1] == -1 && digits[size - 2] == -1))) {
     --size;
   }
 

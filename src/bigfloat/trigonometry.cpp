@@ -1,6 +1,9 @@
 #include "bigfloat.h"
 
-bigfloat bigfloat::PI(bigfloat const &EPS) { return arctg(1, EPS) * 4; }
+bigfloat bigfloat::PI(bigfloat const &EPS) {
+  static bigfloat pi = arctg(1, EPS) * 4;
+  return pi;
+}
 
 bigfloat sin(bigfloat const &number, bigfloat const &EPS) {
   bigfloat result = 0;

@@ -122,7 +122,6 @@ class bigint final {
 
   // Advanced mathematical operations
   static bigint factorial(bigint const &n);
-  static bigint product(const bigint &l, const bigint &r);
   static bigint gcd(bigint a, bigint b);
   bigint pow(bigint const &exponent) const;
   bigint mod_pow(bigint exponent, bigint const &modulus) const;
@@ -184,7 +183,7 @@ class bigint final {
   static unsigned int loword(unsigned int value);
   static unsigned int hiword(unsigned int value);
   static void accumulate_multiplication(
-      bigint &result, unsigned int words_multiplication_result_digits[3],
+      bigint &result, unsigned int *words_multiplication_result_digits,
       unsigned int a, unsigned int b, size_t position_shift);
   static void remove_insignificant_numbers_from_digits_array(int const *digits,
                                                              std::size_t &size);

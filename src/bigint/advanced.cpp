@@ -2,26 +2,17 @@
 
 #include "bigint.h"
 
-bigint bigint::product(const bigint &l, const bigint &r) {
-  if (l > r) {
-    return 1;
-  }
-  if (l == r) {
-    return l;
-  }
-  if (r - l == 1) {
-    return l * r;
-  }
-
-  bigint m = (l + r) / 2;
-  return product(l, m) * product(m + 1, r);
-}
-
 bigint bigint::factorial(const bigint &n) {
   if (n < 2) {
     return 1;
   }
-  return product(2, n);
+
+  bigint result = 1;
+  for (bigint i = 2; i <= n; ++i) {
+    result *= i;
+  }
+
+  return result;
 }
 
 bigint bigint::gcd(bigint a, bigint b) {

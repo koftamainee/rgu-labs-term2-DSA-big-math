@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <climits>
 #include <cstring>
+#include <system_error>
 
 #include "bigint.h"
 
@@ -56,7 +57,6 @@ bigint const bigint::operator--(int) & {
 }
 
 bigint &bigint::operator+=(bigint const &other) & {
-  // std::cout << "+= called on: " << *this << ", " << other << "\n";
   int this_sign = sign();
   int other_sign = other.sign();
 
@@ -129,10 +129,18 @@ bigint &bigint::operator+=(bigint const &other) & {
     if (signs_differ && both_negative && next_zero && extra_digit > 0) {
       extra_digit = 0;
     }
-    //   if (this_digit < 0 && other_digit >= 0 ||
-    //       this_digit >= 0 && other_digit < 0) {
+    // if (this_digit == INT_MIN && other_digit < 0 ||
+    //     this_digit < 0 && other_digit == INT_MIN) {
+    //   if (i < max_size - 1) {
     //     extra_digit = 0;
     //   }
+    // }
+    if (this_digit < 0 && other_digit < 0) {
+      long long sum = this_digit + other_digit;
+      if (sum >= INT_MIN) {
+        extra_digit = 0;
+      }
+    }
   }
 
   if (result_sign == -1 && result[max_size - 1] == 0) {
@@ -141,6 +149,9 @@ bigint &bigint::operator+=(bigint const &other) & {
   if ((this_sign == -1 || other_sign == -1) && result_sign == 1 &&
       result[max_size - 1] == 1) {
     --max_size;
+  }
+  if (result_sign == -1 && result[max_size - 1] >= 0) {
+    result[max_size - 1] = -result[max_size - 1];
   }
   move_from_array(result, max_size);
   return *this;
@@ -190,8 +201,7 @@ bigint &bigint::operator*=(bigint const &other) & {
 }
 
 bigint &bigint::multiply(bigint const &other) {
-  // if (size() >= KARATSUBA_THRESHOLD && other.size() >= KARATSUBA_THRESHOLD)
-  // {
+  // if (size() >= KARATSUBA_THRESHOLD && other.size() >= KARATSUBA_THRESHOLD) {
   //   return karatsuba_multiply(other);
   // }
   return scholarbook_multiply(other);
