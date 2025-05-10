@@ -117,10 +117,6 @@ bigint &bigint::operator+=(bigint const &other) & {
     unsigned int combined = (hi_res << SHIFT) | lo_res;
     result[i] = *reinterpret_cast<int *>(&combined);
 
-    if (i + 1 >= max_size) {
-      break;
-    }
-
     bool signs_differ = (this_sign != other_sign);
     bool both_negative = (this_digit < 0 && other_digit < 0);
     bool next_zero = ((i + 1 >= this_size || (*this)[i + 1] <= 0) ||
@@ -129,12 +125,12 @@ bigint &bigint::operator+=(bigint const &other) & {
     if (signs_differ && both_negative && next_zero && extra_digit > 0) {
       extra_digit = 0;
     }
-    // if (this_digit == INT_MIN && other_digit < 0 ||
-    //     this_digit < 0 && other_digit == INT_MIN) {
-    //   if (i < max_size - 1) {
-    //     extra_digit = 0;
-    //   }
-    // }
+    if (this_digit == INT_MIN && other_digit < 0 ||
+        this_digit < 0 && other_digit == INT_MIN) {
+      if (i < max_size - 1) {
+        extra_digit = 0;
+      }
+    }
     if (this_digit < 0 && other_digit < 0) {
       long long sum = this_digit + other_digit;
       if (sum >= INT_MIN) {

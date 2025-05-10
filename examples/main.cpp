@@ -13,7 +13,7 @@ bigint fibonacci_iterative(bigint const &n);
 int main() {
   // benchmark_karatsuba_threshold();
   // bigint_performance();
-  // test_bigint();
+  test_bigint();
 
   int arr1[] = {-2147483648, -1000000000};
 
