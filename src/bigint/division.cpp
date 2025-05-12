@@ -107,14 +107,22 @@ bigint::division_result bigint::division(bigint const &dividend,
 
   while (remainder >= divisor) {
     int remainder_oldest_bit_index = remainder.get_oldest_positive_bit_index();
+
     int shift = remainder_oldest_bit_index - divisor_oldest_bit_index;
+
     bigint shifted_divisor = divisor << shift;
+
     if (shifted_divisor > remainder) {
       shifted_divisor >>= 1;
       --shift;
     }
+
     shifted_divisor.negate();
+
+    std::cout << remainder << " += " << shifted_divisor << " = ";
+
     remainder += shifted_divisor;
+    std::cout << remainder << "\n";
 
     bigint one = 1;
     _add_with_shift(quotient, one, shift);
@@ -122,6 +130,11 @@ bigint::division_result bigint::division(bigint const &dividend,
 
   quotient.remove_leading_zeros();
   remainder.remove_leading_zeros();
+
+  std::cout << "\n=== FINAL RESULT ===\n";
+  std::cout << "Quotient: " << quotient << "\n";
+  std::cout << "Remainder: " << remainder << "\n";
+  std::cout << "=== DIVISION ENDED ===\n\n";
 
   return {quotient, remainder};
 }

@@ -16,6 +16,10 @@ bigint &bigint::negate() & {
   if (sign() == 0) {
     return *this;
   }
+  if (size() == 1 && oldest_digit_ == INT_MIN) {
+    int arr[] = {INT_MIN, 0};
+    return from_array(arr, 2);
+  }
   if (sign() == 1) {
     bit_inverse();
     _raw_negative_increment();
@@ -73,8 +77,8 @@ bigint &bigint::operator+=(bigint const &other) & {
   if (this_sign == other_sign) {
     result_sign = this_sign;
   } else {
-    const bigint &abs_this = this->abs();
-    const bigint &abs_other = other.abs();
+    const bigint abs_this = this->abs();
+    const bigint abs_other = other.abs();
 
     if (abs_this == abs_other) {
       return *this = 0;
@@ -95,9 +99,17 @@ bigint &bigint::operator+=(bigint const &other) & {
     int this_digit = (i < this_size) ? (*this)[i] : 0;
     int other_digit = (i < other_size) ? const_cast<bigint &>(other)[i] : 0;
 
-    result[i] = 0;
-
     if (this_digit == 0 && other_digit == 0 && extra_digit == 0) {
+      result[i] = 0;
+      continue;
+    }
+
+    if (this_digit == 0 && extra_digit == 0) {
+      result[i] = other_digit;
+      continue;
+    }
+    if (other_digit == 0 && extra_digit == 0) {
+      result[i] = this_digit;
       continue;
     }
 
@@ -117,38 +129,24 @@ bigint &bigint::operator+=(bigint const &other) & {
     unsigned int combined = (hi_res << SHIFT) | lo_res;
     result[i] = *reinterpret_cast<int *>(&combined);
 
-    bool signs_differ = (this_sign != other_sign);
-    bool both_negative = (this_digit < 0 && other_digit < 0);
-    bool next_zero = ((i + 1 >= this_size || (*this)[i + 1] <= 0) ||
-                      (i + 1 >= other_size || other[i + 1] <= 0));
-
-    if (signs_differ && both_negative && next_zero && extra_digit > 0) {
+    if ((this_digit ^ other_digit) < 0) {
       extra_digit = 0;
     }
-    if (this_digit == INT_MIN && other_digit < 0 ||
-        this_digit < 0 && other_digit == INT_MIN) {
-      if (i < max_size - 1) {
-        extra_digit = 0;
-      }
-    }
+
     if (this_digit < 0 && other_digit < 0) {
-      long long sum = this_digit + other_digit;
-      if (sum >= INT_MIN) {
-        extra_digit = 0;
+      int sum = this_digit + other_digit;
+
+      if (sum >= 0) {
+        --extra_digit;
       }
+
+      this_digit = sum;
     }
   }
-
   if (result_sign == -1 && result[max_size - 1] == 0) {
     --max_size;
   }
-  if ((this_sign == -1 || other_sign == -1) && result_sign == 1 &&
-      result[max_size - 1] == 1) {
-    --max_size;
-  }
-  if (result_sign == -1 && result[max_size - 1] >= 0) {
-    result[max_size - 1] = -result[max_size - 1];
-  }
+
   move_from_array(result, max_size);
   return *this;
 }

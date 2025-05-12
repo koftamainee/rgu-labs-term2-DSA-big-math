@@ -139,14 +139,17 @@ void bigint::remove_insignificant_numbers_from_digits_array(int const *digits,
     throw std::invalid_argument("Digits count can't be EQ to 0");
   }
 
-  while (size > 1 && ((digits[size - 1] == 0 && digits[size - 2] >= 0) ||
-                      (digits[size - 1] == -1 && digits[size - 2] == -1))) {
-    --size;
+  int i = static_cast<int>(size) - 1;
+  while (digits[i] == -1 && i >= 0) {
+    --i;
+  }
+  if (i == -1) {  // all minus ones
+    size = 1;
+    return;
   }
 
-  if (size == 0) {
-    throw std::invalid_argument(
-        "After removing insignificant numbers, array cannot be empty");
+  while (size > 1 && ((digits[size - 1] == 0 && digits[size - 2] >= 0))) {
+    --size;
   }
 }
 
