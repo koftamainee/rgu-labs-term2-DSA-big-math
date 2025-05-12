@@ -122,6 +122,9 @@ int main() {
   // bigint_performance();
   // test_bigint();
 
+  // bigint a = INT_MIN;
+  // std::cout << a << " - 1 = " << a + (-1) << std::endl;
+
   // test_bigint_addition();
 
   int arr[] = {-450461974, 1520782648, 5};

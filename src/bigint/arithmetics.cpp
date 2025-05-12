@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <climits>
 #include <cstring>
+#include <filesystem>
+#include <iostream>
 #include <system_error>
 
 #include "bigint.h"
@@ -91,25 +93,17 @@ bigint &bigint::operator+=(bigint const &other) & {
   unsigned int this_size = size();
   unsigned int other_size = other.size();
   unsigned int max_size = (this_size > other_size ? this_size : other_size) + 1;
+  bool borrow_one = false;
 
-  int *result = new int[max_size];
+  int *result = new int[max_size]();
   unsigned int extra_digit = 0;
 
   for (int i = 0; i < max_size; ++i) {
     int this_digit = (i < this_size) ? (*this)[i] : 0;
     int other_digit = (i < other_size) ? const_cast<bigint &>(other)[i] : 0;
 
-    if (this_digit == 0 && other_digit == 0 && extra_digit == 0) {
-      result[i] = 0;
-      continue;
-    }
-
-    if (this_digit == 0 && extra_digit == 0) {
-      result[i] = other_digit;
-      continue;
-    }
-    if (other_digit == 0 && extra_digit == 0) {
-      result[i] = this_digit;
+    if (this_digit == 0 && other_digit == 0 && extra_digit == 0 &&
+        !borrow_one) {
       continue;
     }
 
@@ -128,21 +122,42 @@ bigint &bigint::operator+=(bigint const &other) & {
 
     unsigned int combined = (hi_res << SHIFT) | lo_res;
     result[i] = *reinterpret_cast<int *>(&combined);
+    if (borrow_one) {
+      if (result[i] == 0) {
+        result[i] = -2;
+      } else {
+        --result[i];
+        borrow_one = false;
+      }
+    }
 
     if ((this_digit ^ other_digit) < 0) {
       extra_digit = 0;
     }
 
     if (this_digit < 0 && other_digit < 0) {
-      int sum = this_digit + other_digit;
-
-      if (sum >= 0) {
-        --extra_digit;
+      long long sum = static_cast<long long>(this_digit) + other_digit;
+      if (sum < INT_MIN) {
+        extra_digit = 0;
+        borrow_one = true;
+      } else {
+        std::cout << "nothing happend!!" << std::endl;
+        std::cout << "extra_digit: " << extra_digit << std::endl;
+        extra_digit = 0;
+        // borrow_one = true;
       }
-
-      this_digit = sum;
+      // std::cout << "sum: " << sum << std::endl;
+      // getchar();
     }
   }
+  if (borrow_one) {
+    while (result[max_size - 1] == -2) {
+      --max_size;
+    }
+    ++max_size;
+    result[max_size - 1] = -1;
+  }
+
   if (result_sign == -1 && result[max_size - 1] == 0) {
     --max_size;
   }
@@ -195,7 +210,8 @@ bigint &bigint::operator*=(bigint const &other) & {
 }
 
 bigint &bigint::multiply(bigint const &other) {
-  // if (size() >= KARATSUBA_THRESHOLD && other.size() >= KARATSUBA_THRESHOLD) {
+  // if (size() >= KARATSUBA_THRESHOLD && other.size() >=
+  // KARATSUBA_THRESHOLD) {
   //   return karatsuba_multiply(other);
   // }
   return scholarbook_multiply(other);

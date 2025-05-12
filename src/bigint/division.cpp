@@ -131,10 +131,10 @@ bigint::division_result bigint::division(bigint const &dividend,
   quotient.remove_leading_zeros();
   remainder.remove_leading_zeros();
 
-  std::cout << "\n=== FINAL RESULT ===\n";
-  std::cout << "Quotient: " << quotient << "\n";
-  std::cout << "Remainder: " << remainder << "\n";
-  std::cout << "=== DIVISION ENDED ===\n\n";
+  // std::cout << "\n=== FINAL RESULT ===\n";
+  // std::cout << "Quotient: " << quotient << "\n";
+  // std::cout << "Remainder: " << remainder << "\n";
+  // std::cout << "=== DIVISION ENDED ===\n\n";
 
   return {quotient, remainder};
 }
