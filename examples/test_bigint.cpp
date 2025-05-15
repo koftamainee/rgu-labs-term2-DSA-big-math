@@ -1,5 +1,6 @@
 #include <iostream>
 #include <optional>
+#include <vector>
 
 #include "bigint.h"
 
@@ -25,18 +26,23 @@ bigint fibonacci_iterative(bigint const &n) {
 }
 
 bigint catalan_number(int n) {
-  // if (n < 0) {
-  //   return 0;
-  // }
-  // bigint result = 1;
-  // for (int i = 1; i <= n; ++i) {
-  //   result *= (n + i);
-  //
-  //   result /= i;
-  // }
-  // return result / (n + 1);
+  if (n < 0) {
+    return 0;
+  }
 
-  return 0;
+  auto *catalan = new bigint[n + 1];
+  catalan[0] = 1;
+
+  for (int i = 1; i <= n; ++i) {
+    catalan[i] = 0;
+    for (int j = 0; j < i; ++j) {
+      catalan[i] += catalan[j] * catalan[i - 1 - j];
+    }
+  }
+
+  bigint result = catalan[n];
+  delete[] catalan;
+  return result;
 }
 
 int test_bigint() {

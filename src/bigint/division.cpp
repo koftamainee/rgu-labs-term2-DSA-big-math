@@ -119,10 +119,10 @@ bigint::division_result bigint::division(bigint const &dividend,
 
     shifted_divisor.negate();
 
-    std::cout << remainder << " += " << shifted_divisor << " = ";
+    // std::cout << remainder << " += " << shifted_divisor << " = ";
 
     remainder += shifted_divisor;
-    std::cout << remainder << "\n";
+    // std::cout << remainder << "\n";
 
     bigint one = 1;
     _add_with_shift(quotient, one, shift);

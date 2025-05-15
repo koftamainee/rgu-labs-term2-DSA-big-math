@@ -120,27 +120,16 @@ bigint fibonacci_iterative(bigint const &n);
 int main() {
   // benchmark_karatsuba_threshold();
   // bigint_performance();
-  // test_bigint();
+  test_bigint();
+
+  // bigint a = "78126478612475127645126547251547124";
+  // bigint b = "418724638726478236478263784623";
+  // std::cout << a - b << std::endl;
 
   // bigint a = INT_MIN;
   // std::cout << a << " - 1 = " << a + (-1) << std::endl;
 
   // test_bigint_addition();
-
-  int arr[] = {-450461974, 1520782648, 5};
-  bigint a(arr, 3);
-  bigint b = 12345;
-
-  bigint result = a / b;
-  // int arr1[] = {1461013815, 1};
-  // int arr2[] = {-1058799616, 0};
-  //
-  // bigint a(arr1, 2);
-  // bigint b(arr2, 2);
-  // b.negate();
-  //
-  // bigint res = a + b;
-  // std::cout << a << " + " << b << " = " << res << "\n";
 
   return 0;
 }

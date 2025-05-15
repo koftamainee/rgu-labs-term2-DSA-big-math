@@ -69,12 +69,12 @@ bigint &bigint::karatsuba_multiply(bigint const &other) & {
   bigint z2 = high1 * high2;
   bigint z1 = (low1 + high1) * (low2 + high2);
 
-  std::cout << z1 << " + " << -z2 << " = ";
+  // std::cout << z1 << " + " << -z2 << " = ";
   z1 -= z2;
-  std::cout << z1 << std::endl;
-  std::cout << z1 << " + " << -z0 << " = ";
+  // std::cout << z1 << std::endl;
+  // std::cout << z1 << " + " << -z0 << " = ";
   z1 -= z0;
-  std::cout << z1 << std::endl;
+  // std::cout << z1 << std::endl;
 
   bigint result = std::move(z0);
   _add_with_word_shift(result, z1, m);
