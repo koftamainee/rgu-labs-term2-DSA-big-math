@@ -1,4 +1,5 @@
 #include <climits>
+#include <stdexcept>
 
 #include "bigfloat.h"
 #include "bigint.h"
@@ -100,6 +101,12 @@ bigint &bigint::operator+=(bigint const &other) & {
     unsigned int this_digit =
         (static_cast<bigint const *>(this))->operator[](i);
     unsigned int other_digit = (other)[i];
+    // if (i >= this_size && this_sign < 0) {
+    //   this_digit = UINT_MAX;
+    // }
+    // if (i >= other_size && other_sign < 0) {
+    //   other_digit = UINT_MAX;
+    // }
 
     result[i] = 0;
 
@@ -111,15 +118,27 @@ bigint &bigint::operator+=(bigint const &other) & {
         static_cast<unsigned long long>(this_digit) + other_digit + extra_digit;
     result[i] = static_cast<unsigned int>(sum);
     extra_digit = sum >> (sizeof(int) * 8);
+
+    if ((this_sign ^ other_sign) < 0) {
+      bool all_zeros = true;
+      bigint const &negative = this_sign < 0 ? *this : other;
+      size_t const negative_size = this_sign < 0 ? this_size : other_size;
+      for (int j = i + 1; j < negative_size; ++j) {
+        if (negative[j] != 0) {
+          all_zeros = false;
+          break;
+        }
+      }
+      if (all_zeros) {
+        extra_digit = 0;
+      }
+    }
   }
 
   if (result_sign == -1 && result[max_size - 1] == 0) {
     --max_size;
   }
-  if ((this_sign == -1 || other_sign == -1) && result_sign == 1 &&
-      result[max_size - 1] == 1) {
-    --max_size;
-  }
+
   move_from_array(reinterpret_cast<int *>(result), max_size);
   return *this;
 }
@@ -168,7 +187,7 @@ bigint &bigint::operator*=(bigint const &other) & {
 }
 
 bigint &bigint::multiply(bigint const &other) {
-  // if (size() >= KARATSUBA_THRESHOLD || other.size() >= KARATSUBA_THRESHOLD) {
+  // if (size() >= KARATSUBA_THRESHOLD && other.size() >= KARATSUBA_THRESHOLD) {
   //   return karatsuba_multiply(other);
   // }
   return scholarbook_multiply(other);

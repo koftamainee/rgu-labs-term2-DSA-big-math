@@ -65,6 +65,7 @@ int &bigint::operator[](std::size_t index) {
 }
 
 bigint &bigint::from_string(cstd::string const &str, std::size_t base) {
+  std::cout << "from_string called\n";
   if (str.size() == 0) {
     throw std::invalid_argument("string is empty");
   }
@@ -139,16 +140,8 @@ void bigint::remove_insignificant_numbers_from_digits_array(int const *digits,
     throw std::invalid_argument("Digits count can't be EQ to 0");
   }
 
-  int i = static_cast<int>(size) - 1;
-  while (digits[i] == -1 && i >= 0) {
-    --i;
-  }
-  if (i == -1) {  // all minus ones
-    size = 1;
-    return;
-  }
-
-  while (size > 1 && ((digits[size - 1] == 0 && digits[size - 2] >= 0))) {
+  while (size != 1 && ((digits[size - 1] == 0 && digits[size - 2] >= 0) ||
+                       (digits[size - 1] == -1 && digits[size - 2] < 0))) {
     --size;
   }
 }
