@@ -81,9 +81,10 @@ void test_bigint_addition() {
   // Test 8: Adding a positive number with its negative counterpart
   {
     int arr1[] = {2147483647, 1000000000};
-    int arr2[] = {-2147483647, -1000000000};
+    int arr2[] = {2147483647, 1000000000};
     bigint a(arr1, 2);
     bigint b(arr2, 2);
+    b.negate();
     bigint result = a + b;
     std::cout << "Test 8: " << a << " + " << b << " = " << result << std::endl;
   }
@@ -121,15 +122,34 @@ int main() {
   // benchmark_karatsuba_threshold();
   // bigint_performance();
   test_bigint();
+  // test_bigfloat();
+
+  // test_bigint_addition();
 
   // bigint a = "78126478612475127645126547251547124";
   // bigint b = "418724638726478236478263784623";
-  // std::cout << a - b << std::endl;
+  // b.negate();
+  // std::cout << a << " + " << b << " = " << a + b << std::endl;
+
+  // int arr[] = {-1, -1, -1, -15};
+  // bigint a(arr, 4);
+  // std::cout << a + 1 << std::endl;
 
   // bigint a = INT_MIN;
   // std::cout << a << " - 1 = " << a + (-1) << std::endl;
 
   // test_bigint_addition();
+
+  bigint a =
+      "716287436176254761254376812537651276351876537612548751732985723087356";
+  bigint b =
+      "2983471982637812673962173612876547812576451287645187245817625486715";
+  bigint res =
+      "713303964193616948580414638924774728539300086324903564487168097600641";
+
+  std::cout << a << " - " << b << " = " << a - b << std::endl;
+  std::cout << a - b << std::endl;
+  std::cout << res << std::endl;
 
   return 0;
 }

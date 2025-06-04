@@ -60,10 +60,9 @@ int test_bigfloat() {
     std::cout << "c.negate(): " << neg << "\n\n";
 
     std::cout << "7. Mathematical functions:\n";
-    bigfloat eps(1, 100000000);
+    bigfloat eps(1, 100);
 
-    std::cout << "sin(π/4): " << sin(bigfloat::PI(eps) / bigfloat(4), eps)
-              << "\n";
+    std::cout << "sin(π/4): " << sin(bigfloat(1, 2), eps) << "\n";
     std::cout << "cos(π/4): " << cos(bigfloat::PI(eps) / bigfloat(4), eps)
               << "\n";
     std::cout << "tan(π/4): " << tg(bigfloat::PI(eps) / bigfloat(4), eps)

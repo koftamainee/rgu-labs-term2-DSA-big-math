@@ -6,17 +6,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include_directories(include)
 
-# file(GLOB BIGINT_SOURCES src/bigint/*.cpp) file(GLOB BIGINT_SOURCES
-# src/bigint/*.cpp)
+file(GLOB BIGINT_SOURCES src/bigint/*.cpp)
 file(GLOB BIGFLOAT_SOURCES src/bigfloat/*.cpp)
 file(GLOB BIGPOLY_SOURCES src/bigpoly/*.cpp)
 file(GLOB BIGCOMPLEX_SOURCES src/bigcomplex/*.cpp)
 file(GLOB CSTD_SOURCES src/cstd/*.cpp)
 
-# add_library(big_math ${BIGFLOAT_SOURCES} ${BIGINT_SOURCES} ${BIGPOLY_SOURCES}
-# ${BIGCOMPLEX_SOURCES} ${CSTD_SOURCES})
-add_library(big_math ${BIGFLOAT_SOURCES} ${BIGPOLY_SOURCES}
+add_library(big_math ${BIGFLOAT_SOURCES} ${BIGINT_SOURCES} ${BIGPOLY_SOURCES}
                      ${BIGCOMPLEX_SOURCES} ${CSTD_SOURCES})
+# add_library(big_math ${BIGFLOAT_SOURCES} ${BIGPOLY_SOURCES}
+# ${BIGCOMPLEX_SOURCES} ${CSTD_SOURCES})
 
 # Add executable target
 file(GLOB EXAMPLES_SOURCES examples/*.cpp)
