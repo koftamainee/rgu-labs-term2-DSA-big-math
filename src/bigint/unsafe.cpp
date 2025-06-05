@@ -134,7 +134,7 @@ void bigint::_add_with_word_shift(bigint &adding_to, bigint &summand,
     ++max_size;
   }
 
-  int *result = new int[max_size];
+  auto *result = new unsigned int[max_size];
 
   unsigned int extra_digit = 0;
   int summand_pos = 0;
@@ -144,25 +144,16 @@ void bigint::_add_with_word_shift(bigint &adding_to, bigint &summand,
   }
 
   for (int i = static_cast<int>(word_shift); i < max_size; ++i) {
-    int this_digit = (i < adding_to_size) ? adding_to[i] : 0;
-    int other_digit = (summand_pos < summand_size) ? summand[summand_pos++] : 0;
+    unsigned int this_digit = static_cast<bigint const &>(adding_to)[i];
+    unsigned int other_digit =
+        static_cast<bigint const &>(summand)[summand_pos++];
 
-    unsigned int this_low = loword(this_digit);
-    unsigned int this_high = hiword(this_digit);
-    unsigned int other_low = loword(other_digit);
-    unsigned int other_high = hiword(other_digit);
+    unsigned long long sum =
+        static_cast<unsigned long long>(this_digit) + other_digit + extra_digit;
 
-    unsigned int sum_low = this_low + other_low + extra_digit;
-    extra_digit = sum_low >> SHIFT;
-    unsigned int result_low = sum_low & MASK;
-
-    unsigned int sum_high = this_high + other_high + extra_digit;
-    extra_digit = sum_high >> SHIFT;
-    unsigned int result_high = sum_high & MASK;
-
-    unsigned int combined = (result_high << SHIFT) | result_low;
-    result[i] = *reinterpret_cast<int *>(&combined);
+    result[i] = static_cast<unsigned int>(sum);
+    extra_digit = static_cast<unsigned int>(sum >> (sizeof(int) * 8));
   }
 
-  adding_to.move_from_array(result, max_size);
+  adding_to.move_from_array(reinterpret_cast<int *>(result), max_size);
 }

@@ -9,8 +9,8 @@ int bigint_performance();
 bigint fibonacci_iterative(bigint const &n);
 
 int main() {
-  // bigint_performance();
-  test_bigint();
+  bigint_performance();
+  // test_bigint();
   // test_bigfloat();
 
   return 0;
