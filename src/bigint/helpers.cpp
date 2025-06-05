@@ -65,35 +65,49 @@ int &bigint::operator[](std::size_t index) {
 }
 
 bigint &bigint::from_string(cstd::string const &str, std::size_t base) {
-  std::cout << "from_string called\n";
-  if (str.size() == 0) {
+  if (str.empty()) {
     throw std::invalid_argument("string is empty");
   }
-  if (base > 36) {
-    throw std::invalid_argument("invalid base for conversion : ");
-  }
-  if (str.size() == 1 && str[0] == '-') {
-    throw std::invalid_argument("Invalid string number representation");
+  if (base < 2 || base > 36) {
+    throw std::invalid_argument("invalid base: must be between 2 and 36");
   }
 
   *this = 0;
   bool negative = false;
-  for (int i = 0; i < str.size(); ++i) {
-    if (str[i] == '-') {
-      negative = true;
-      continue;
-    }
-    auto const c = str[i];
-    *this *= 10;
-    if (std::isdigit(c) != 0) {
-      *this += c - '0';
-    } else if (std::isalpha(c) != 0) {
-      *this += std::toupper(c) - 'A' + 10;
-    } else {
-      throw std::invalid_argument(
-          "invalid character in string number representation found");
-    }
+  size_t start_pos = 0;
+
+  if (str[0] == '-') {
+    negative = true;
+    start_pos = 1;
+  } else if (str[0] == '+') {
+    start_pos = 1;
   }
+
+  if (start_pos == str.size()) {
+    throw std::invalid_argument("string contains only a sign character");
+  }
+
+  for (size_t i = start_pos; i < str.size(); ++i) {
+    const char c = str[i];
+    int value = -1;
+
+    if (c >= '0' && c <= '9') {
+      value = c - '0';
+    } else if (c >= 'A' && c <= 'Z') {
+      value = 10 + (c - 'A');
+    } else if (c >= 'a' && c <= 'z') {
+      value = 10 + (c - 'a');
+    }
+
+    if (value < 0 || static_cast<size_t>(value) >= base) {
+      throw std::invalid_argument("invalid character '" + std::string(1, c) +
+                                  "' for base " + std::to_string(base));
+    }
+
+    *this *= static_cast<int>(base);
+    *this += value;
+  }
+
   if (negative) {
     negate();
   }

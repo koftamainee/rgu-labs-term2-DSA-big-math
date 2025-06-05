@@ -1,27 +1,18 @@
 #include <stdexcept>
-#include <vector>
 
 #include "bigint.h"
 
 bigint bigint::factorial(const bigint &n) {
-  if (n < 2) return 1;
-  std::vector<bigint> nums;
-  for (int i = 2; i <= n; ++i) {
-    nums.push_back(i);
+  if (n < 2) {
+    return 1;
   }
-  // Умножаем попарно, пока не останется одно число
-  while (nums.size() > 1) {
-    std::vector<bigint> new_nums;
-    for (size_t i = 0; i < nums.size(); i += 2) {
-      if (i + 1 < nums.size()) {
-        new_nums.push_back(nums[i] * nums[i + 1]);
-      } else {
-        new_nums.push_back(nums[i]);
-      }
-    }
-    nums = std::move(new_nums);
+
+  bigint result = 1;
+  for (bigint i = 2; i <= n; ++i) {
+    result *= i;
   }
-  return nums[0];
+
+  return result;
 }
 
 bigint bigint::gcd(bigint a, bigint b) {
@@ -61,6 +52,13 @@ bigint bigint::gcd(bigint a, bigint b) {
   return a << shift;
 }
 
-bigint bigint::pow(bigint const &exponent) const {}
+bigint bigint::pow(bigint const &exponent) const {
+  throw std::runtime_error(
+      "bigint::pow(bigint const &exponent) const {}: Not implemented");
+}
 
-bigint bigint::mod_pow(bigint exponent, bigint const &modulus) const {}
+bigint bigint::mod_pow(bigint exponent, bigint const &modulus) const {
+  throw std::runtime_error(
+      "bigint::mod_pow(bigint exponent, bigint const &modulus) const {}: Not "
+      "implemented");
+}
