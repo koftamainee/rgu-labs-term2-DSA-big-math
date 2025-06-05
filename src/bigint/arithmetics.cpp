@@ -1,7 +1,5 @@
 #include <climits>
-#include <stdexcept>
 
-#include "bigfloat.h"
 #include "bigint.h"
 
 bigint bigint::operator-() const {

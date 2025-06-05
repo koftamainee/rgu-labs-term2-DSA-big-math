@@ -1,15 +1,10 @@
 #include <strings.h>
 
-#include <cctype>
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
 
 #include "bigint.h"
-
-unsigned int bigint::max(unsigned int first, unsigned int second) noexcept {
-  return first > second ? first : second;
-}
 
 unsigned int bigint::loword(unsigned int value) { return value & MASK; }
 

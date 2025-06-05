@@ -58,7 +58,7 @@ bigint &bigint::karatsuba_multiply(bigint const &other) & {
   auto const this_size = this->size();
   auto const other_size = other.size();
 
-  size_t const m = (max(this_size, other_size)) / 2;
+  size_t const m = (std::max(this_size, other_size)) / 2;
 
   bigint const high1 = this->get_upper(m);
   bigint const low1 = this->get_lower(m);

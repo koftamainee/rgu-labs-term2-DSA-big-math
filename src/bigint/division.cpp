@@ -1,5 +1,3 @@
-#include <cmath>
-
 #include "bigint.h"
 
 bigint::division_result::division_result(bigint const &quotient,
