@@ -1,18 +1,27 @@
 #include <stdexcept>
+#include <vector>
 
 #include "bigint.h"
 
 bigint bigint::factorial(const bigint &n) {
-  if (n < 2) {
-    return 1;
+  if (n < 2) return 1;
+  std::vector<bigint> nums;
+  for (int i = 2; i <= n; ++i) {
+    nums.push_back(i);
   }
-
-  bigint result = 1;
-  for (bigint i = 2; i <= n; ++i) {
-    result *= i;
+  // Умножаем попарно, пока не останется одно число
+  while (nums.size() > 1) {
+    std::vector<bigint> new_nums;
+    for (size_t i = 0; i < nums.size(); i += 2) {
+      if (i + 1 < nums.size()) {
+        new_nums.push_back(nums[i] * nums[i + 1]);
+      } else {
+        new_nums.push_back(nums[i]);
+      }
+    }
+    nums = std::move(new_nums);
   }
-
-  return result;
+  return nums[0];
 }
 
 bigint bigint::gcd(bigint a, bigint b) {

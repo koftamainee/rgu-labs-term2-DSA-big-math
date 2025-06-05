@@ -101,13 +101,6 @@ bigint &bigint::operator+=(bigint const &other) & {
     unsigned int this_digit =
         (static_cast<bigint const *>(this))->operator[](i);
     unsigned int other_digit = (other)[i];
-    // if (i >= this_size && this_sign < 0) {
-    //   this_digit = UINT_MAX;
-    // }
-    // if (i >= other_size && other_sign < 0) {
-    //   other_digit = UINT_MAX;
-    // }
-
     result[i] = 0;
 
     if (this_digit == 0 && other_digit == 0 && extra_digit == 0) {
@@ -122,7 +115,7 @@ bigint &bigint::operator+=(bigint const &other) & {
     if ((this_sign ^ other_sign) < 0) {
       bool all_zeros = true;
       bigint const &negative = this_sign < 0 ? *this : other;
-      size_t const negative_size = this_sign < 0 ? this_size : other_size;
+      size_t const negative_size = (this_sign < 0 ? this_size : other_size) + 1;
       for (int j = i + 1; j < negative_size; ++j) {
         if (negative[j] != 0) {
           all_zeros = false;
