@@ -6,28 +6,35 @@ bigfloat bigfloat::PI(bigfloat const &EPS) {
 }
 
 bigfloat sin(bigfloat const &number, bigfloat const &EPS) {
-  bigfloat result = 0;
+  bigfloat res = 0;
   bigfloat term = number;
+  bigfloat number_squared = number * number;
   bigint n = 1;
+
   while (term.abs() > EPS) {
-    result += term;
-    term = -term * number * number / ((2 * n) * (2 * n + 1));
+    res += term;
+    term *= -number_squared;
     ++n;
+    term /= (2 * n - 1) * (2 * n - 2);
   }
 
-  return result;
+  return res;
 }
 
 bigfloat cos(bigfloat const &number, bigfloat const &EPS) {
-  bigfloat result = 0;
+  bigfloat res = 0;
   bigfloat term = 1;
-  bigint n = 1;
+  bigfloat number_squared = number * number;
+  bigint n = 0;
+
   while (term.abs() > EPS) {
-    result += term;
-    term = -term * number * number / (n * (n - 1));
+    res += term;
+    term *= -number_squared;
+    ++n;
+    term /= (2 * n - 1) * (2 * n);
   }
 
-  return result;
+  return res;
 }
 
 bigfloat tg(bigfloat const &number, bigfloat const &EPS) {
@@ -39,11 +46,11 @@ bigfloat ctg(bigfloat const &number, bigfloat const &EPS) {
 }
 
 bigfloat sec(bigfloat const &number, bigfloat const &EPS) {
-  return 1 / sin(number, EPS);
+  return sin(number, EPS).reciprocal();
 }
 
 bigfloat cosec(bigfloat const &number, bigfloat const &EPS) {
-  return 1 / cos(number, EPS);
+  return cos(number, EPS).reciprocal();
 }
 
 bigfloat arcsin(bigfloat const &number, bigfloat const &EPS) {
@@ -82,9 +89,9 @@ bigfloat arcctg(bigfloat const &number, bigfloat const &EPS) {
 }
 
 bigfloat arcsec(bigfloat const &number, bigfloat const &EPS) {
-  return arccos(1 / number, EPS);
+  return arccos(number.reciprocal(), EPS);
 }
 
 bigfloat arccosec(bigfloat const &number, bigfloat const &EPS) {
-  return arcsin(1 / number, EPS);
+  return arcsin(number.reciprocal(), EPS);
 }

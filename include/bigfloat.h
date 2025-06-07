@@ -34,6 +34,7 @@ class bigfloat final {
   bigfloat& operator/=(bigfloat const& other) &;
 
   bigfloat abs() const;
+  bigfloat reciprocal() const;
 
   friend bigfloat operator+(bigfloat const& first, bigfloat const& second);
   friend bigfloat operator-(bigfloat const& first, bigfloat const& second);
@@ -66,7 +67,6 @@ class bigfloat final {
   friend bigfloat arccosec(bigfloat const& number, bigfloat const& EPS);
 
   // Exponential and root functions
-  friend bigfloat pow(bigfloat const& base, bigint const& exp);
   friend bigfloat radical(bigfloat const& radicand, bigint const& index,
                           bigfloat const& EPS);
   friend bigfloat sqrt(bigfloat const& radicand, bigfloat const& EPS);

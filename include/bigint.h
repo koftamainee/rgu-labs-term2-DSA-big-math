@@ -125,6 +125,7 @@ class bigint final {
                                   bigint const &num) noexcept;
   friend std::istream &operator>>(std::istream &in, bigint &num);
 
+ private:
   // Constants
   static constexpr unsigned int SHIFT = (sizeof(int) << 2);
   static constexpr unsigned int MASK = (1 << SHIFT) - 1;

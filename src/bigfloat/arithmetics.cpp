@@ -1,17 +1,22 @@
+#include <utility>
+
 #include "bigfloat.h"
 
 void bigfloat::simplify() {
-  bigint divider = bigint::gcd(numerator_, denominator_);
-  if (divider == 0) {
+  if (numerator_ == 0) {
+    denominator_ = 1;
+    return;
+  }
+  if (numerator_ < 0) {
+    numerator_.negate();
+    denominator_.negate();
+  }
+  bigint divider = bigint::gcd(numerator_, denominator_.abs());
+  if (divider == 1) {
     return;
   }
   numerator_ /= divider;
   denominator_ /= divider;
-
-  if (denominator_ < 0) {
-    numerator_ = -numerator_;
-    denominator_ = -denominator_;
-  }
 }
 bigfloat bigfloat::operator-() const {
   bigfloat negative = *this;
@@ -24,11 +29,12 @@ bigfloat &bigfloat::negate() {
 }
 
 bigfloat &bigfloat::operator+=(bigfloat const &other) & {
-  *this *= other.denominator_;
-  bigint new_other_numerator = other.numerator_ * denominator_;
-  numerator_ += new_other_numerator;
+  numerator_ =
+      numerator_ * other.denominator_ + other.numerator_ * denominator_;
+  denominator_ *= other.denominator_;
 
   simplify();
+
   return *this;
 }
 
@@ -70,3 +76,12 @@ bigfloat operator/(bigfloat const &first, bigfloat const &second) {
 }
 
 bigfloat bigfloat::abs() const { return denominator_ < 0 ? -*this : *this; }
+
+bigfloat bigfloat::reciprocal() const {
+  bigfloat res(denominator_, numerator_);
+  if (res.numerator_ < 0) {
+    res.numerator_.negate();
+    res.denominator_.negate();
+  }
+  return res;
+}

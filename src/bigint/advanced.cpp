@@ -16,40 +16,27 @@ bigint bigint::factorial(const bigint &n) {
 }
 
 bigint bigint::gcd(bigint a, bigint b) {
-  a = a < 0 ? -a : a;
-  b = b < 0 ? -b : b;
-
   if (a == 0) {
-    return b;
+    return b < 0 ? -b : b;
   }
   if (b == 0) {
-    return a;
+    return a < 0 ? -a : a;
   }
 
-  int shift = 0;
-  while (((a | b) & 1) == 0) {
-    a >>= 1;
-    b >>= 1;
-    ++shift;
+  if (a < 0) {
+    a = -a;
+  }
+  if (b < 0) {
+    b = -b;
   }
 
-  while ((a & 1) == 0) {
-    a >>= 1;
+  while (b != 0) {
+    bigint temp = b;
+    b = a % b;
+    a = temp;
   }
 
-  do {
-    while ((b & 1) == 0) {
-      b >>= 1;
-    }
-    if (a > b) {
-      auto temp = a;
-      a = b;
-      b = temp;
-    }
-    b -= a;
-  } while (b != 0);
-
-  return a << shift;
+  return a;
 }
 
 bigint bigint::pow(bigint const &exponent) const {
