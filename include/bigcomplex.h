@@ -3,14 +3,13 @@
 #include <ostream>
 
 #include "bigfloat.h"
-#include "cstring.h"
 
 class bigcomplex final {
  private:
   bigfloat real_;
   bigfloat imaginary_;
 
-  void from_str(cstd::string const &complex_str);
+  void from_str(std::string const &complex_str);
 
  public:
   bigcomplex() = default;
@@ -21,7 +20,7 @@ class bigcomplex final {
   bigcomplex &operator=(bigcomplex &&other) = default;
 
   bigcomplex(bigfloat real_, bigfloat imaginary_ = 0);
-  bigcomplex(cstd::string const &complex_str);
+  bigcomplex(std::string const &complex_str);
 
   bigcomplex operator-() const noexcept;
   bigcomplex &negate() noexcept;

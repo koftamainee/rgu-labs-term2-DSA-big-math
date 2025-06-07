@@ -64,6 +64,9 @@ bigfloat operator*(bigfloat const &first, bigfloat const &second) {
 }
 
 bigfloat &bigfloat::operator/=(bigfloat const &other) & {
+  if (other == 0) {
+    throw bigint::zero_division_exception();
+  }
   numerator_ *= other.denominator_;
   denominator_ *= other.numerator_;
   simplify();

@@ -4,6 +4,9 @@
 
 const bigfloat bigfloat::DEFAULT_EPS = bigfloat(bigint(1), bigint(1000000));
 
+std::map<bigfloat, bigfloat> bigfloat::pi_cache_;
+std::vector<bigfloat> bigfloat::bernoulli_cache_ = {1, bigfloat(-1, 2)};
+
 bigfloat::bigfloat() {
   numerator_ = 0;
   denominator_ = 1;

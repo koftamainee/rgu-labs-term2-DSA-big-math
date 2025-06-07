@@ -2,7 +2,6 @@
 #include <exception>
 
 #include "bigfloat.h"
-#include "cstring.h"
 
 std::ostream &operator<<(std::ostream &out, bigfloat const &num) noexcept {
   if (num == 0) {
@@ -20,7 +19,7 @@ std::ostream &operator<<(std::ostream &out, bigfloat const &num) noexcept {
   return out;
 }
 std::istream &operator>>(std::istream &in, bigfloat &num) {
-  cstd::string input;
+  std::string input;
   in >> input;
 
   char *slash_pos = std::strchr(input.data(), '/');
@@ -52,4 +51,41 @@ std::istream &operator>>(std::istream &in, bigfloat &num) {
     return in;
   }
   return in;
+}
+
+std::string bigfloat::to_decimal(size_t precision) const {
+  bool is_negative = (denominator_ < 0);
+
+  bigint abs_num = numerator_.abs();
+  bigint abs_den = denominator_.abs();
+
+  bigint::division_result dr = bigint::division(abs_num, abs_den);
+  bigint integer_part = dr.quotient();
+  bigint remainder = dr.remainder();
+
+  std::string result;
+
+  if (is_negative) {
+    result += "-";
+  }
+
+  result += integer_part.to_string();
+
+  if (remainder != 0 && precision > 0) {
+    result += ".";
+
+    for (size_t i = 0; i < precision; ++i) {
+      remainder *= 10;
+      bigint digit = remainder / abs_den;
+      remainder %= abs_den;
+
+      result += digit.to_string();
+
+      if (remainder == 0) {
+        break;
+      }
+    }
+  }
+
+  return result;
 }

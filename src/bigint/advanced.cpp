@@ -40,8 +40,27 @@ bigint bigint::gcd(bigint a, bigint b) {
 }
 
 bigint bigint::pow(bigint const &exponent) const {
-  throw std::runtime_error(
-      "bigint::pow(bigint const &exponent) const {}: Not implemented");
+  if (exponent < bigint(0)) {
+    throw std::runtime_error("bigint::pow: Negative exponent not supported");
+  }
+
+  if (exponent == bigint(0)) {
+    return 1;
+  }
+
+  bigint base = *this;
+  bigint result(1);
+  bigint exp = exponent;
+
+  while (exp > bigint(0)) {
+    if (exp % bigint(2) == bigint(1)) {
+      result *= base;
+    }
+    base *= base;
+    exp /= bigint(2);
+  }
+
+  return result;
 }
 
 bigint bigint::mod_pow(bigint exponent, bigint const &modulus) const {

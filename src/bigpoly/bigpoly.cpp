@@ -1,7 +1,5 @@
 #include "bigpoly.h"
 
-#include "cstring.h"
-
 void bigpoly::clone(bigpoly const &other) { poly_ = clone_node(other.poly_); }
 
 bigpoly::node *bigpoly::clone_node(node *root) {
@@ -24,7 +22,7 @@ void bigpoly::cleanup() noexcept {
 
 bigpoly::bigpoly() noexcept : poly_(nullptr) {}
 
-bigpoly::bigpoly(cstd::string const &poly_str) {
+bigpoly::bigpoly(std::string const &poly_str) {
   poly_ = poly_from_str(poly_str);
 }
 

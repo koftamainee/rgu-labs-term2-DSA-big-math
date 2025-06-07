@@ -59,7 +59,7 @@ int &bigint::operator[](std::size_t index) {
                                    : *(other_digits_ + 1 + index);
 }
 
-bigint &bigint::from_string(cstd::string const &str, std::size_t base) {
+bigint &bigint::from_string(std::string const &str, std::size_t base) {
   if (str.empty()) {
     throw std::invalid_argument("string is empty");
   }
@@ -110,13 +110,13 @@ bigint &bigint::from_string(cstd::string const &str, std::size_t base) {
   return *this;
 }
 
-cstd::string bigint::to_string() const {
+std::string bigint::to_string() const {
   if (*this == bigint(0)) {
     return {"0"};
   }
 
   bigint num = this->abs();
-  cstd::string result;
+  std::string result;
 
   while (num != bigint(0)) {
     division_result dr = division(num, 10);

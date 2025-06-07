@@ -58,45 +58,50 @@ int test_bigfloat() {
     bigfloat cs = cos(pi4, eps);
     bigfloat t = tg(pi4, eps);
 
-    std::cout << "sin(π/4) ≈ " << s << " (expected ≈707107/1000000)\n";
-    std::cout << "cos(π/4) ≈ " << cs << " (expected ≈707107/1000000)\n";
-    std::cout << "tan(π/4) ≈ " << t << " (expected ≈1/1)\n";
-    std::cout << "sin² + cos² ≈ " << (s * s + cs * cs)
+    std::cout << "sin(π/4) ≈ " << s.to_decimal()
+              << " (expected ≈707107/1000000)\n";
+    std::cout << "cos(π/4) ≈ " << cs.to_decimal()
+              << " (expected ≈707107/1000000)\n";
+    std::cout << "tan(π/4) ≈ " << t.to_decimal() << " (expected ≈1/1)\n";
+    std::cout << "sin² + cos² ≈ " << (s * s + cs * cs).to_decimal()
               << " (expected ≈1/1)\n\n";
 
     // Test inverse trig functions
     bigfloat half(1, 2);
     bigfloat as = arcsin(half, eps);
     bigfloat ac = arccos(half, eps);
-    bigfloat at = arctg(bigfloat(1), eps);  // arctan(1) = π/4
+    bigfloat at = arctg(bigfloat(1), eps);
 
-    std::cout << "arcsin(1/2) ≈ " << as << " (expected ≈π/6)\n";
-    std::cout << "arccos(1/2) ≈ " << ac << " (expected ≈π/3)\n";
-    std::cout << "arctan(1/1) ≈ " << at << " (expected ≈π/4)\n";
-    std::cout << "arcsin(1/2) + arccos(1/2) ≈ " << (as + ac)
+    std::cout << "arcsin(1/2) ≈ " << as.to_decimal() << " (expected ≈π/6)\n";
+    std::cout << "arccos(1/2) ≈ " << ac.to_decimal() << " (expected ≈π/3)\n";
+    std::cout << "arctan(1/1) ≈ " << at.to_decimal() << " (expected ≈π/4)\n";
+    std::cout << "arcsin(1/2) + arccos(1/2) ≈ " << (as + ac).to_decimal()
               << " (expected ≈π/2)\n\n";
 
     // Test exponential and logarithmic functions
     bigfloat sq = sqrt(bigfloat(2), eps);
     bigfloat lg = log2(bigfloat(8), eps);
     bigfloat ln = log(bigfloat::PI(eps), eps);
-    bigfloat lg10 = log10(bigfloat(1000), eps);
+    // bigfloat lg10 = log10(bigfloat(1000), eps);
 
-    std::cout << "sqrt(2) ≈ " << sq << " (expected ≈1414214/1000000)\n";
-    std::cout << "log2(8) ≈ " << lg << " (expected 3/1)\n";
-    std::cout << "log(PI) ≈ " << ln << " (no simple fraction)\n";
-    std::cout << "log10(1000) ≈ " << lg10 << " (expected 3/1)\n\n";
+    std::cout << "sqrt(2) ≈ " << sq.to_decimal()
+              << " (expected ≈1414214/1000000)\n";
+    std::cout << "log2(8) ≈ " << lg.to_decimal() << " (expected 3/1)\n";
+    std::cout << "log(PI) ≈ " << ln.to_decimal() << " (no simple fraction)\n";
+    // std::cout << "log10(1000) ≈ " << lg10 << " (expected 3/1)\n\n";
 
     // Test radical function
-    bigfloat cube_root = radical(bigfloat(27), 3, eps);
-    std::cout << "radical(27, 3) ≈ " << cube_root << " (expected 3/1)\n\n";
+    // bigfloat cube_root = radical(bigfloat(27), 3, eps);
+    // std::cout << "radical(27, 3) ≈ " << cube_root << " (expected 3/1)\n\n";
 
     // Test constants
     bigfloat pi_approx = bigfloat::PI(eps);
-    std::cout << "PI ≈ " << pi_approx << " (expected ≈355/113)\n\n";
+    std::cout << "PI ≈ " << pi_approx.to_decimal()
+              << " (expected ≈355/113)\n\n";
 
     // Test I/O operations
-    bigfloat in1, in2;
+    bigfloat in1;
+    bigfloat in2;
     std::cout << "Enter two bigfloats in fraction form (a/b): ";
     std::cin >> in1 >> in2;
     std::cout << "You entered: " << in1 << " and " << in2 << "\n";

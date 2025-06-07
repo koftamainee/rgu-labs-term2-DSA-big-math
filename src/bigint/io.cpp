@@ -5,7 +5,6 @@
 #include <stdexcept>
 
 #include "bigint.h"
-#include "cstring.h"
 
 std::ostream& operator<<(std::ostream& out, bigint const& num) noexcept {
   if (num == bigint(0)) {
@@ -49,7 +48,7 @@ std::ostream& operator<<(std::ostream& out, bigint const& num) noexcept {
 }
 
 std::istream& operator>>(std::istream& in, bigint& num) {
-  cstd::string input;
+  std::string input;
   in >> input;
 
   num.cleanup();
