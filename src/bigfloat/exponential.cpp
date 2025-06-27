@@ -24,21 +24,33 @@ bigfloat pow(bigfloat const &base, bigint const &exp) {
   return result;
 }
 
-bigfloat radical(bigfloat const &radicand, bigint const &index,
-                 bigfloat const &EPS) {
-  if (radicand < 0 && index % 2 == 0) {
+bigfloat radical(const bigfloat &radicand, const bigint &index,
+                 const bigfloat &EPS) {
+  if (index == 0) {
+    throw std::invalid_argument("Index cannot be zero!");
+  }
+  if (radicand < 0 && (index % 2 == 0)) {
     throw std::invalid_argument("Negative radicand with even index");
   }
-  if (index == 0) {
-    throw std::invalid_argument("Index can not be zero!");
-  }
 
-  bigfloat x = radicand;
+  bigfloat approx = 1;
+  while (pow(approx, index) < radicand.abs()) {
+    approx *= 2;
+  }
+  bigfloat x = (radicand < 0) ? -approx : approx;
+
   bigfloat delta;
 
   do {
     bigfloat x_prev = x;
-    x = ((index - 1) * x + radicand / pow(x, index - 1)) / index;
+
+    bigfloat x_to_power = 1;
+    for (bigint i = 0; i < index - 1; ++i) {
+      x_to_power *= x;
+    }
+
+    x = ((index - 1) * x + radicand / x_to_power) / index;
+
     delta = (x - x_prev).abs();
   } while (delta > EPS);
 

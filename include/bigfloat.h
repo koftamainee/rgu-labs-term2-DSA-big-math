@@ -20,6 +20,8 @@ class bigfloat final {
   static const bigfloat &bernoulli_number(size_t n);
   static bigfloat binomial(size_t n, size_t k);
 
+  static bigfloat reduce_argument(const bigfloat &number, const bigfloat &EPS);
+
  public:
   static const bigfloat DEFAULT_EPS;
 
@@ -46,6 +48,7 @@ class bigfloat final {
 
   bigfloat abs() const;
   bigfloat reciprocal() const;
+  bigfloat truncate() const;
 
   friend bigfloat operator+(bigfloat const &first, bigfloat const &second);
   friend bigfloat operator-(bigfloat const &first, bigfloat const &second);

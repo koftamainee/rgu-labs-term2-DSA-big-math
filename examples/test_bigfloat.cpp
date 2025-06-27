@@ -82,17 +82,18 @@ int test_bigfloat() {
     bigfloat sq = sqrt(bigfloat(2), eps);
     bigfloat lg = log2(bigfloat(8), eps);
     bigfloat ln = log(bigfloat::PI(eps), eps);
-    // bigfloat lg10 = log10(bigfloat(1000), eps);
+    bigfloat lg10 = log10(bigfloat(1000), eps);
 
     std::cout << "sqrt(2) ≈ " << sq.to_decimal()
               << " (expected ≈1414214/1000000)\n";
     std::cout << "log2(8) ≈ " << lg.to_decimal() << " (expected 3/1)\n";
     std::cout << "log(PI) ≈ " << ln.to_decimal() << " (no simple fraction)\n";
-    // std::cout << "log10(1000) ≈ " << lg10 << " (expected 3/1)\n\n";
+    std::cout << "log10(1000) ≈ " << lg10.to_decimal() << " (expected 3/1)\n\n";
 
     // Test radical function
-    // bigfloat cube_root = radical(bigfloat(27), 3, eps);
-    // std::cout << "radical(27, 3) ≈ " << cube_root << " (expected 3/1)\n\n";
+    bigfloat cube_root = radical(bigfloat(27), 3, eps);
+    std::cout << "radical(27, 3) ≈ " << cube_root.to_decimal()
+              << " (expected 3/1)\n\n";
 
     // Test constants
     bigfloat pi_approx = bigfloat::PI(eps);

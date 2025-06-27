@@ -88,3 +88,5 @@ bigfloat bigfloat::reciprocal() const {
   }
   return res;
 }
+
+bigfloat bigfloat::truncate() const { return {numerator_ / denominator_, 1}; }
